@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:health_app/app_theme.dart';
-import 'package:health_app/login.dart';
+import 'package:health_app/pages/login.dart';
+import 'package:health_app/pages/start_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -15,10 +16,12 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       routes: {
-        Login.routeName:(_) => Login(),
-      }, 
-      initialRoute: Login.routeName,
-      theme: AppTheme.lightTheme ,
+        Login.routeName: (_) => Login(),
+        StartScreen.id: (_) => const StartScreen(),
+      },
+      initialRoute: StartScreen.id,
+      theme: AppTheme.lightTheme,
       themeMode: ThemeMode.light,
-    );}}
-    
+    );
+  }
+}
