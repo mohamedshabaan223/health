@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:health_app/app_theme.dart';
+import 'package:health_app/pages/create_new_password_page.dart';
 import 'package:health_app/widgets/create_icons.dart';
 import 'package:health_app/widgets/default_elvatedbutton.dart';
 import 'package:health_app/widgets/default_textbutton.dart';
@@ -66,7 +67,9 @@ class _LoginState extends State<Login> {
                 children: [
                   Spacer(),
                   TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.pushNamed(context, CreateNewPasswordPage.id);
+                      },
                       child: Text('Forget Password',
                           style:
                               Theme.of(context).textTheme.titleSmall?.copyWith(

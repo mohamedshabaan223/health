@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:health_app/app_theme.dart';
+import 'package:health_app/pages/create_new_password_page.dart';
 import 'package:health_app/pages/login.dart';
 import 'package:health_app/pages/register_page.dart';
 import 'package:health_app/pages/start_screen.dart';
@@ -20,6 +21,7 @@ class MyApp extends StatelessWidget {
         Login.routeName: (_) => Login(),
         StartScreen.id: (_) => const StartScreen(),
         RegisterPage.id: (_) => RegisterPage(),
+        CreateNewPasswordPage.id: (_) => CreateNewPasswordPage(),
       },
       initialRoute: StartScreen.id,
       theme: AppTheme.lightTheme,
