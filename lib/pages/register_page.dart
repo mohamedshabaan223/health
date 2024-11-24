@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:health_app/app_theme.dart';
 import 'package:health_app/widgets/default_textbutton.dart';
 import 'package:health_app/widgets/default_textformfield.dart';
+import 'package:health_app/widgets/list_view_icons.dart';
 import 'package:health_app/widgets/start_screen_button.dart';
 import 'package:health_app/widgets/text_form_field_label.dart';
 
@@ -97,37 +98,23 @@ class RegisterPage extends StatelessWidget {
             height: height * 0.01,
           ),
           Center(
-              child: StartScreenButton(
-            label: 'Sign Up',
-            onPressed: () {},
-            buttonBackgroundColor: AppTheme.green,
-            buttonForegroundColor: AppTheme.white,
-          )),
+            child: StartScreenButton(
+              label: 'Sign Up',
+              onPressed: () {},
+              buttonBackgroundColor: AppTheme.green,
+              buttonForegroundColor: AppTheme.white,
+            ),
+          ),
           SizedBox(
-            height: height * 0.02,
+            height: height * 0.01,
           ),
           Center(
               child: Text('or sign up with',
                   style: Theme.of(context).textTheme.titleSmall)),
-          const SizedBox(
-            height: 5,
+          SizedBox(
+            height: height * 0.02,
           ),
-          Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-            IconButton(
-                onPressed: () {},
-                icon: const Icon(
-                  Icons.facebook_outlined,
-                  size: 60,
-                  color: AppTheme.green,
-                )),
-            IconButton(
-                onPressed: () {},
-                icon: const Icon(
-                  Icons.fingerprint,
-                  size: 60,
-                  color: AppTheme.green,
-                )),
-          ]),
+          ListViewIcons(),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
