@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:health_app/app_theme.dart';
 import 'package:health_app/pages/login.dart';
+import 'package:health_app/pages/register_page.dart';
 import 'package:health_app/pages/start_screen.dart';
 
 void main() {
@@ -18,6 +19,7 @@ class MyApp extends StatelessWidget {
       routes: {
         Login.routeName: (_) => Login(),
         StartScreen.id: (_) => const StartScreen(),
+        RegisterPage.id: (_) => RegisterPage(),
       },
       initialRoute: StartScreen.id,
       theme: AppTheme.lightTheme,
