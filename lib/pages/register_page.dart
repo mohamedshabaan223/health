@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:health_app/app_theme.dart';
+import 'package:health_app/pages/home_page.dart';
 import 'package:health_app/widgets/default_textbutton.dart';
 import 'package:health_app/widgets/default_textformfield.dart';
 import 'package:health_app/widgets/list_view_icons.dart';
@@ -100,7 +101,9 @@ class RegisterPage extends StatelessWidget {
           Center(
             child: StartScreenButton(
               label: 'Sign Up',
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pushNamed(context, HomePage.id);
+              },
               buttonBackgroundColor: AppTheme.green,
               buttonForegroundColor: AppTheme.white,
             ),
@@ -122,7 +125,11 @@ class RegisterPage extends StatelessWidget {
                 'already have an account ?',
                 style: Theme.of(context).textTheme.titleSmall,
               ),
-              DefaultTextbutton(label: 'Log in', onPressed: () {}),
+              DefaultTextbutton(
+                  label: 'Log in',
+                  onPressed: () {
+                    Navigator.pop(context);
+                  }),
             ],
           )
         ]),

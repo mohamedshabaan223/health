@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:health_app/app_theme.dart';
 import 'package:health_app/pages/create_new_password_page.dart';
+import 'package:health_app/pages/home_page.dart';
+import 'package:health_app/pages/register_page.dart';
 import 'package:health_app/widgets/create_icons.dart';
 import 'package:health_app/widgets/default_elvatedbutton.dart';
 import 'package:health_app/widgets/default_textbutton.dart';
@@ -39,6 +41,9 @@ class _LoginState extends State<Login> {
           padding: const EdgeInsets.all(30),
           child: ListView(
             children: [
+              SizedBox(
+                height: height * 0.07,
+              ),
               Text(
                 'Email',
                 style: Theme.of(context).textTheme.titleLarge,
@@ -83,7 +88,9 @@ class _LoginState extends State<Login> {
               Center(
                 child: StartScreenButton(
                   label: 'Log In',
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pushNamed(context, HomePage.id);
+                  },
                   buttonBackgroundColor: AppTheme.green,
                   buttonForegroundColor: AppTheme.white,
                 ),
@@ -106,7 +113,11 @@ class _LoginState extends State<Login> {
                     'Donot have an account ?',
                     style: Theme.of(context).textTheme.titleSmall,
                   ),
-                  DefaultTextbutton(label: 'Sign Up', onPressed: () {}),
+                  DefaultTextbutton(
+                      label: 'Sign Up',
+                      onPressed: () {
+                        Navigator.pushNamed(context, RegisterPage.id);
+                      }),
                 ],
               )
             ],
