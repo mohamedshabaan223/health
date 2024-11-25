@@ -10,6 +10,7 @@ import 'package:health_app/widgets/text_form_field_label.dart';
 class RegisterPage extends StatelessWidget {
   RegisterPage({super.key});
   static const String id = '/register';
+  TextEditingController fullNameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
@@ -36,7 +37,7 @@ class RegisterPage extends StatelessWidget {
           ),
           DefaultTextformfield(
             hint: 'Enter Full Name',
-            controller: emailController,
+            controller: fullNameController,
           ),
           SizedBox(
             height: height * 0.04,
@@ -117,7 +118,7 @@ class RegisterPage extends StatelessWidget {
           SizedBox(
             height: height * 0.02,
           ),
-          ListViewIcons(),
+          const ListViewIcons(),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

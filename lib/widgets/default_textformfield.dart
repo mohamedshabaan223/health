@@ -23,7 +23,7 @@ class _DefaultTextformfieldState extends State<DefaultTextformfield> {
   Widget build(BuildContext context) {
     return TextFormField(
       style: const TextStyle(
-        color: Colors.green, // Changes input text color to green
+        color: Colors.green,
       ),
       controller: widget.controller,
       validator: widget.validator,
@@ -42,8 +42,8 @@ class _DefaultTextformfieldState extends State<DefaultTextformfield> {
         hintText: widget.hint,
         hintStyle: const TextStyle(color: AppTheme.green),
         contentPadding: const EdgeInsets.symmetric(
-          vertical: 8.0, // Reduces the height
-          horizontal: 12.0, // Adjust horizontal padding
+          vertical: 8.0,
+          horizontal: 12.0,
         ),
         suffixIcon: widget.isPassword
             ? IconButton(
