@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
         StartScreen.id: (_) => const StartScreen(),
         RegisterPage.id: (_) => RegisterPage(),
         CreateNewPasswordPage.id: (_) => CreateNewPasswordPage(),
-        HomePage.id: (_) => HomePage(),
+        HomePage.id: (_) => const HomePage(),
       },
       initialRoute: StartScreen.id,
       theme: AppTheme.lightTheme,

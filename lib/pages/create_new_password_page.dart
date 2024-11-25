@@ -10,7 +10,9 @@ class CreateNewPasswordPage extends StatelessWidget {
   static const String id = '/create-new-password';
   TextEditingController passwordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
-
+  String? password;
+  String? confirmPassword;
+  GlobalKey<FormState> formKey = GlobalKey();
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
@@ -27,42 +29,63 @@ class CreateNewPasswordPage extends StatelessWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.all(30),
-        child: ListView(
-          children: [
-            SizedBox(
-              height: height * 0.06,
-            ),
-            const TextFormFieldLabel(text: 'Password'),
-            SizedBox(
-              height: height * 0.01,
-            ),
-            DefaultTextformfield(
-              hint: 'Enter New Password',
-              controller: passwordController,
-              isPassword: true,
-            ),
-            SizedBox(
-              height: height * 0.04,
-            ),
-            const TextFormFieldLabel(text: 'Confirm Password'),
-            SizedBox(
-              height: height * 0.01,
-            ),
-            DefaultTextformfield(
-              hint: 'Confirm Password',
-              controller: confirmPasswordController,
-              isPassword: true,
-            ),
-            SizedBox(
-              height: height * 0.04,
-            ),
-            Center(
-              child: DefaultElvatedbutton(
-                label: 'Create New Password',
-                onPressed: () {},
+        child: Form(
+          key: formKey,
+          child: ListView(
+            children: [
+              SizedBox(
+                height: height * 0.06,
               ),
-            )
-          ],
+              const TextFormFieldLabel(text: 'Password'),
+              SizedBox(
+                height: height * 0.01,
+              ),
+              DefaultTextformfield(
+                onChanged: (data) {
+                  password = data;
+                },
+                hint: 'Enter New Password',
+                controller: passwordController,
+                isPassword: true,
+              ),
+              SizedBox(
+                height: height * 0.04,
+              ),
+              const TextFormFieldLabel(text: 'Confirm Password'),
+              SizedBox(
+                height: height * 0.01,
+              ),
+              DefaultTextformfield(
+                onChanged: (data) {
+                  confirmPassword = data;
+                },
+                hint: 'Confirm Password',
+                controller: confirmPasswordController,
+                isPassword: true,
+              ),
+              SizedBox(
+                height: height * 0.04,
+              ),
+              Center(
+                child: DefaultElvatedbutton(
+                  label: 'Create New Password',
+                  onPressed: () {
+                    if (formKey.currentState!.validate()) {
+                      if (password == confirmPassword) {
+                        Navigator.pop(context);
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Password does not match'),
+                          ),
+                        );
+                      }
+                    }
+                  },
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );

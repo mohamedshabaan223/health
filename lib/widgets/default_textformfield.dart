@@ -5,14 +5,13 @@ class DefaultTextformfield extends StatefulWidget {
   DefaultTextformfield(
       {required this.hint,
       required this.controller,
-      this.validator,
-      this.isPassword = false});
+      this.isPassword = false,
+      required this.onChanged});
 
   String hint;
   TextEditingController controller;
-  String? Function(String?)? validator;
   bool isPassword;
-
+  Function(String)? onChanged;
   @override
   State<DefaultTextformfield> createState() => _DefaultTextformfieldState();
 }
@@ -22,11 +21,21 @@ class _DefaultTextformfieldState extends State<DefaultTextformfield> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      onChanged: widget.onChanged,
+      validator: (value) {
+        if (value!.isEmpty) {
+          return 'Field is required';
+        }
+        if (widget.isPassword) {
+          if (value.length < 6) {
+            return 'Password must be at least 6 characters';
+          }
+        }
+      },
       style: const TextStyle(
         color: Colors.green,
       ),
       controller: widget.controller,
-      validator: widget.validator,
       decoration: InputDecoration(
         fillColor: AppTheme.gray,
         filled: true,
