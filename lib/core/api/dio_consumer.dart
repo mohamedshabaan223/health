@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:health_app/core/api/api_consumer.dart';
 import 'package:health_app/core/api/api_interceptors.dart';
 import 'package:health_app/core/api/end_points.dart';
+import 'package:health_app/core/errors/error_model.dart';
 import 'package:health_app/core/errors/exceptions.dart';
 
 class DioConsumer extends ApiConsumer {
@@ -34,7 +35,7 @@ class DioConsumer extends ApiConsumer {
       );
       return response.data;
     } on DioException catch (e) {
-      handelDioException(e);
+      throw _handleDioException(e);
     }
   }
 
@@ -49,7 +50,7 @@ class DioConsumer extends ApiConsumer {
       );
       return response.data;
     } on DioException catch (e) {
-      handelDioException(e);
+      throw _handleDioException(e);
     }
   }
 
@@ -68,7 +69,7 @@ class DioConsumer extends ApiConsumer {
       );
       return response.data;
     } on DioException catch (e) {
-      handelDioException(e);
+      throw _handleDioException(e);
     }
   }
 
@@ -87,7 +88,45 @@ class DioConsumer extends ApiConsumer {
       );
       return response.data;
     } on DioException catch (e) {
-      handelDioException(e);
+      throw _handleDioException(e);
     }
+  }
+}
+
+// Handle DioException and throw ServerException
+ServerException _handleDioException(DioException e) {
+  if (e.response != null) {
+    // Handle specific HTTP errors and create an ErrorModel
+    switch (e.response?.statusCode) {
+      case 400: // Bad Request
+        // You may get the error message from the response and map it to the ErrorModel
+        return ServerException(
+          errorModel: ErrorModel.fromJson(e.response!.data),
+        );
+      case 401: // Unauthorized
+        return ServerException(
+          errorModel: ErrorModel.fromJson(e.response!.data),
+        );
+      case 500: // Internal Server Error
+        return ServerException(
+          errorModel: ErrorModel.fromJson(e.response!.data),
+        );
+      default:
+        // For other status codes
+        return ServerException(
+          errorModel: ErrorModel(
+            status: e.response?.statusCode ?? 0,
+            errorMessage: 'Unexpected error occurred',
+          ),
+        );
+    }
+  } else {
+    // If there is no response from the server (network error)
+    return ServerException(
+      errorModel: ErrorModel(
+        status: 0,
+        errorMessage: e.message ?? 'Network error occurred',
+      ),
+    );
   }
 }

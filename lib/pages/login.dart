@@ -21,9 +21,6 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   String? email;
   String? password;
-  GlobalKey<FormState> formKey = GlobalKey();
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
   bool isLoading = false;
   @override
   Widget build(BuildContext context) {
@@ -68,7 +65,7 @@ class _LoginState extends State<Login> {
               body: Padding(
                 padding: const EdgeInsets.all(30),
                 child: Form(
-                  key: formKey,
+                  key: BlocProvider.of<AuthCubit>(context).logInFormKey,
                   child: ListView(
                     children: [
                       SizedBox(
@@ -86,7 +83,8 @@ class _LoginState extends State<Login> {
                             email = data;
                           },
                           hint: 'Enter Email',
-                          controller: emailController),
+                          controller:
+                              BlocProvider.of<AuthCubit>(context).logInEmail),
                       SizedBox(
                         height: height * 0.03,
                       ),
@@ -102,7 +100,8 @@ class _LoginState extends State<Login> {
                           password = data;
                         },
                         hint: 'Enter Password',
-                        controller: passwordController,
+                        controller:
+                            BlocProvider.of<AuthCubit>(context).logInPassword,
                         isPassword: true,
                       ),
                       Row(
@@ -129,11 +128,11 @@ class _LoginState extends State<Login> {
                         child: StartScreenButton(
                           label: 'Log In',
                           onPressed: () {
-                            if (formKey.currentState!.validate()) {
-                              BlocProvider.of<AuthCubit>(context).logIn(
-                                email: email!,
-                                password: password!,
-                              );
+                            if (BlocProvider.of<AuthCubit>(context)
+                                .logInFormKey
+                                .currentState!
+                                .validate()) {
+                              BlocProvider.of<AuthCubit>(context).logIn();
                             } else {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(

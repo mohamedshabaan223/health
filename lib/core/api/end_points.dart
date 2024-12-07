@@ -1,5 +1,5 @@
 class EndPoints {
-  static String baseUrl = "https://localhost:7293/Api/V1/Account/";
+  static String baseUrl = "https://10.0.2.2:7293/Api/V1/Account/";
   static String login = "Login";
   static String register = "Register";
 }
@@ -12,4 +12,6 @@ class ApiKey {
   static String token = 'token';
   static String id = 'id';
   static String message = 'message';
+  static String username = 'username';
+  static String phone = 'phone';
 }

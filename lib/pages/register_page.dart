@@ -13,15 +13,10 @@ import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 class RegisterPage extends StatelessWidget {
   RegisterPage({super.key});
   static const String id = '/register';
-  TextEditingController fullNameController = TextEditingController();
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
-  TextEditingController phoneController = TextEditingController();
   String? email;
   String? password;
   String? fullName;
   String? phone;
-  GlobalKey<FormState> formKey = GlobalKey();
   bool isLoading = false;
   @override
   Widget build(BuildContext context) {
@@ -65,7 +60,7 @@ class RegisterPage extends StatelessWidget {
             body: Padding(
               padding: const EdgeInsets.all(30),
               child: Form(
-                key: formKey,
+                key: BlocProvider.of<AuthCubit>(context).registerFormKey,
                 child: ListView(children: [
                   const TextFormFieldLabel(text: 'Full name'),
                   SizedBox(
@@ -76,7 +71,8 @@ class RegisterPage extends StatelessWidget {
                       fullName = data;
                     },
                     hint: 'Enter Full Name',
-                    controller: fullNameController,
+                    controller:
+                        BlocProvider.of<AuthCubit>(context).registerUserName,
                   ),
                   SizedBox(
                     height: height * 0.02,
@@ -90,7 +86,8 @@ class RegisterPage extends StatelessWidget {
                       email = data;
                     },
                     hint: 'Enter Email',
-                    controller: emailController,
+                    controller:
+                        BlocProvider.of<AuthCubit>(context).registerEmail,
                   ),
                   SizedBox(
                     height: height * 0.02,
@@ -104,7 +101,8 @@ class RegisterPage extends StatelessWidget {
                       password = data;
                     },
                     hint: 'Enter Password',
-                    controller: passwordController,
+                    controller:
+                        BlocProvider.of<AuthCubit>(context).registerPassword,
                     isPassword: true,
                   ),
                   SizedBox(
@@ -119,7 +117,8 @@ class RegisterPage extends StatelessWidget {
                       phone = data;
                     },
                     hint: 'Enter Phone',
-                    controller: phoneController,
+                    controller:
+                        BlocProvider.of<AuthCubit>(context).registerPhoneNumber,
                   ),
                   SizedBox(
                     height: height * 0.05,
@@ -162,15 +161,14 @@ class RegisterPage extends StatelessWidget {
                     child: StartScreenButton(
                       label: 'Sign Up',
                       onPressed: () {
-                        if (formKey.currentState!.validate()) {
-                          BlocProvider.of<AuthCubit>(context).register(
-                              email: email!,
-                              password: password!,
-                              fullName: fullName!,
-                              phoneNumber: phone!);
+                        if (BlocProvider.of<AuthCubit>(context)
+                            .registerFormKey
+                            .currentState!
+                            .validate()) {
+                          BlocProvider.of<AuthCubit>(context).register();
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
+                            const SnackBar(
                               content: Text("Please enter valid data"),
                             ),
                           );

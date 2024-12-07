@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -11,8 +12,18 @@ import 'package:health_app/pages/register_page.dart';
 import 'package:health_app/pages/start_screen.dart';
 import 'package:health_app/simple_bloc_observer.dart';
 
+class MyHttpOverrides extends HttpOverrides {
+  @override
+  HttpClient createHttpClient(SecurityContext? context) {
+    return super.createHttpClient(context)
+      ..badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
+  }
+}
+
 void main() {
   Bloc.observer = SimpleBlocObserver();
+  HttpOverrides.global = MyHttpOverrides();
   runApp(const MyApp());
 }
 
