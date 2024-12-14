@@ -1,28 +1,17 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:health_app/app_theme.dart';
-import 'package:health_app/pages/doctor_rating.dart';
-import 'package:health_app/pages/home_page.dart';
+import 'package:health_app/pages/doctor_page.dart';
 import 'package:health_app/widgets/container_doctor.dart';
+import 'package:health_app/widgets/container_doctor_rating.dart';
 import 'package:health_app/widgets/default_icon.dart';
 import 'package:health_app/widgets/top_icon_in_home_page.dart';
 
-class DoctorPage extends StatefulWidget {
-static const String routeName = '/doctor';
+class Rating extends StatelessWidget {
+static const String routeName ='/rating';
 
-  @override
-  State<DoctorPage> createState() => _DoctorPageState();
-}
-
-class _DoctorPageState extends State<DoctorPage> {
-    bool isRating = false; 
-    bool isFavorite = false; 
-    bool isFemale = false; 
-    bool isMale = false; 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return  Scaffold(
       body: SafeArea(
       child:Padding(
         padding: const EdgeInsets.all(15.0),
@@ -35,7 +24,7 @@ class _DoctorPageState extends State<DoctorPage> {
           Navigator.of(context).pop(DoctorPage.routeName);
         }, icon: Icon(Icons.arrow_back_ios_new_outlined,
              size: 30,color: AppTheme.green,)),
-             Text('Doctor' , style:  Theme.of(context).textTheme.titleMedium,
+             Text('Rating' , style:  Theme.of(context).textTheme.titleMedium,
              ),
              Row(
                children: [
@@ -60,16 +49,15 @@ class _DoctorPageState extends State<DoctorPage> {
                      SizedBox(width: 5,),
                      Defaulticon(
                       onTap: (){
-                        Navigator.of(context).pushNamed(Rating.routeName);
+                        
                       },
                       icon: Icon(Icons.star_border, size: 17 , 
-                      color: AppTheme.green,),
-                      containerClolor:  AppTheme.gray,
+                      color: AppTheme.white,),
+                      containerClolor:  AppTheme.green,
                      ),
                       SizedBox(width: 5,),
                      Defaulticon(
                        onTap: (){
-                      
                        },
                       icon: Icon(Icons.favorite_border, size: 17 ,
                        color: AppTheme.green,),
@@ -78,36 +66,31 @@ class _DoctorPageState extends State<DoctorPage> {
                       SizedBox(width: 5,),
                      Defaulticon(
                        onTap: (){
-                      
-                        
+                       
                       },
                       icon: Icon(Icons.female , size: 17 ,
                        color:  AppTheme.green,),
-                      containerClolor:  AppTheme.gray,
+                      containerClolor:  AppTheme.white,
                      ),
                      SizedBox(width: 5,),
                      Defaulticon(
-                      onTap: (){
-                       
-                       
-                      },
+                      onTap: (){},
                       icon: Icon(Icons.male , size: 17 ,
                        color:  AppTheme.green,),
-                      containerClolor:  AppTheme.gray,
+                      containerClolor: AppTheme.gray,
                      ),
-                     
             ],
            ),
          ),
-         Expanded(child: ListView.builder(itemBuilder: (_ , index) =>ContainerDoctor(
-           doctorNmae: 'Dr. Olivia Turner ,M.D.',
-          descrabtion: 'Dermato-Endocrinology',
-          doctorImage: 'assets/images/doctor_image.png',
-         ))),
+         Expanded(child: ListView.builder(itemBuilder: (_ , index) =>ContainrDoctorRating()
+        , itemCount: 3, 
+        itemExtent: 160,) ,
+        ),
+         
         
           ],
         ),
       ) ),);
   }
 }
-  
+ 
