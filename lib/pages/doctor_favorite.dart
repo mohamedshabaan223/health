@@ -1,18 +1,20 @@
+
 import 'package:flutter/material.dart';
 import 'package:health_app/app_theme.dart';
-import 'package:health_app/pages/doctor_favorite.dart';
 import 'package:health_app/pages/doctor_page.dart';
-import 'package:health_app/widgets/container_doctor.dart';
-import 'package:health_app/widgets/container_doctor_rating.dart';
+import 'package:health_app/pages/doctor_rating.dart';
+import 'package:health_app/widgets/container_doctor_fav.dart';
 import 'package:health_app/widgets/default_icon.dart';
 import 'package:health_app/widgets/top_icon_in_home_page.dart';
 
-class Rating extends StatelessWidget {
-static const String routeName ='/rating';
+class Favorite extends StatelessWidget {
+  
+  static const String routeName ='/favorite';
+  bool isFavorite = false;
 
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
+    return Scaffold(
       body: SafeArea(
       child:Padding(
         padding: const EdgeInsets.all(15.0),
@@ -25,9 +27,9 @@ static const String routeName ='/rating';
           Navigator.of(context).pop(DoctorPage.routeName);
         }, icon: Icon(Icons.arrow_back_ios_new_outlined,
              size: 30,color: AppTheme.green,)),
-             Text('Rating' , style:  Theme.of(context).textTheme.titleMedium,
+             Text('Favorite' , style:  Theme.of(context).textTheme.titleMedium,
              ),
-             Row(
+            Row(
                children: [
                  TopIconInHomePage(icons: Icon(Icons.search , color: AppTheme.green,), 
                  containerBackgroundColor: AppTheme.gray),
@@ -50,20 +52,19 @@ static const String routeName ='/rating';
                      SizedBox(width: 5,),
                      Defaulticon(
                       onTap: (){
-                        
+                         Navigator.of(context).pushNamed(Rating.routeName);
                       },
                       icon: Icon(Icons.star_border, size: 17 , 
-                      color: AppTheme.white,),
-                      containerClolor:  AppTheme.green,
+                      color: AppTheme.green,),
+                      containerClolor:  AppTheme.gray,
                      ),
                       SizedBox(width: 5,),
                      Defaulticon(
                        onTap: (){
-                        Navigator.of(context).pushNamed(Favorite.routeName);
                        },
                       icon: Icon(Icons.favorite_border, size: 17 ,
-                       color: AppTheme.green,),
-                      containerClolor: AppTheme.gray,
+                       color: AppTheme.white,),
+                      containerClolor: AppTheme.green,
                      ),
                       SizedBox(width: 5,),
                      Defaulticon(
@@ -72,11 +73,13 @@ static const String routeName ='/rating';
                       },
                       icon: Icon(Icons.female , size: 17 ,
                        color:  AppTheme.green,),
-                      containerClolor:  AppTheme.white,
+                      containerClolor:  AppTheme.gray,
                      ),
                      SizedBox(width: 5,),
                      Defaulticon(
-                      onTap: (){},
+                      onTap: (){
+                         
+                      },
                       icon: Icon(Icons.male , size: 17 ,
                        color:  AppTheme.green,),
                       containerClolor: AppTheme.gray,
@@ -84,11 +87,10 @@ static const String routeName ='/rating';
             ],
            ),
          ),
-         Expanded(child: ListView.builder(itemBuilder: (_ , index) =>ContainrDoctorRating()
-        , itemCount: 3, 
-        itemExtent: 160,) ,
-        ),
-         
+        Expanded(child: ListView.builder(itemBuilder:( _ , index) =>  ContainerDoctorFavorite()
+        ,itemExtent: 150,
+        itemCount: 4,) 
+        ,)
         
           ],
         ),
@@ -96,3 +98,4 @@ static const String routeName ='/rating';
   }
 }
  
+  

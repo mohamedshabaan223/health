@@ -6,6 +6,7 @@ import 'package:health_app/app_theme.dart';
 import 'package:health_app/core/api/dio_consumer.dart';
 import 'package:health_app/cubits/cubit/auth_cubit.dart';
 import 'package:health_app/pages/create_new_password_page.dart';
+import 'package:health_app/pages/doctor_favorite.dart';
 import 'package:health_app/pages/doctor_page.dart';
 import 'package:health_app/pages/doctor_page_information.dart';
 import 'package:health_app/pages/doctor_rating.dart';
@@ -49,6 +50,7 @@ class MyApp extends StatelessWidget {
           DoctorPage.routeName:(_) => DoctorPage(),
           DoctorInformation.routeName:(_) => DoctorInformation(),
           Rating.routeName:(_) => Rating(),
+          Favorite.routeName:(_) => Favorite(),
         },
         initialRoute: HomePage.id,
         theme: AppTheme.lightTheme,

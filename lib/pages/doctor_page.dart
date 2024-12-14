@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:health_app/app_theme.dart';
+import 'package:health_app/pages/doctor_favorite.dart';
 import 'package:health_app/pages/doctor_rating.dart';
 import 'package:health_app/pages/home_page.dart';
 import 'package:health_app/widgets/container_doctor.dart';
@@ -69,7 +70,7 @@ class _DoctorPageState extends State<DoctorPage> {
                       SizedBox(width: 5,),
                      Defaulticon(
                        onTap: (){
-                      
+                      Navigator.of(context).pushNamed(Favorite.routeName);
                        },
                       icon: Icon(Icons.favorite_border, size: 17 ,
                        color: AppTheme.green,),
