@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:health_app/app_theme.dart';
+import 'package:health_app/pages/doctor_page.dart';
 import 'package:health_app/widgets/CustomButtomNavigationBar.dart';
 import 'package:health_app/widgets/card_of_doctor.dart';
 import 'package:health_app/widgets/custom_user_information.dart';
@@ -57,7 +58,9 @@ class HomePage extends StatelessWidget {
                     DoctorsAndFavourite(
                       icon: FontAwesomeIcons.stethoscope,
                       label: 'Doctors',
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.of(context).pushNamed(DoctorPage.routeName);
+                      },
                     ),
                     SizedBox(width: width * 0.05),
                     DoctorsAndFavourite(

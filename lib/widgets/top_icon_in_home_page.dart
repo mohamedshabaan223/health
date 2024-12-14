@@ -11,8 +11,8 @@ class TopIconInHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 40,
-      width: 40,
+      height: 37,
+      width: 37,
       decoration: BoxDecoration(
           color: containerBackgroundColor,
           borderRadius: BorderRadius.circular(30)),
