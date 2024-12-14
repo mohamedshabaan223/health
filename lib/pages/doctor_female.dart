@@ -1,18 +1,21 @@
-
 import 'package:flutter/material.dart';
 import 'package:health_app/app_theme.dart';
-import 'package:health_app/pages/doctor_female.dart';
+import 'package:health_app/pages/doctor_favorite.dart';
 import 'package:health_app/pages/doctor_page.dart';
 import 'package:health_app/pages/doctor_rating.dart';
-import 'package:health_app/widgets/container_doctor_fav.dart';
+import 'package:health_app/widgets/container_doctor.dart';
 import 'package:health_app/widgets/default_icon.dart';
 import 'package:health_app/widgets/top_icon_in_home_page.dart';
 
-class Favorite extends StatelessWidget {
-  
-  static const String routeName ='/favorite';
-  bool isFavorite = false;
+class Female extends StatefulWidget {
+  static const String routeName = '/female';
 
+  @override
+  State<Female> createState() => _FemaleState();
+}
+
+class _FemaleState extends State<Female> {
+   
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,9 +31,9 @@ class Favorite extends StatelessWidget {
           Navigator.of(context).pop(DoctorPage.routeName);
         }, icon: Icon(Icons.arrow_back_ios_new_outlined,
              size: 30,color: AppTheme.green,)),
-             Text('Favorite' , style:  Theme.of(context).textTheme.titleMedium,
+             Text('Female' , style:  Theme.of(context).textTheme.titleMedium,
              ),
-            Row(
+             Row(
                children: [
                  TopIconInHomePage(icons: Icon(Icons.search , color: AppTheme.green,), 
                  containerBackgroundColor: AppTheme.gray),
@@ -62,41 +65,43 @@ class Favorite extends StatelessWidget {
                       SizedBox(width: 5,),
                      Defaulticon(
                        onTap: (){
+                        Navigator.of(context).pushNamed(Favorite.routeName);
                        },
                       icon: Icon(Icons.favorite_border, size: 17 ,
-                       color: AppTheme.white,),
-                      containerClolor: AppTheme.green,
+                       color: AppTheme.green,),
+                      containerClolor: AppTheme.gray,
                      ),
                       SizedBox(width: 5,),
                      Defaulticon(
                        onTap: (){
-                       Navigator.of(context).pushNamed(Female.routeName);
                       },
                       icon: Icon(Icons.female , size: 17 ,
-                       color:  AppTheme.green,),
-                      containerClolor:  AppTheme.gray,
+                       color:  AppTheme.white,),
+                      containerClolor:  AppTheme.green,
                      ),
                      SizedBox(width: 5,),
                      Defaulticon(
                       onTap: (){
-                         
+                       
                       },
                       icon: Icon(Icons.male , size: 17 ,
                        color:  AppTheme.green,),
-                      containerClolor: AppTheme.gray,
+                      containerClolor:  AppTheme.gray,
                      ),
             ],
            ),
          ),
-        Expanded(child: ListView.builder(itemBuilder:( _ , index) =>  ContainerDoctorFavorite()
-        ,itemExtent: 150,
-        itemCount: 4,) 
-        ,)
+         Expanded(child: ListView.builder(itemBuilder: (_ , index) =>ContainerDoctor(
+          doctorNmae: 'Dr. Olivia Turner ,M.D.',
+          descrabtion: 'Dermato-Endocrinology',
+          doctorImage: 'assets/images/doctor_image.png',
+         ) ,
+         itemCount: 3,),
+         ),
         
           ],
         ),
       ) ),);
   }
 }
- 
   
