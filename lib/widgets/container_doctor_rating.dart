@@ -5,9 +5,15 @@ import 'package:health_app/pages/doctor_page_information.dart';
 import 'package:health_app/widgets/default_icon.dart';
 
 
-class ContainrDoctorRating extends StatelessWidget {
+class ContainrDoctorRating extends StatefulWidget {
   const ContainrDoctorRating({super.key});
+ 
+  @override
+  State<ContainrDoctorRating> createState() => _ContainrDoctorRatingState();
+}
 
+class _ContainrDoctorRatingState extends State<ContainrDoctorRating> {
+  bool isFavorite =false;
   @override
   Widget build(BuildContext context) {
      double height = MediaQuery.of(context).size.height;
@@ -147,8 +153,13 @@ class ContainrDoctorRating extends StatelessWidget {
                    ),
                    SizedBox(width: 4,),
                     Defaulticon(
-                      onTap: (){},
-                    icon: Icon(Icons.favorite_border, size: 17 , color: AppTheme.green,),
+                      onTap: (){
+                        isFavorite =!isFavorite;
+                        setState(() {
+                          
+                        });
+                      },
+                    icon: Icon( isFavorite?Icons.favorite: Icons.favorite_border, size: 17 , color: AppTheme.green,),
                     containerClolor: AppTheme.white,
                    ),
                   

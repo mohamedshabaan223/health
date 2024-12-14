@@ -5,9 +5,15 @@ import 'package:health_app/widgets/container_schdule.dart';
 import 'package:health_app/widgets/default_icon.dart';
 
 
-class ContainerDoctorInfo extends StatelessWidget {
+class ContainerDoctorInfo extends StatefulWidget {
   const ContainerDoctorInfo({super.key});
 
+  @override
+  State<ContainerDoctorInfo> createState() => _ContainerDoctorInfoState();
+}
+
+class _ContainerDoctorInfoState extends State<ContainerDoctorInfo> {
+  bool isFavorite =false;
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
@@ -156,9 +162,14 @@ class ContainerDoctorInfo extends StatelessWidget {
                     containerClolor: AppTheme.white,
                    ),
                    SizedBox(width: 4,),
-                    Defaulticon(
-                      onTap: (){},
-                    icon: Icon(Icons.favorite_border, size: 17 , color: AppTheme.green,),
+                     Defaulticon(
+                      onTap: (){
+                        isFavorite = !isFavorite;
+                        setState(() {
+                          
+                        });
+                      },
+                    icon: Icon(isFavorite? Icons.favorite:Icons.favorite_border, size: 17 , color: AppTheme.green,),
                     containerClolor: AppTheme.white,
                    ),
                   ],
@@ -167,8 +178,6 @@ class ContainerDoctorInfo extends StatelessWidget {
           ),
         );
   }
-
-
 
    Widget _buildInfoContainer(
       {required IconData icon, required String text, required double width}) {
