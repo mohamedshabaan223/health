@@ -36,7 +36,7 @@ class HomePage extends StatelessWidget {
                       containerBackgroundColor: AppTheme.gray,
                       icons: Icon(
                         Icons.notifications_outlined,
-                        size: 25,
+                        size: 22,
                         color: AppTheme.green,
                       ),
                     ),
@@ -45,7 +45,7 @@ class HomePage extends StatelessWidget {
                       containerBackgroundColor: AppTheme.gray,
                       icons: Icon(
                         Icons.settings_outlined,
-                        size: 25,
+                        size: 22,
                         color: AppTheme.green,
                       ),
                     ),
