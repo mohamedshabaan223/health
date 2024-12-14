@@ -29,10 +29,19 @@ class DoctorInformation extends StatelessWidget {
                                Navigator.of(context).pop(DoctorPage.routeName);
                              }, icon: Icon(Icons.arrow_back_ios_new_outlined,
                      size: 30,color: AppTheme.green,)),
-                     Text('Doctor' , style:  Theme.of(context).textTheme.titleMedium,
+                     Text('Doctor Information' , style:  Theme.of(context).textTheme.titleMedium,
                      ),
-                     TopIconInHomePage(icons: Icon(Icons.search , color: AppTheme.green,), 
-                     containerBackgroundColor: AppTheme.gray),
+                     Row(
+               children: [
+                 TopIconInHomePage(icons: Icon(Icons.search , color: AppTheme.green,), 
+                 containerBackgroundColor: AppTheme.gray),
+                 SizedBox(width: 8,),
+                InkWell(
+                  onTap: (){},
+                  child: Image.asset('assets/images/filter1.png')),
+                
+               ],
+             ),
                                ],
                               ),
                  ),

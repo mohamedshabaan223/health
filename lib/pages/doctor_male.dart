@@ -1,28 +1,21 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:health_app/app_theme.dart';
 import 'package:health_app/pages/doctor_favorite.dart';
 import 'package:health_app/pages/doctor_female.dart';
-import 'package:health_app/pages/doctor_male.dart';
+import 'package:health_app/pages/doctor_page.dart';
 import 'package:health_app/pages/doctor_rating.dart';
-import 'package:health_app/pages/home_page.dart';
 import 'package:health_app/widgets/container_doctor.dart';
 import 'package:health_app/widgets/default_icon.dart';
 import 'package:health_app/widgets/top_icon_in_home_page.dart';
 
-class DoctorPage extends StatefulWidget {
-static const String routeName = '/doctor';
+class Male extends StatefulWidget {
+  static const String routeName ='/male';
 
   @override
-  State<DoctorPage> createState() => _DoctorPageState();
+  State<Male> createState() => _MaleState();
 }
 
-class _DoctorPageState extends State<DoctorPage> {
-    bool isRating = false; 
-    bool isFavorite = false; 
-    bool isFemale = false; 
-    bool isMale = false; 
+class _MaleState extends State<Male> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,7 +31,7 @@ class _DoctorPageState extends State<DoctorPage> {
           Navigator.of(context).pop(DoctorPage.routeName);
         }, icon: Icon(Icons.arrow_back_ios_new_outlined,
              size: 30,color: AppTheme.green,)),
-             Text('Doctor' , style:  Theme.of(context).textTheme.titleMedium,
+             Text('Male' , style:  Theme.of(context).textTheme.titleMedium,
              ),
              Row(
                children: [
@@ -51,8 +44,7 @@ class _DoctorPageState extends State<DoctorPage> {
                 
                ],
              ),
-          ],
-         ),
+          ],),
          Padding(
            padding: const EdgeInsets.symmetric(vertical: 10 , horizontal: 20),
            child: Row(
@@ -63,7 +55,7 @@ class _DoctorPageState extends State<DoctorPage> {
                      SizedBox(width: 5,),
                      Defaulticon(
                       onTap: (){
-                        Navigator.of(context).pushNamed(Rating.routeName);
+                         Navigator.of(context).pushNamed(Rating.routeName);
                       },
                       icon: Icon(Icons.star_border, size: 17 , 
                       color: AppTheme.green,),
@@ -72,7 +64,7 @@ class _DoctorPageState extends State<DoctorPage> {
                       SizedBox(width: 5,),
                      Defaulticon(
                        onTap: (){
-                      Navigator.of(context).pushNamed(Favorite.routeName);
+                        Navigator.of(context).pushNamed(Favorite.routeName);
                        },
                       icon: Icon(Icons.favorite_border, size: 17 ,
                        color: AppTheme.green,),
@@ -81,34 +73,33 @@ class _DoctorPageState extends State<DoctorPage> {
                       SizedBox(width: 5,),
                      Defaulticon(
                        onTap: (){
-                      Navigator.of(context).pushNamed(Female.routeName);  
+                         Navigator.of(context).pushNamed(Female.routeName);
                       },
                       icon: Icon(Icons.female , size: 17 ,
                        color:  AppTheme.green,),
-                      containerClolor:  AppTheme.gray,
+                      containerClolor:  AppTheme.white,
                      ),
                      SizedBox(width: 5,),
                      Defaulticon(
-                      onTap: (){
-                       Navigator.of(context).pushNamed(Male.routeName);
-                      },
+                      onTap: (){},
                       icon: Icon(Icons.male , size: 17 ,
-                       color:  AppTheme.green,),
-                      containerClolor:  AppTheme.gray,
+                       color:  AppTheme.white,),
+                      containerClolor: AppTheme.green,
                      ),
-                     
             ],
            ),
          ),
          Expanded(child: ListView.builder(itemBuilder: (_ , index) =>ContainerDoctor(
-           doctorNmae: 'Dr. Olivia Turner ,M.D.',
-          descrabtion: 'Dermato-Endocrinology',
-          doctorImage: 'assets/images/doctor_image.png',
-         ))),
+          doctorNmae: 'Dr.Alexander Bennett , Ph.D.',
+          descrabtion: 'Dermato-Genetics',
+          doctorImage: 'assets/images/male.png',
+         ) ,
+         itemCount: 3,),
+         ),
         
           ],
         ),
       ) ),);
   }
 }
-  
+ 

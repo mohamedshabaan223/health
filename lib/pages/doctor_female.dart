@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:health_app/app_theme.dart';
 import 'package:health_app/pages/doctor_favorite.dart';
+import 'package:health_app/pages/doctor_male.dart';
 import 'package:health_app/pages/doctor_page.dart';
 import 'package:health_app/pages/doctor_rating.dart';
 import 'package:health_app/widgets/container_doctor.dart';
@@ -82,7 +83,7 @@ class _FemaleState extends State<Female> {
                      SizedBox(width: 5,),
                      Defaulticon(
                       onTap: (){
-                       
+                       Navigator.of(context).pushNamed(Male.routeName);
                       },
                       icon: Icon(Icons.male , size: 17 ,
                        color:  AppTheme.green,),

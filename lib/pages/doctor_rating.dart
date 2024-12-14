@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:health_app/app_theme.dart';
 import 'package:health_app/pages/doctor_favorite.dart';
+import 'package:health_app/pages/doctor_female.dart';
+import 'package:health_app/pages/doctor_male.dart';
 import 'package:health_app/pages/doctor_page.dart';
 import 'package:health_app/widgets/container_doctor.dart';
 import 'package:health_app/widgets/container_doctor_rating.dart';
@@ -68,7 +70,7 @@ static const String routeName ='/rating';
                       SizedBox(width: 5,),
                      Defaulticon(
                        onTap: (){
-                       
+                        Navigator.of(context).pushNamed(Female.routeName);
                       },
                       icon: Icon(Icons.female , size: 17 ,
                        color:  AppTheme.green,),
@@ -76,7 +78,9 @@ static const String routeName ='/rating';
                      ),
                      SizedBox(width: 5,),
                      Defaulticon(
-                      onTap: (){},
+                      onTap: (){
+                         Navigator.of(context).pushNamed(Male.routeName);
+                      },
                       icon: Icon(Icons.male , size: 17 ,
                        color:  AppTheme.green,),
                       containerClolor: AppTheme.gray,

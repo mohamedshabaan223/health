@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:health_app/app_theme.dart';
+import 'package:health_app/pages/doctor_favorite.dart';
 import 'package:health_app/pages/doctor_page.dart';
 import 'package:health_app/widgets/CustomButtomNavigationBar.dart';
 import 'package:health_app/widgets/card_of_doctor.dart';
@@ -66,7 +67,9 @@ class HomePage extends StatelessWidget {
                     DoctorsAndFavourite(
                       icon: FontAwesomeIcons.heart,
                       label: 'Favourite',
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.of(context).pushNamed(Favorite.routeName);
+                      },
                     ),
                     const SearchField(),
                   ],
