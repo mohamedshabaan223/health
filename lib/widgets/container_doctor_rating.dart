@@ -158,19 +158,7 @@ class _ContainrDoctorRatingState extends State<ContainrDoctorRating> {
                           ),
                         ),
                         SizedBox(
-                          width: width * 0.14,
-                        ),
-                        Defaulticon(
-                          onTap: () {},
-                          icon: Icon(
-                            Icons.calendar_month_outlined,
-                            size: 17,
-                            color: AppTheme.green,
-                          ),
-                          containerClolor: AppTheme.white,
-                        ),
-                        SizedBox(
-                          width: 4,
+                          width: width * 0.22,
                         ),
                         Defaulticon(
                           onTap: () {},

@@ -97,20 +97,6 @@ class Rating extends StatelessWidget {
                     ),
                     Defaulticon(
                       onTap: () {
-                        Navigator.of(context).pushNamed(Favorite.routeName);
-                      },
-                      icon: Icon(
-                        Icons.favorite_border,
-                        size: 17,
-                        color: AppTheme.green,
-                      ),
-                      containerClolor: AppTheme.gray,
-                    ),
-                    SizedBox(
-                      width: 5,
-                    ),
-                    Defaulticon(
-                      onTap: () {
                         Navigator.of(context).pushNamed(Female.routeName);
                       },
                       icon: Icon(

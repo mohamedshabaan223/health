@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:health_app/app_theme.dart';
-import 'package:health_app/pages/chose_suitable_day_for_appointement.dart';
+import 'package:health_app/pages/appointment_screen.dart';
 
 class ContainerSchdule extends StatelessWidget {
   @override

@@ -60,44 +60,6 @@ class Favorite extends StatelessWidget {
                     const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                 child: Row(
                   children: [
-                    Text(
-                      'Sort By',
-                      style: Theme.of(context)
-                          .textTheme
-                          .titleMedium
-                          ?.copyWith(color: AppTheme.green),
-                    ),
-                    SizedBox(
-                      width: 5,
-                    ),
-                    Defaulticon(
-                      onTap: () {
-                        Navigator.of(context).pushNamed(DoctorPage.routeName);
-                      },
-                      icon: Icon(
-                        Icons.sort_by_alpha_outlined,
-                        size: 18,
-                        color: AppTheme.green,
-                      ),
-                      containerClolor: AppTheme.gray,
-                    ),
-                    SizedBox(
-                      width: 5,
-                    ),
-                    Defaulticon(
-                      onTap: () {
-                        Navigator.of(context).pushNamed(Rating.routeName);
-                      },
-                      icon: Icon(
-                        Icons.star_border,
-                        size: 17,
-                        color: AppTheme.green,
-                      ),
-                      containerClolor: AppTheme.gray,
-                    ),
-                    SizedBox(
-                      width: 5,
-                    ),
                     Defaulticon(
                       onTap: () {},
                       icon: Icon(
@@ -109,31 +71,6 @@ class Favorite extends StatelessWidget {
                     ),
                     SizedBox(
                       width: 5,
-                    ),
-                    Defaulticon(
-                      onTap: () {
-                        Navigator.of(context).pushNamed(Female.routeName);
-                      },
-                      icon: Icon(
-                        Icons.female,
-                        size: 17,
-                        color: AppTheme.green,
-                      ),
-                      containerClolor: AppTheme.gray,
-                    ),
-                    SizedBox(
-                      width: 5,
-                    ),
-                    Defaulticon(
-                      onTap: () {
-                        Navigator.of(context).pushNamed(Male.routeName);
-                      },
-                      icon: Icon(
-                        Icons.male,
-                        size: 17,
-                        color: AppTheme.green,
-                      ),
-                      containerClolor: AppTheme.gray,
                     ),
                   ],
                 ),

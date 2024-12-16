@@ -88,23 +88,7 @@ class _ContainerDoctorState extends State<ContainerDoctor> {
                       ),
                     ),
                     SizedBox(
-                      width: width * 0.06,
-                    ),
-                    Defaulticon(
-                      onTap: () {
-                        isSelected = !isSelected;
-                        setState(() {});
-                      },
-                      icon: Icon(
-                        Icons.calendar_month,
-                        size: 17,
-                        color: isSelected ? AppTheme.white : AppTheme.green,
-                      ),
-                      containerClolor:
-                          isSelected ? AppTheme.green : AppTheme.white,
-                    ),
-                    SizedBox(
-                      width: 4,
+                      width: width * 0.13,
                     ),
                     Defaulticon(
                       onTap: () {},
