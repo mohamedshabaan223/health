@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:health_app/app_theme.dart';
 import 'package:health_app/core/api/dio_consumer.dart';
 import 'package:health_app/cubits/cubit/auth_cubit.dart';
+import 'package:health_app/pages/chose_suitable_day_for_appointement.dart';
 import 'package:health_app/pages/create_new_password_page.dart';
 import 'package:health_app/pages/doctor_favorite.dart';
 import 'package:health_app/pages/doctor_female.dart';
@@ -55,6 +56,7 @@ class MyApp extends StatelessWidget {
           Favorite.routeName: (_) => Favorite(),
           Female.routeName: (_) => Female(),
           Male.routeName: (_) => Male(),
+          AppointmentScreen.id: (_) => const AppointmentScreen(),
         },
         initialRoute: StartScreen.id,
         theme: AppTheme.lightTheme,

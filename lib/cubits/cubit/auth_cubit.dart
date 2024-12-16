@@ -1,5 +1,4 @@
 import 'package:bloc/bloc.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:health_app/core/api/api_consumer.dart';
 import 'package:health_app/core/api/end_points.dart';
@@ -22,6 +21,7 @@ class AuthCubit extends Cubit<AuthState> {
   TextEditingController registerEmail = TextEditingController();
   TextEditingController registerPassword = TextEditingController();
   TextEditingController confirmPassword = TextEditingController();
+  TextEditingController age = TextEditingController();
 
   SignInModel? user;
 

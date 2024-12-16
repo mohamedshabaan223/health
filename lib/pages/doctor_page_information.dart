@@ -1,9 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:health_app/app_theme.dart';
 import 'package:health_app/pages/doctor_page.dart';
+import 'package:health_app/widgets/CustomButtomNavigationBar.dart';
 import 'package:health_app/widgets/container_doctor_info.dart';
-import 'package:health_app/widgets/top_icon_in_home_page.dart';
 
 class DoctorInformation extends StatelessWidget {
   static const String routeName = '/doctor-info';
@@ -24,52 +23,46 @@ class DoctorInformation extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       IconButton(
-                          onPressed: () {
-                            Navigator.of(context).pop(DoctorPage.routeName);
-                          },
-                          icon: Icon(
-                            Icons.arrow_back_ios_new_outlined,
-                            size: 30,
-                            color: AppTheme.green,
-                          )),
+                        onPressed: () {
+                          Navigator.of(context).pop(DoctorPage.routeName);
+                        },
+                        icon: const Icon(
+                          Icons.arrow_back_ios_new_outlined,
+                          size: 25,
+                          color: AppTheme.green,
+                        ),
+                      ),
+                      SizedBox(
+                        width: width * 0.15,
+                      ),
                       Text(
                         'Doctor Information',
-                        style: Theme.of(context).textTheme.titleMedium,
-                      ),
-                      Row(
-                        children: [
-                          TopIconInHomePage(
-                              icons: Icon(
-                                Icons.search,
-                                color: AppTheme.green,
-                              ),
-                              containerBackgroundColor: AppTheme.gray),
-                          SizedBox(
-                            width: 8,
-                          ),
-                          InkWell(
-                              onTap: () {},
-                              child: Image.asset('assets/images/filter1.png')),
-                        ],
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleMedium!
+                            .copyWith(fontSize: 18),
                       ),
                     ],
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 15,
                 ),
-                ContainerDoctorInfo(),
+                const ContainerDoctorInfo(),
                 SizedBox(
                   height: height * 0.05,
                 ),
                 Text(
                   'Profile',
-                  style: Theme.of(context).textTheme.labelMedium,
+                  style: Theme.of(context)
+                      .textTheme
+                      .labelMedium!
+                      .copyWith(fontSize: 17, color: AppTheme.green),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 10,
                 ),
                 Text(
@@ -78,40 +71,13 @@ class DoctorInformation extends StatelessWidget {
                 ),
                 SizedBox(
                   height: height * 0.05,
-                ),
-                Text(
-                  'Career Path',
-                  style: Theme.of(context).textTheme.labelMedium,
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-                  style: Theme.of(context).textTheme.titleSmall,
-                ),
-                SizedBox(
-                  height: height * 0.05,
-                ),
-                Text(
-                  'Hightlight',
-                  style: Theme.of(context).textTheme.labelMedium,
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-                  style: Theme.of(context).textTheme.titleSmall,
-                ),
-                SizedBox(
-                  height: height * 0.1,
                 ),
               ],
             ),
           ),
         ),
       ),
+      bottomNavigationBar: const CustomButtomNavigationBar(),
     );
   }
 }

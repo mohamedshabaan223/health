@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:health_app/app_theme.dart';
 import 'package:health_app/widgets/container_schdule.dart';
@@ -13,6 +12,7 @@ class ContainerDoctorInfo extends StatefulWidget {
 
 class _ContainerDoctorInfoState extends State<ContainerDoctorInfo> {
   bool isFavorite = false;
+  bool isRating = false;
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
@@ -28,8 +28,8 @@ class _ContainerDoctorInfoState extends State<ContainerDoctorInfo> {
           children: [
             Row(
               children: [
-                Padding(
-                  padding: const EdgeInsets.only(right: 30),
+                const Padding(
+                  padding: EdgeInsets.only(right: 30),
                   child: CircleAvatar(
                     backgroundImage: AssetImage('assets/images/male.png'),
                     radius: 75,
@@ -38,7 +38,7 @@ class _ContainerDoctorInfoState extends State<ContainerDoctorInfo> {
                 Column(
                   children: [
                     Container(
-                      padding: EdgeInsets.only(left: 7, top: 3),
+                      padding: const EdgeInsets.only(left: 7, top: 3),
                       height: height * 0.05,
                       width: width * 0.36,
                       decoration: BoxDecoration(
@@ -49,7 +49,7 @@ class _ContainerDoctorInfoState extends State<ContainerDoctorInfo> {
                           Image.asset(
                             'assets/images/professianol1.png',
                           ),
-                          SizedBox(
+                          const SizedBox(
                             width: 7,
                           ),
                           Text(
@@ -62,7 +62,7 @@ class _ContainerDoctorInfoState extends State<ContainerDoctorInfo> {
                         ],
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
                     Container(
@@ -108,7 +108,7 @@ class _ContainerDoctorInfoState extends State<ContainerDoctorInfo> {
                 ),
               ],
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             Container(
@@ -135,7 +135,7 @@ class _ContainerDoctorInfoState extends State<ContainerDoctorInfo> {
                     Text(
                       'Dermato-Genetics',
                       style: TextStyle(
-                        color: AppTheme.green3,
+                        color: AppTheme.black,
                         fontSize: 13,
                       ),
                     ),
@@ -143,7 +143,7 @@ class _ContainerDoctorInfoState extends State<ContainerDoctorInfo> {
                 ),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             Row(
@@ -154,62 +154,68 @@ class _ContainerDoctorInfoState extends State<ContainerDoctorInfo> {
                   width: width * 0.12,
                 ),
                 SizedBox(width: width * 0.01),
-                _buildInfoContainer(
-                  icon: Icons.chat,
-                  text: '40',
-                  width: width * 0.14,
+                InkWell(
+                  onTap: () {},
+                  child: _buildInfoContainer(
+                    icon: Icons.chat,
+                    text: '40',
+                    width: width * 0.14,
+                  ),
                 ),
                 SizedBox(width: width * 0.01),
                 _buildInfoContainer(
                   icon: Icons.alarm,
-                  text: 'Mon-Sat/9:00AM-5:00Pm',
+                  text: 'Mon - Sat / 9:00AM - 5:00Pm',
                   width: width * 0.57,
                 ),
               ],
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             Row(
               children: [
                 ContainerSchdule(),
                 SizedBox(
-                  width: width * 0.26,
+                  width: width * 0.23,
                 ),
                 Defaulticon(
                   onTap: () {},
-                  icon: Icon(
-                    CupertinoIcons.exclamationmark,
+                  icon: const Icon(
+                    Icons.chat_bubble_outline,
                     size: 17,
                     color: AppTheme.green,
                   ),
                   containerClolor: AppTheme.white,
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 4,
                 ),
                 Defaulticon(
                   onTap: () {},
-                  icon: Icon(
+                  icon: const Icon(
                     Icons.question_mark,
                     size: 17,
                     color: AppTheme.green,
                   ),
                   containerClolor: AppTheme.white,
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 4,
                 ),
                 Defaulticon(
-                  onTap: () {},
+                  onTap: () {
+                    isRating = !isRating;
+                    setState(() {});
+                  },
                   icon: Icon(
-                    Icons.star_border,
+                    isRating ? Icons.star : Icons.star_border,
                     size: 17,
                     color: AppTheme.green,
                   ),
                   containerClolor: AppTheme.white,
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 4,
                 ),
                 Defaulticon(
@@ -231,30 +237,33 @@ class _ContainerDoctorInfoState extends State<ContainerDoctorInfo> {
       ),
     );
   }
+}
 
-  Widget _buildInfoContainer(
-      {required IconData icon, required String text, required double width}) {
-    return Container(
-      width: width,
-      height: 30,
-      decoration: BoxDecoration(
-        color: AppTheme.white,
-        borderRadius: BorderRadius.circular(15),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(icon, color: AppTheme.green, size: 22),
-          const SizedBox(width: 4),
-          Text(
-            text,
-            style: const TextStyle(
-              color: AppTheme.green,
-              fontSize: 16,
-            ),
+Widget _buildInfoContainer({
+  required IconData icon,
+  required String text,
+  required double width,
+}) {
+  return Container(
+    width: width,
+    height: 30,
+    decoration: BoxDecoration(
+      color: AppTheme.white,
+      borderRadius: BorderRadius.circular(15),
+    ),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(icon, color: AppTheme.green, size: 20),
+        const SizedBox(width: 4),
+        Text(
+          text,
+          style: const TextStyle(
+            color: AppTheme.green,
+            fontSize: 14,
           ),
-        ],
-      ),
-    );
-  }
+        ),
+      ],
+    ),
+  );
 }

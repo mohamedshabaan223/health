@@ -28,7 +28,7 @@ class Favorite extends StatelessWidget {
                       onPressed: () {
                         Navigator.of(context).pop();
                       },
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.arrow_back_ios_new_outlined,
                         size: 25,
                         color: AppTheme.green,
@@ -39,7 +39,7 @@ class Favorite extends StatelessWidget {
                   ),
                   Row(
                     children: [
-                      TopIconInHomePage(
+                      const TopIconInHomePage(
                           icons: Icon(
                             Icons.search,
                             color: AppTheme.green,
