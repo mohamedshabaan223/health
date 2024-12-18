@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:health_app/app_theme.dart';
 import 'package:health_app/cubits/auth_cubit/auth_cubit.dart';
+import 'package:health_app/pages/your_appoinment.dart';
 import 'package:health_app/widgets/CustomButtomNavigationBar.dart';
 import 'package:health_app/widgets/default_textformfield.dart';
 
@@ -64,7 +65,9 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                       text: 'Dr. Alexander Bennett, Ph.D.', width: 215),
                   const Spacer(),
                   InkWell(
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.of(context).pushNamed(YourAppoinment.id);
+                      },
                       child: _buildInfoContainer(text: 'Done', width: 60)),
                 ],
               ),

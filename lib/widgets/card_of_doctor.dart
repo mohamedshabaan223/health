@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:health_app/app_theme.dart';
 
 class CardOfDoctor extends StatefulWidget {
-  const CardOfDoctor({super.key, required this.onTap});
+  const CardOfDoctor({super.key, this.onTap});
   final Function()? onTap;
 
   @override

@@ -3,6 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:health_app/app_theme.dart';
 import 'package:health_app/pages/doctor_favorite.dart';
 import 'package:health_app/pages/doctor_page.dart';
+import 'package:health_app/pages/doctor_page_information.dart';
 import 'package:health_app/widgets/CustomButtomNavigationBar.dart';
 import 'package:health_app/widgets/card_of_doctor.dart';
 import 'package:health_app/widgets/custom_user_information.dart';
@@ -157,7 +158,10 @@ class HomePage extends StatelessWidget {
                       return Padding(
                         padding: const EdgeInsets.only(bottom: 3.0),
                         child: CardOfDoctor(
-                          onTap: () {},
+                          onTap: () {
+                            Navigator.of(context)
+                                .pushNamed(DoctorInformation.routeName);
+                          },
                         ),
                       );
                     },

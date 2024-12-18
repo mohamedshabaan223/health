@@ -21,6 +21,7 @@ import 'package:health_app/pages/home_page.dart';
 import 'package:health_app/pages/login.dart';
 import 'package:health_app/pages/register_page.dart';
 import 'package:health_app/pages/start_screen.dart';
+import 'package:health_app/pages/your_appoinment.dart';
 import 'package:health_app/simple_bloc_observer.dart';
 
 class MyHttpOverrides extends HttpOverrides {
@@ -70,6 +71,7 @@ class MyApp extends StatelessWidget {
           Female.routeName: (_) => Female(),
           Male.routeName: (_) => Male(),
           AppointmentScreen.id: (_) => const AppointmentScreen(),
+          YourAppoinment.id: (_) => const YourAppoinment(),
         },
         initialRoute:
             token != null && token != "" ? HomePage.id : StartScreen.id,
