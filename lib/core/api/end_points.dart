@@ -1,7 +1,10 @@
 class EndPoints {
-  static String baseUrl = "http://10.0.2.2:5282/Api/V1/Account/";
-  static String login = "Login";
-  static String register = "Register";
+  static String baseUrl = "http://10.0.2.2:5282/Api/V1/";
+  static String login = "Account/Login";
+  static String register = "Account/Register";
+  static String getAllDoctors = "Doctors/GetAllDoctors";
+  static String getFemaleDoctors = "Doctors/GetAllDoctors?Gender=0";
+  static String getMaleDoctors = "Doctors/GetAllDoctors?Gender=1";
 }
 
 class ApiKey {
@@ -14,4 +17,8 @@ class ApiKey {
   static String message = 'message';
   static String username = 'username';
   static String phone = 'phone';
+  static String doctorId = 'id';
+  static String doctorName = 'doctorName';
+  static String doctorSpeciality = 'specializationName';
+  static String doctorPhone = 'phone';
 }

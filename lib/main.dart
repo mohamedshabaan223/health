@@ -7,7 +7,8 @@ import 'package:health_app/cache/cache_helper.dart';
 import 'package:health_app/constants.dart';
 import 'package:health_app/core/api/dio_consumer.dart';
 import 'package:health_app/core/api/end_points.dart';
-import 'package:health_app/cubits/cubit/auth_cubit.dart';
+import 'package:health_app/cubits/auth_cubit/auth_cubit.dart';
+import 'package:health_app/cubits/doctors_cubit/doctor_cubit.dart';
 import 'package:health_app/pages/appointment_screen.dart';
 import 'package:health_app/pages/create_new_password_page.dart';
 import 'package:health_app/pages/doctor_favorite.dart';
@@ -47,8 +48,13 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => AuthCubit(DioConsumer(dio: Dio())),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<AuthCubit>(
+          create: (context) => AuthCubit(DioConsumer(dio: Dio())),
+        ),
+        BlocProvider(create: (context) => DoctorCubit(DioConsumer(dio: Dio()))),
+      ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         routes: {

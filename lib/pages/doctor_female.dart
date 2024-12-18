@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:health_app/app_theme.dart';
-import 'package:health_app/pages/doctor_favorite.dart';
+import 'package:health_app/cubits/doctors_cubit/doctor_cubit.dart';
 import 'package:health_app/pages/doctor_male.dart';
 import 'package:health_app/pages/doctor_page.dart';
 import 'package:health_app/pages/doctor_rating.dart';
@@ -18,6 +19,13 @@ class Female extends StatefulWidget {
 
 class _FemaleState extends State<Female> {
   @override
+  void initState() {
+    super.initState();
+    // Fetch female doctors on initialization
+    BlocProvider.of<DoctorCubit>(context).getDoctorsByGender(gender: '0');
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
@@ -25,40 +33,43 @@ class _FemaleState extends State<Female> {
           padding: const EdgeInsets.all(15.0),
           child: Column(
             children: [
+              // Top Bar with Back and Title
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   IconButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      icon: Icon(
-                        Icons.arrow_back_ios_new_outlined,
-                        size: 25,
-                        color: AppTheme.green,
-                      )),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    icon: const Icon(
+                      Icons.arrow_back_ios_new_outlined,
+                      size: 25,
+                      color: AppTheme.green,
+                    ),
+                  ),
                   Text(
-                    'Female',
+                    'Female Doctors',
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
                   Row(
                     children: [
-                      TopIconInHomePage(
-                          icons: Icon(
-                            Icons.search,
-                            color: AppTheme.green,
-                          ),
-                          containerBackgroundColor: AppTheme.gray),
-                      SizedBox(
-                        width: 8,
+                      const TopIconInHomePage(
+                        icons: Icon(
+                          Icons.search,
+                          color: AppTheme.green,
+                        ),
+                        containerBackgroundColor: AppTheme.gray,
                       ),
+                      const SizedBox(width: 8),
                       InkWell(
-                          onTap: () {},
-                          child: Image.asset('assets/images/filter1.png')),
+                        onTap: () {},
+                        child: Image.asset('assets/images/filter1.png'),
+                      ),
                     ],
                   ),
                 ],
               ),
+              // Sorting and Filter Options
               Padding(
                 padding:
                     const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
@@ -71,54 +82,46 @@ class _FemaleState extends State<Female> {
                           .titleMedium
                           ?.copyWith(color: AppTheme.green),
                     ),
-                    SizedBox(
-                      width: 5,
-                    ),
+                    const SizedBox(width: 5),
                     Defaulticon(
                       onTap: () {
                         Navigator.of(context).pushNamed(DoctorPage.routeName);
                       },
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.sort_by_alpha,
                         size: 18,
                         color: AppTheme.green,
                       ),
                       containerClolor: AppTheme.gray,
                     ),
-                    SizedBox(
-                      width: 5,
-                    ),
+                    const SizedBox(width: 5),
                     Defaulticon(
                       onTap: () {
                         Navigator.of(context).pushNamed(Rating.routeName);
                       },
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.star_border,
                         size: 17,
                         color: AppTheme.green,
                       ),
                       containerClolor: AppTheme.gray,
                     ),
-                    SizedBox(
-                      width: 5,
-                    ),
+                    const SizedBox(width: 5),
                     Defaulticon(
-                      onTap: () {},
-                      icon: Icon(
+                      onTap: () {}, // Current page, no action needed
+                      icon: const Icon(
                         Icons.female,
                         size: 17,
                         color: AppTheme.white,
                       ),
                       containerClolor: AppTheme.green,
                     ),
-                    SizedBox(
-                      width: 5,
-                    ),
+                    const SizedBox(width: 5),
                     Defaulticon(
                       onTap: () {
                         Navigator.of(context).pushNamed(Male.routeName);
                       },
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.male,
                         size: 17,
                         color: AppTheme.green,
@@ -128,14 +131,36 @@ class _FemaleState extends State<Female> {
                   ],
                 ),
               ),
+              // Female Doctors List
               Expanded(
-                child: ListView.builder(
-                  itemBuilder: (_, index) => ContainerDoctor(
-                    doctorNmae: 'Dr. Olivia Turner ,M.D.',
-                    descrabtion: 'Dermato-Endocrinology',
-                    doctorImage: 'assets/images/doctor_image.png',
-                  ),
-                  itemCount: 3,
+                child: BlocBuilder<DoctorCubit, DoctorState>(
+                  builder: (context, state) {
+                    if (state is DoctorLoading) {
+                      return const Center(child: CircularProgressIndicator());
+                    } else if (state is DoctorFailure) {
+                      return Center(
+                        child: Text(
+                          'Error: ${state.errorMessage}',
+                          style: const TextStyle(color: Colors.red),
+                        ),
+                      );
+                    } else if (state is DoctorSuccess) {
+                      final doctors = state.doctorsList;
+                      return ListView.builder(
+                        itemCount: doctors.length,
+                        itemBuilder: (_, index) => ContainerDoctor(
+                          doctorNmae:
+                              doctors[index].doctorName ?? 'Dr. Unknown',
+                          descrabtion: doctors[index].specializationName ??
+                              'No Specialty',
+                          doctorImage: 'assets/images/doctor_image.png',
+                        ),
+                      );
+                    }
+                    return const Center(
+                      child: Text('No doctors available.'),
+                    );
+                  },
                 ),
               ),
             ],

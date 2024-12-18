@@ -1,7 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:health_app/app_theme.dart';
-import 'package:health_app/pages/doctor_favorite.dart';
+import 'package:health_app/cubits/doctors_cubit/doctor_cubit.dart';
 import 'package:health_app/pages/doctor_female.dart';
 import 'package:health_app/pages/doctor_male.dart';
 import 'package:health_app/pages/doctor_rating.dart';
@@ -20,9 +21,43 @@ class DoctorPage extends StatefulWidget {
 class _DoctorPageState extends State<DoctorPage> {
   bool isSortByAlpha = false;
   bool isRating = false;
-  bool isFavorite = false;
   bool isFemale = false;
   bool isMale = false;
+  List<String> doctorsImage = [
+    'assets/images/male.png',
+    'assets/images/doctor_image.png',
+    'assets/images/male.png',
+    'assets/images/doctor_image.png',
+    'assets/images/male.png',
+    'assets/images/doctor_image.png',
+    'assets/images/male.png',
+    'assets/images/doctor_image.png',
+    'assets/images/male.png',
+    'assets/images/doctor_image.png',
+    'assets/images/male.png',
+    'assets/images/doctor_image.png',
+    'assets/images/male.png',
+    'assets/images/doctor_image.png',
+    'assets/images/male.png',
+    'assets/images/doctor_image.png',
+    'assets/images/male.png',
+    'assets/images/doctor_image.png',
+    'assets/images/male.png',
+    'assets/images/doctor_image.png',
+    'assets/images/male.png',
+    'assets/images/doctor_image.png',
+    'assets/images/male.png',
+    'assets/images/doctor_image.png',
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    // Initially fetch all doctors with default sorting order (ASC)
+    BlocProvider.of<DoctorCubit>(context)
+        .getAllDoctorsByOrderType(orderType: 'ASC');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,36 +70,38 @@ class _DoctorPageState extends State<DoctorPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   IconButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      icon: Icon(
-                        Icons.arrow_back_ios_new_outlined,
-                        size: 25,
-                        color: AppTheme.green,
-                      )),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    icon: const Icon(
+                      Icons.arrow_back_ios_new_outlined,
+                      size: 25,
+                      color: AppTheme.green,
+                    ),
+                  ),
                   Text(
                     'Doctors',
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
                   Row(
                     children: [
-                      TopIconInHomePage(
-                          icons: Icon(
-                            Icons.search,
-                            color: AppTheme.green,
-                          ),
-                          containerBackgroundColor: AppTheme.gray),
-                      SizedBox(
-                        width: 8,
+                      const TopIconInHomePage(
+                        icons: Icon(
+                          Icons.search,
+                          color: AppTheme.green,
+                        ),
+                        containerBackgroundColor: AppTheme.gray,
                       ),
+                      const SizedBox(width: 8),
                       InkWell(
-                          onTap: () {},
-                          child: Image.asset('assets/images/filter1.png')),
+                        onTap: () {},
+                        child: Image.asset('assets/images/filter1.png'),
+                      ),
                     ],
                   ),
                 ],
               ),
+              // Sort and filter section
               Padding(
                 padding:
                     const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
@@ -77,54 +114,53 @@ class _DoctorPageState extends State<DoctorPage> {
                           .titleMedium
                           ?.copyWith(color: AppTheme.green),
                     ),
-                    SizedBox(
-                      width: 5,
-                    ),
+                    const SizedBox(width: 5),
                     Defaulticon(
-                      onTap: () {},
-                      icon: Icon(
+                      onTap: () {
+                        setState(() {
+                          isSortByAlpha = !isSortByAlpha;
+                        });
+                        BlocProvider.of<DoctorCubit>(context)
+                            .getAllDoctorsByOrderType(
+                                orderType: isSortByAlpha ? "ASC" : "DESC");
+                      },
+                      icon: const Icon(
                         Icons.sort_by_alpha_outlined,
                         size: 18,
                         color: AppTheme.white,
                       ),
                       containerClolor: AppTheme.green,
                     ),
-                    SizedBox(
-                      width: 5,
-                    ),
+                    const SizedBox(width: 5),
                     Defaulticon(
                       onTap: () {
                         Navigator.of(context).pushNamed(Rating.routeName);
                       },
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.star_border,
                         size: 17,
                         color: AppTheme.green,
                       ),
                       containerClolor: AppTheme.gray,
                     ),
-                    SizedBox(
-                      width: 5,
-                    ),
+                    const SizedBox(width: 5),
                     Defaulticon(
                       onTap: () {
                         Navigator.of(context).pushNamed(Female.routeName);
                       },
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.female,
                         size: 17,
                         color: AppTheme.green,
                       ),
                       containerClolor: AppTheme.gray,
                     ),
-                    SizedBox(
-                      width: 5,
-                    ),
+                    const SizedBox(width: 5),
                     Defaulticon(
                       onTap: () {
                         Navigator.of(context).pushNamed(Male.routeName);
                       },
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.male,
                         size: 17,
                         color: AppTheme.green,
@@ -134,13 +170,32 @@ class _DoctorPageState extends State<DoctorPage> {
                   ],
                 ),
               ),
+              // Doctors list display
               Expanded(
-                  child: ListView.builder(
-                      itemBuilder: (_, index) => ContainerDoctor(
-                            doctorNmae: 'Dr. Olivia Turner ,M.D.',
-                            descrabtion: 'Dermato-Endocrinology',
-                            doctorImage: 'assets/images/doctor_image.png',
-                          ))),
+                child: BlocBuilder<DoctorCubit, DoctorState>(
+                  builder: (context, state) {
+                    if (state is DoctorLoading) {
+                      return const Center(child: CircularProgressIndicator());
+                    } else if (state is DoctorFailure) {
+                      return Center(
+                          child: Text('Error: ${state.errorMessage}'));
+                    } else if (state is DoctorSuccess) {
+                      final doctors = state.doctorsList;
+                      return ListView.builder(
+                        itemCount: doctors.length,
+                        itemBuilder: (_, index) => ContainerDoctor(
+                          doctorNmae:
+                              doctors[index].doctorName ?? 'Dr. Unknown',
+                          descrabtion: doctors[index].specializationName ??
+                              'No Specialty',
+                          doctorImage: doctorsImage[index],
+                        ),
+                      );
+                    }
+                    return const Center(child: Text('No doctors available.'));
+                  },
+                ),
+              ),
             ],
           ),
         ),
