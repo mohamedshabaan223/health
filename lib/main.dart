@@ -3,7 +3,10 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:health_app/app_theme.dart';
+import 'package:health_app/cache/cache_helper.dart';
+import 'package:health_app/constants.dart';
 import 'package:health_app/core/api/dio_consumer.dart';
+import 'package:health_app/core/api/end_points.dart';
 import 'package:health_app/cubits/cubit/auth_cubit.dart';
 import 'package:health_app/pages/appointment_screen.dart';
 import 'package:health_app/pages/create_new_password_page.dart';
@@ -28,9 +31,13 @@ class MyHttpOverrides extends HttpOverrides {
   }
 }
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   Bloc.observer = SimpleBlocObserver();
   HttpOverrides.global = MyHttpOverrides();
+  await CacheHelper().init();
+  token = CacheHelper().getData(key: ApiKey.token);
+  print("Token: $token");
   runApp(const MyApp());
 }
 
@@ -58,7 +65,8 @@ class MyApp extends StatelessWidget {
           Male.routeName: (_) => Male(),
           AppointmentScreen.id: (_) => const AppointmentScreen(),
         },
-        initialRoute: StartScreen.id,
+        initialRoute:
+            token != null && token != "" ? HomePage.id : StartScreen.id,
         theme: AppTheme.lightTheme,
         themeMode: ThemeMode.light,
       ),

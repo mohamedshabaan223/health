@@ -32,6 +32,7 @@ class _LoginState extends State<Login> {
         if (state is LoginLoading) {
           isLoading = true;
         } else if (state is LoginSuccess) {
+          isLoading = false;
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text('Login Success'),
@@ -39,7 +40,6 @@ class _LoginState extends State<Login> {
           );
           Navigator.pushReplacement(context,
               MaterialPageRoute(builder: (context) => const HomePage()));
-          isLoading = false;
         } else if (state is LoginFailure) {
           isLoading = false;
           ScaffoldMessenger.of(context).showSnackBar(

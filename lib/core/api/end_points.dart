@@ -1,5 +1,5 @@
 class EndPoints {
-  static String baseUrl = "https://10.0.2.2:7293/Api/V1/Account/";
+  static String baseUrl = "http://10.0.2.2:5282/Api/V1/Account/";
   static String login = "Login";
   static String register = "Register";
 }

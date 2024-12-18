@@ -144,8 +144,7 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
               const SizedBox(height: 20),
               DefaultTextformfield(
                 hint: 'full name',
-                controller:
-                    BlocProvider.of<AuthCubit>(context).registerUserName,
+                controller: BlocProvider.of<AuthCubit>(context).patientName,
                 onChanged: (data) {
                   fullName = data;
                 },
@@ -153,8 +152,7 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
               const SizedBox(height: 15),
               DefaultTextformfield(
                 hint: 'Age',
-                controller:
-                    BlocProvider.of<AuthCubit>(context).registerUserName,
+                controller: BlocProvider.of<AuthCubit>(context).age,
                 onChanged: (data) {
                   fullName = data;
                 },

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:health_app/app_theme.dart';
 import 'package:health_app/widgets/default_elvatedbutton.dart';
 import 'package:health_app/widgets/default_textformfield.dart';
-import 'package:health_app/widgets/start_screen_button.dart';
 import 'package:health_app/widgets/text_form_field_label.dart';
 
 class CreateNewPasswordPage extends StatelessWidget {

@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:health_app/app_theme.dart';
-import 'package:health_app/pages/doctor_female.dart';
-import 'package:health_app/pages/doctor_male.dart';
-import 'package:health_app/pages/doctor_page.dart';
-import 'package:health_app/pages/doctor_rating.dart';
 import 'package:health_app/widgets/CustomButtomNavigationBar.dart';
 import 'package:health_app/widgets/container_doctor_fav.dart';
 import 'package:health_app/widgets/default_icon.dart';

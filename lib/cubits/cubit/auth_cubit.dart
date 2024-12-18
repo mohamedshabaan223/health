@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:health_app/cache/cache_helper.dart';
 import 'package:health_app/core/api/api_consumer.dart';
 import 'package:health_app/core/api/end_points.dart';
 import 'package:health_app/core/errors/exceptions.dart';
@@ -22,12 +23,14 @@ class AuthCubit extends Cubit<AuthState> {
   TextEditingController registerPassword = TextEditingController();
   TextEditingController confirmPassword = TextEditingController();
   TextEditingController age = TextEditingController();
+  TextEditingController patientName = TextEditingController();
 
   SignInModel? user;
 
   Future<void> logIn() async {
     try {
       emit(LoginLoading());
+      print("Initiating API call for login...");
       final response = await api.post(
         EndPoints.login,
         data: {
@@ -35,6 +38,10 @@ class AuthCubit extends Cubit<AuthState> {
           ApiKey.password: logInPassword.text,
         },
       );
+
+      user = SignInModel.fromJson(response);
+      await CacheHelper().saveData(key: ApiKey.token, value: user!.token);
+
       emit(LoginSuccess());
     } on ServerException catch (e) {
       print("Error caught in logIn: ${e.errorModel.errorMessage}");
