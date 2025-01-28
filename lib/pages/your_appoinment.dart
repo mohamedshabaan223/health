@@ -156,7 +156,7 @@ class YourAppoinment extends StatelessWidget {
                           style: TextStyle(fontSize: 15),
                         ),
                         Text(
-                          '20',
+                          '22',
                           style: TextStyle(fontSize: 15),
                         ),
                       ],

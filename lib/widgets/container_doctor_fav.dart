@@ -25,8 +25,8 @@ class _ContainerDoctorFavoriteState extends State<ContainerDoctorFavorite> {
           Navigator.pushNamed(context, DoctorInformation.routeName);
         },
         child: Container(
-          margin: EdgeInsets.symmetric(vertical: 10, horizontal: 6),
-          height: height * 0.17,
+          margin: EdgeInsets.symmetric(vertical: 8, horizontal: 6),
+          height: height * 0.20,
           width: width * 15,
           decoration: BoxDecoration(
             color: AppTheme.gray,

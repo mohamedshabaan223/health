@@ -22,7 +22,7 @@ class _FemaleState extends State<Female> {
   void initState() {
     super.initState();
     // Fetch female doctors on initialization
-    BlocProvider.of<DoctorCubit>(context).getDoctorsByGender(gender: '0');
+    BlocProvider.of<DoctorCubit>(context).getDoctorsByGender(gender: '1');
   }
 
   @override

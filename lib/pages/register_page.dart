@@ -6,6 +6,7 @@ import 'package:health_app/pages/home_page.dart';
 import 'package:health_app/widgets/default_textbutton.dart';
 import 'package:health_app/widgets/default_textformfield.dart';
 import 'package:health_app/widgets/list_view_icons.dart';
+import 'package:health_app/widgets/radio_buttom_for_users.dart';
 import 'package:health_app/widgets/start_screen_button.dart';
 import 'package:health_app/widgets/text_form_field_label.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
@@ -120,9 +121,7 @@ class RegisterPage extends StatelessWidget {
                     controller:
                         BlocProvider.of<AuthCubit>(context).registerPhoneNumber,
                   ),
-                  SizedBox(
-                    height: height * 0.05,
-                  ),
+                  SizedBox(height: 100, child: RadioButtonForUsers()),
                   Column(
                     children: [
                       Text(

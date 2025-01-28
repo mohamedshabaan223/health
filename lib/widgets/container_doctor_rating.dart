@@ -19,7 +19,7 @@ class _ContainrDoctorRatingState extends State<ContainrDoctorRating> {
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
       body: Container(
-        margin: EdgeInsets.symmetric(vertical: 10, horizontal: 6),
+        margin: EdgeInsets.symmetric(vertical: 8, horizontal: 6),
         height: height * 0.17,
         width: width * 15,
         decoration: BoxDecoration(
