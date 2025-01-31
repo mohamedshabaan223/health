@@ -18,6 +18,7 @@ import 'package:health_app/pages/doctor_page.dart';
 import 'package:health_app/pages/doctor_page_information.dart';
 import 'package:health_app/pages/doctor_rating.dart';
 import 'package:health_app/pages/home_page.dart';
+import 'package:health_app/pages/home_screen.dart';
 import 'package:health_app/pages/login.dart';
 import 'package:health_app/pages/register_page.dart';
 import 'package:health_app/pages/start_screen.dart';
@@ -37,8 +38,8 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Bloc.observer = SimpleBlocObserver();
   HttpOverrides.global = MyHttpOverrides();
-  await CacheHelper().init();
-  token = CacheHelper().getData(key: ApiKey.token);
+ // await CacheHelper().init();
+  //token = CacheHelper().getData(key: ApiKey.token);
   print("Token: $token");
   runApp(const MyApp());
 }
@@ -72,9 +73,9 @@ class MyApp extends StatelessWidget {
           Male.routeName: (_) => Male(),
           AppointmentScreen.id: (_) => const AppointmentScreen(),
           YourAppoinment.id: (_) => const YourAppoinment(),
+          HomeScreen.id:(_) =>HomeScreen()
         },
-        initialRoute:
-            token != null && token != "" ? HomePage.id : StartScreen.id,
+        initialRoute:HomeScreen.id ,
         theme: AppTheme.lightTheme,
         themeMode: ThemeMode.light,
       ),

@@ -30,7 +30,6 @@ environment:
 dependencies:
   cupertino_icons: ^1.0.8
   dio: ^5.7.0
-  shared_preferences: ^2.3.3
   flutter_bloc: ^8.1.6
   modal_progress_hud_nsn: ^0.5.1
   flutter:

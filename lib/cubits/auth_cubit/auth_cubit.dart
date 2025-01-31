@@ -40,7 +40,7 @@ class AuthCubit extends Cubit<AuthState> {
       );
 
       user = SignInModel.fromJson(response);
-      await CacheHelper().saveData(key: ApiKey.token, value: user!.token);
+      //await CacheHelper().saveData(key: ApiKey.token, value: user!.token);
 
       emit(LoginSuccess());
     } on ServerException catch (e) {
