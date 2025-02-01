@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:health_app/app_theme.dart';
-import 'package:health_app/pages/cancelled_appoinement_screen.dart';
-import 'package:health_app/widgets/container_appoinement.dart';
+import 'package:health_app/widgets/container_cancelled.dart';
 import 'package:health_app/widgets/container_complete_doctor.dart';
+import 'package:health_app/widgets/container_upcomming.dart';
 
 class Calendar extends StatefulWidget {
   static const String id = '/calendar';
@@ -11,48 +11,109 @@ class Calendar extends StatefulWidget {
   State<Calendar> createState() => _CalendarState();
 }
 
-class _CalendarState extends State<Calendar> {
+class _CalendarState extends State<Calendar>
+    with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+  int _selectedIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 3, vsync: this);
+    _tabController.addListener(() {
+      if (_tabController.indexIsChanging) {
+        setState(() {
+          _selectedIndex = _tabController.index;
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('All Appointment'),
+        title: const Text('All Appointment'),
+        bottom: TabBar(
+          controller: _tabController,
+          indicatorColor: AppTheme.green,
+          labelColor: AppTheme.white,
+          unselectedLabelColor: AppTheme.green,
+          tabs: [
+            Tab(
+              child: Container(
+                padding: const EdgeInsets.all(10.0),
+                decoration: BoxDecoration(
+                  color: _selectedIndex == 0 ? AppTheme.green : AppTheme.gray,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Text(
+                  'Complete',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color:
+                        _selectedIndex == 0 ? AppTheme.white : AppTheme.green,
+                  ),
+                ),
+              ),
+            ),
+            Tab(
+              child: Container(
+                padding: const EdgeInsets.all(10.0),
+                decoration: BoxDecoration(
+                  color: _selectedIndex == 1 ? AppTheme.green : AppTheme.gray,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Text(
+                  'Upcoming',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color:
+                        _selectedIndex == 1 ? AppTheme.white : AppTheme.green,
+                  ),
+                ),
+              ),
+            ),
+            Tab(
+              child: Container(
+                padding: const EdgeInsets.all(10.0),
+                decoration: BoxDecoration(
+                  color: _selectedIndex == 2 ? AppTheme.green : AppTheme.gray,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Text(
+                  'Cancelled',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color:
+                        _selectedIndex == 2 ? AppTheme.white : AppTheme.green,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Column(
+        child: TabBarView(
+          controller: _tabController,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                ContainerAppointment(
-                  onTap: () {},
-                  label: 'Complete',
-                  labelColor: AppTheme.white,
-                  containerColor: AppTheme.green,
-                ),
-                ContainerAppointment(
-                  onTap: () {},
-                  label: 'Upcoming',
-                  labelColor: AppTheme.green,
-                  containerColor: AppTheme.gray,
-                ),
-                ContainerAppointment(
-                  onTap: () {
-                    Navigator.of(context).pushNamed(CancelledAppointment.id);
-                  },
-                  label: 'cancelled',
-                  labelColor: AppTheme.green,
-                  containerColor: AppTheme.gray,
-                ),
-              ],
+            ListView.builder(
+              itemBuilder: (_, index) => ContainerCompleteDoctor(),
             ),
-            const SizedBox(
-              height: 15,
+            ListView.builder(
+              itemBuilder: (_, index) => ContainerUpcoming(),
             ),
-            Expanded(
-                child: ListView.builder(
-                    itemBuilder: (_, index) => ContainerCompleteDoctor()))
+            ListView.builder(
+              itemBuilder: (_, index) => ContainerCancelled(),
+            ),
           ],
         ),
       ),

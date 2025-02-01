@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:health_app/app_theme.dart';
 import 'package:health_app/pages/appointment_screen.dart';
-import 'package:health_app/widgets/CustomButtomNavigationBar.dart';
 import 'package:health_app/widgets/card_of_doctor.dart';
 import 'package:health_app/widgets/start_screen_button.dart';
 
@@ -224,7 +223,6 @@ class YourAppoinment extends StatelessWidget {
           ),
         ),
       ),
-      bottomNavigationBar: CustomButtomNavigationBar(),
     );
   }
 }

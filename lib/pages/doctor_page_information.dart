@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:health_app/app_theme.dart';
 import 'package:health_app/pages/doctor_page.dart';
-import 'package:health_app/widgets/CustomButtomNavigationBar.dart';
 import 'package:health_app/widgets/container_doctor_info.dart';
 
 class DoctorInformation extends StatelessWidget {
@@ -77,7 +76,6 @@ class DoctorInformation extends StatelessWidget {
           ),
         ),
       ),
-      bottomNavigationBar: CustomButtomNavigationBar(),
     );
   }
 }

@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:health_app/app_theme.dart';
 import 'package:health_app/cubits/auth_cubit/auth_cubit.dart';
 import 'package:health_app/pages/your_appoinment.dart';
-import 'package:health_app/widgets/CustomButtomNavigationBar.dart';
 import 'package:health_app/widgets/default_textformfield.dart';
 
 class AppointmentScreen extends StatefulWidget {
@@ -15,8 +14,8 @@ class AppointmentScreen extends StatefulWidget {
 }
 
 class _AppointmentScreenState extends State<AppointmentScreen> {
-  int selectedDayIndex = 2; // Default selected day
-  int selectedTimeIndex = 2; // Default selected time
+  int selectedDayIndex = 2;
+  int selectedTimeIndex = 2;
   String selectedPatientType = 'Yourself';
   String selectedGender = 'Female';
   int? age;
@@ -196,7 +195,6 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
           ),
         ),
       ),
-      bottomNavigationBar: CustomButtomNavigationBar(),
     );
   }
 
@@ -204,7 +202,7 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
     return Text(
       title,
       style: const TextStyle(
-          fontSize: 16, fontWeight: FontWeight.bold, color: AppTheme.green2),
+          fontSize: 18, fontWeight: FontWeight.bold, color: AppTheme.green2),
     );
   }
 

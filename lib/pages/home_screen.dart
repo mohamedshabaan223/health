@@ -38,8 +38,8 @@ class _MyWidgetState extends State<HomeScreen> {
                   selectedIndex = index;
                 });
               },
-              unselectedFontSize: 12,
-              selectedFontSize: 14,
+              unselectedFontSize: 13,
+              selectedFontSize: 15,
               selectedItemColor: const Color.fromARGB(255, 59, 133, 106),
               unselectedItemColor: AppTheme.white,
               items: const [

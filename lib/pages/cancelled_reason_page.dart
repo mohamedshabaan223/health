@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:health_app/app_theme.dart';
 
-class CancelledPage extends StatefulWidget {
+class CancelledReasonPage extends StatefulWidget {
   static const String id = '/cancelled_page';
 
   @override
-  State<CancelledPage> createState() => _CancelledPageState();
+  State<CancelledReasonPage> createState() => _CancelledReasonPageState();
 }
 
-class _CancelledPageState extends State<CancelledPage> {
+class _CancelledReasonPageState extends State<CancelledReasonPage> {
   String? cancelled;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Cancel Appointment'),
+        title: const Text('Cancel Appointment'),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
@@ -32,7 +32,6 @@ class _CancelledPageState extends State<CancelledPage> {
               height: 50,
             ),
             RadioListTile(
-                fillColor: WidgetStatePropertyAll(AppTheme.gray),
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(32)),
                 // hoverColor: AppTheme.green,

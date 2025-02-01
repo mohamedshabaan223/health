@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:health_app/app_theme.dart';
+import 'package:health_app/pages/appointment_screen.dart';
 
 import 'package:health_app/pages/review_page.dart';
 import 'package:health_app/widgets/default_icon.dart';
@@ -110,7 +111,9 @@ class _ContainerCompleteDoctorState extends State<ContainerCompleteDoctor> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               InkWell(
-                onTap: () {},
+                onTap: () {
+                  Navigator.of(context).pushNamed(AppointmentScreen.id);
+                },
                 child: Container(
                   alignment: Alignment.center,
                   height: 27,

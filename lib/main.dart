@@ -10,7 +10,7 @@ import 'package:health_app/core/api/end_points.dart';
 import 'package:health_app/cubits/auth_cubit/auth_cubit.dart';
 import 'package:health_app/cubits/doctors_cubit/doctor_cubit.dart';
 import 'package:health_app/pages/appointment_screen.dart';
-import 'package:health_app/pages/cancelled_appoinement_screen.dart';
+import 'package:health_app/pages/cancelled_reason_page.dart';
 import 'package:health_app/pages/create_new_password_page.dart';
 import 'package:health_app/pages/doctor_favorite.dart';
 import 'package:health_app/pages/doctor_female.dart';
@@ -26,6 +26,7 @@ import 'package:health_app/pages/review_page.dart';
 import 'package:health_app/pages/start_screen.dart';
 import 'package:health_app/pages/your_appoinment.dart';
 import 'package:health_app/simple_bloc_observer.dart';
+import 'package:health_app/tabs/calendar/calendar.dart';
 
 class MyHttpOverrides extends HttpOverrides {
   @override
@@ -76,8 +77,9 @@ class MyApp extends StatelessWidget {
           AppointmentScreen.id: (_) => const AppointmentScreen(),
           YourAppoinment.id: (_) => const YourAppoinment(),
           Review.id: (_) => Review(),
-          CancelledAppointment.id: (_) => CancelledAppointment(),
           HomeScreen.id: (_) => HomeScreen(),
+          Calendar.id: (_) => Calendar(),
+          CancelledReasonPage.id: (_) => CancelledReasonPage(),
         },
         initialRoute: HomeScreen.id,
         theme: AppTheme.lightTheme,

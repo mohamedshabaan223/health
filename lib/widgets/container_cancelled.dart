@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:health_app/app_theme.dart';
-import 'package:health_app/pages/cancelled_page.dart';
-import 'package:health_app/pages/review_page.dart';
+import 'package:health_app/pages/cancelled_reason_page.dart';
 
 class ContainerCancelled extends StatelessWidget {
   @override
@@ -9,9 +8,9 @@ class ContainerCancelled extends StatelessWidget {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       width: width * 0.15,
-      height: height * 0.19,
+      height: height * 0.16,
       decoration: BoxDecoration(
           color: AppTheme.gray, borderRadius: BorderRadius.circular(17)),
       child: Padding(
@@ -20,8 +19,8 @@ class ContainerCancelled extends StatelessWidget {
           children: [
             Row(
               children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 14.0),
+                const Padding(
+                  padding: EdgeInsets.only(left: 14.0),
                   child: CircleAvatar(
                     radius: 40,
                     backgroundImage: AssetImage('assets/images/male.png'),
@@ -46,63 +45,35 @@ class ContainerCancelled extends StatelessWidget {
                             .titleSmall
                             ?.copyWith(fontSize: 14),
                       ),
-                      SizedBox(
-                        height: 15,
-                      ),
                     ],
                   ),
                 ),
               ],
             ),
-            Padding(
-              padding: const EdgeInsets.only(left: 20),
-              child: Row(
-                children: [
-                  InkWell(
-                    onTap: () {
-                      Navigator.of(context).pushNamed(Review.id);
-                    },
-                    child: Container(
-                      alignment: Alignment.center,
-                      height: 27,
-                      width: 150,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(18),
-                          color: AppTheme.green),
-                      child: Text(
-                        'Add Review',
-                        style: Theme.of(context)
-                            .textTheme
-                            .titleLarge
-                            ?.copyWith(color: AppTheme.white),
-                      ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                InkWell(
+                  onTap: () {
+                    Navigator.of(context).pushNamed(CancelledReasonPage.id);
+                  },
+                  child: Container(
+                    alignment: Alignment.center,
+                    height: 30,
+                    width: 155,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(18),
+                        color: AppTheme.green),
+                    child: Text(
+                      'Friday,12June',
+                      style: Theme.of(context)
+                          .textTheme
+                          .titleMedium
+                          ?.copyWith(color: AppTheme.white),
                     ),
                   ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  InkWell(
-                    onTap: () {
-                      Navigator.of(context).pushNamed(CancelledPage.id);
-                    },
-                    child: Container(
-                      alignment: Alignment.center,
-                      height: 27,
-                      width: 140,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(18),
-                          color: AppTheme.white),
-                      child: Text(
-                        'cancelled',
-                        style: Theme.of(context)
-                            .textTheme
-                            .titleLarge
-                            ?.copyWith(color: AppTheme.green),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+                ),
+              ],
             )
           ],
         ),
