@@ -16,24 +16,27 @@ class DoctorsAndFavourite extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      child: Column(
-        children: [
-          FaIcon(
-            icon,
-            size: 22,
-            color: AppTheme.green,
-          ),
-          Text(
-            label,
-            style: const TextStyle(
+    return Material(
+      color: Colors.transparent, // يمكنك تخصيص اللون هنا
+      child: InkWell(
+        onTap: onTap,
+        child: Column(
+          children: [
+            FaIcon(
+              icon,
+              size: 22,
               color: AppTheme.green,
-              fontWeight: FontWeight.w500,
-              fontSize: 12,
             ),
-          ),
-        ],
+            Text(
+              label,
+              style: const TextStyle(
+                color: AppTheme.green,
+                fontWeight: FontWeight.w500,
+                fontSize: 12,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

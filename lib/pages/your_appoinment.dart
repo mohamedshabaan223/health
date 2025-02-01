@@ -224,7 +224,7 @@ class YourAppoinment extends StatelessWidget {
           ),
         ),
       ),
-      bottomNavigationBar: const CustomButtomNavigationBar(),
+      bottomNavigationBar: CustomButtomNavigationBar(),
     );
   }
 }

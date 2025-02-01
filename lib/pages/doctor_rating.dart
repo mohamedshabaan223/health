@@ -134,7 +134,6 @@ class Rating extends StatelessWidget {
           ),
         ),
       ),
-      bottomNavigationBar: const CustomButtomNavigationBar(),
     );
   }
 }

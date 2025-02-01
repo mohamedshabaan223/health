@@ -167,7 +167,6 @@ class _FemaleState extends State<Female> {
           ),
         ),
       ),
-      bottomNavigationBar: const CustomButtomNavigationBar(),
     );
   }
 }

@@ -196,7 +196,7 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
           ),
         ),
       ),
-      bottomNavigationBar: const CustomButtomNavigationBar(),
+      bottomNavigationBar: CustomButtomNavigationBar(),
     );
   }
 

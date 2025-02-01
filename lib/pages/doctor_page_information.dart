@@ -77,7 +77,7 @@ class DoctorInformation extends StatelessWidget {
           ),
         ),
       ),
-      bottomNavigationBar: const CustomButtomNavigationBar(),
+      bottomNavigationBar: CustomButtomNavigationBar(),
     );
   }
 }

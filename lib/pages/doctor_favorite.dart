@@ -82,7 +82,6 @@ class Favorite extends StatelessWidget {
           ),
         ),
       ),
-      bottomNavigationBar: const CustomButtomNavigationBar(),
     );
   }
 }
