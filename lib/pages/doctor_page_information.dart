@@ -10,6 +10,13 @@ class DoctorInformation extends StatelessWidget {
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
+    final doctorId = ModalRoute.of(context)?.settings.arguments as int?;
+    if (doctorId == null) {
+      return Scaffold(
+        appBar: AppBar(title: const Text('Error')),
+        body: const Center(child: Text('No doctor ID provided.')),
+      );
+    }
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -50,7 +57,7 @@ class DoctorInformation extends StatelessWidget {
                 const SizedBox(
                   height: 15,
                 ),
-                const ContainerDoctorInfo(),
+                ContainerDoctorInfo(doctorId: doctorId),
                 SizedBox(
                   height: height * 0.05,
                 ),

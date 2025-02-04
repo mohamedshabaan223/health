@@ -52,7 +52,6 @@ class _DoctorPageState extends State<DoctorPage> {
   @override
   void initState() {
     super.initState();
-    // Initially fetch all doctors with default sorting order (ASC)
     BlocProvider.of<DoctorCubit>(context)
         .getAllDoctorsByOrderType(orderType: 'ASC');
   }
@@ -188,6 +187,7 @@ class _DoctorPageState extends State<DoctorPage> {
                           descrabtion: doctors[index].specializationName ??
                               'No Specialty',
                           doctorImage: doctorsImage[index],
+                          doctorid: doctors[index],
                         ),
                       );
                     }

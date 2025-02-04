@@ -4,7 +4,8 @@ import 'package:health_app/widgets/container_schdule.dart';
 import 'package:health_app/widgets/default_icon.dart';
 
 class ContainerDoctorInfo extends StatefulWidget {
-  const ContainerDoctorInfo({super.key});
+  const ContainerDoctorInfo({super.key, this.doctorId});
+  final int? doctorId;
 
   @override
   State<ContainerDoctorInfo> createState() => _ContainerDoctorInfoState();
@@ -175,7 +176,7 @@ class _ContainerDoctorInfoState extends State<ContainerDoctorInfo> {
             ),
             Row(
               children: [
-                ContainerSchdule(),
+                ContainerSchdule(doctorId: widget.doctorId),
                 SizedBox(
                   width: width * 0.23,
                 ),

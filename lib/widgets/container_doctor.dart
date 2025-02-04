@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:health_app/app_theme.dart';
+import 'package:health_app/models/doctor_model.dart';
 import 'package:health_app/pages/doctor_page_information.dart';
 import 'package:health_app/widgets/default_icon.dart';
 
@@ -9,10 +9,12 @@ class ContainerDoctor extends StatefulWidget {
   ContainerDoctor(
       {required this.doctorNmae,
       required this.descrabtion,
-      required this.doctorImage});
+      required this.doctorImage,
+      required this.doctorid});
   final String doctorNmae;
   final String descrabtion;
   final String doctorImage;
+  final DoctorModel doctorid; // استخدم DoctorModel بدلاً من الحقول الفردية
 
   @override
   State<ContainerDoctor> createState() => _ContainerDoctorState();
@@ -21,7 +23,6 @@ class ContainerDoctor extends StatefulWidget {
 class _ContainerDoctorState extends State<ContainerDoctor> {
   bool isSelected = false;
   bool isFavorite = false;
-
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
@@ -67,8 +68,10 @@ class _ContainerDoctorState extends State<ContainerDoctor> {
                   children: [
                     InkWell(
                       onTap: () {
-                        Navigator.of(context)
-                            .pushNamed(DoctorInformation.routeName);
+                        Navigator.of(context).pushNamed(
+                          DoctorInformation.routeName,
+                          arguments: widget.doctorid.id,
+                        );
                       },
                       child: Container(
                         height: 29,

@@ -8,7 +8,7 @@ class DoctorModel {
     required this.doctorName,
     required this.specializationName,
     this.photo,
-    this.id,
+    required this.id,
   });
 
   factory DoctorModel.fromJson(Map<String, dynamic> json) {

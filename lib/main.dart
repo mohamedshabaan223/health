@@ -8,6 +8,7 @@ import 'package:health_app/constants.dart';
 import 'package:health_app/core/api/dio_consumer.dart';
 import 'package:health_app/core/api/end_points.dart';
 import 'package:health_app/cubits/auth_cubit/auth_cubit.dart';
+import 'package:health_app/cubits/booking_cubit/booking_cubit_cubit.dart';
 import 'package:health_app/cubits/doctors_cubit/doctor_cubit.dart';
 import 'package:health_app/pages/appointment_screen.dart';
 import 'package:health_app/pages/cancelled_reason_page.dart';
@@ -59,6 +60,8 @@ class MyApp extends StatelessWidget {
           create: (context) => AuthCubit(DioConsumer(dio: Dio())),
         ),
         BlocProvider(create: (context) => DoctorCubit(DioConsumer(dio: Dio()))),
+        BlocProvider(
+            create: (context) => BookingCubit(DioConsumer(dio: Dio()))),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -81,7 +84,7 @@ class MyApp extends StatelessWidget {
           Calendar.id: (_) => Calendar(),
           CancelledReasonPage.id: (_) => CancelledReasonPage(),
         },
-        initialRoute: HomeScreen.id,
+        initialRoute: token != null ? HomeScreen.id : StartScreen.id,
         theme: AppTheme.lightTheme,
         themeMode: ThemeMode.light,
       ),

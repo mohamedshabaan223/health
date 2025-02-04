@@ -3,7 +3,6 @@ class EndPoints {
   static String login = "Account/Login";
   static String register = "Account/Register";
   static String getAllDoctors = "Doctors/GetAllDoctors";
-
 }
 
 class ApiKey {

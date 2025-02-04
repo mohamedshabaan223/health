@@ -153,6 +153,7 @@ class _FemaleState extends State<Female> {
                           descrabtion: doctors[index].specializationName ??
                               'No Specialty',
                           doctorImage: 'assets/images/doctor_image.png',
+                          doctorid: doctors[index],
                         ),
                       );
                     }
