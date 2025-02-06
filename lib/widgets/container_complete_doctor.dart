@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:health_app/app_theme.dart';
 import 'package:health_app/pages/appointment_screen.dart';
-
 import 'package:health_app/pages/review_page.dart';
 import 'package:health_app/widgets/default_icon.dart';
 
 class ContainerCompleteDoctor extends StatefulWidget {
+  const ContainerCompleteDoctor({super.key});
+
   @override
   State<ContainerCompleteDoctor> createState() =>
       _ContainerCompleteDoctorState();
@@ -18,7 +19,7 @@ class _ContainerCompleteDoctorState extends State<ContainerCompleteDoctor> {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       width: width * 0.15,
       height: height * 0.20,
       decoration: BoxDecoration(
@@ -27,8 +28,8 @@ class _ContainerCompleteDoctorState extends State<ContainerCompleteDoctor> {
         children: [
           Row(
             children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 14.0),
+              const Padding(
+                padding: EdgeInsets.only(left: 14.0),
                 child: CircleAvatar(
                   radius: 40,
                   backgroundImage: AssetImage('assets/images/male.png'),
@@ -53,20 +54,20 @@ class _ContainerCompleteDoctorState extends State<ContainerCompleteDoctor> {
                           .titleSmall
                           ?.copyWith(fontSize: 14),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 8,
                     ),
                     Row(
                       children: [
                         Container(
-                          padding: EdgeInsets.only(right: 10),
+                          padding: const EdgeInsets.only(right: 10),
                           height: 20,
                           width: 50,
                           decoration: BoxDecoration(
                             color: AppTheme.white,
                             borderRadius: BorderRadius.circular(13),
                           ),
-                          child: Row(
+                          child: const Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Icon(
@@ -85,7 +86,7 @@ class _ContainerCompleteDoctorState extends State<ContainerCompleteDoctor> {
                             ],
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 15,
                         ),
                         Defaulticon(

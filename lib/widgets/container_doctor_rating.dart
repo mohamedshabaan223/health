@@ -19,7 +19,7 @@ class _ContainrDoctorRatingState extends State<ContainrDoctorRating> {
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
       body: Container(
-        margin: EdgeInsets.symmetric(vertical: 8, horizontal: 6),
+        margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 6),
         height: height * 0.17,
         width: width * 15,
         decoration: BoxDecoration(
@@ -27,8 +27,8 @@ class _ContainrDoctorRatingState extends State<ContainrDoctorRating> {
           borderRadius: BorderRadius.circular(18),
         ),
         child: Row(children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 14.0),
+          const Padding(
+            padding: EdgeInsets.only(left: 14.0),
             child: CircleAvatar(
               radius: 37,
               backgroundImage: AssetImage('assets/images/doctor_image.png'),
@@ -44,7 +44,7 @@ class _ContainrDoctorRatingState extends State<ContainrDoctorRating> {
                     Image.asset(
                       'assets/images/professional.png',
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 4,
                     ),
                     Text(
@@ -57,14 +57,14 @@ class _ContainrDoctorRatingState extends State<ContainrDoctorRating> {
                       width: width * 0.1,
                     ),
                     Container(
-                      padding: EdgeInsets.only(right: 10),
+                      padding: const EdgeInsets.only(right: 10),
                       height: 20,
                       width: 50,
                       decoration: BoxDecoration(
                         color: AppTheme.white,
                         borderRadius: BorderRadius.circular(13),
                       ),
-                      child: Row(
+                      child: const Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Icon(
@@ -85,7 +85,7 @@ class _ContainrDoctorRatingState extends State<ContainrDoctorRating> {
                     )
                   ],
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 5,
                 ),
                 Column(
@@ -129,7 +129,7 @@ class _ContainrDoctorRatingState extends State<ContainrDoctorRating> {
                         ),
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
                     Row(
@@ -162,26 +162,26 @@ class _ContainrDoctorRatingState extends State<ContainrDoctorRating> {
                         ),
                         Defaulticon(
                           onTap: () {},
-                          icon: Icon(
+                          icon: const Icon(
                             CupertinoIcons.exclamationmark,
                             size: 17,
                             color: AppTheme.green,
                           ),
                           containerClolor: AppTheme.white,
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 4,
                         ),
                         Defaulticon(
                           onTap: () {},
-                          icon: Icon(
+                          icon: const Icon(
                             Icons.question_mark,
                             size: 17,
                             color: AppTheme.green,
                           ),
                           containerClolor: AppTheme.white,
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 4,
                         ),
                         Defaulticon(

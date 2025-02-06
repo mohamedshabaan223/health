@@ -7,6 +7,8 @@ import 'package:health_app/widgets/container_upcomming.dart';
 class Calendar extends StatefulWidget {
   static const String id = '/calendar';
 
+  const Calendar({super.key});
+
   @override
   State<Calendar> createState() => _CalendarState();
 }
@@ -37,6 +39,7 @@ class _CalendarState extends State<Calendar>
 
   @override
   Widget build(BuildContext context) {
+    //final pationToken = BlocProvider.of<AuthCubit>(context).user!.token!;
     return Scaffold(
       appBar: AppBar(
         title: const Text('All Appointment'),

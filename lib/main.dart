@@ -10,6 +10,7 @@ import 'package:health_app/core/api/end_points.dart';
 import 'package:health_app/cubits/auth_cubit/auth_cubit.dart';
 import 'package:health_app/cubits/booking_cubit/booking_cubit_cubit.dart';
 import 'package:health_app/cubits/doctors_cubit/doctor_cubit.dart';
+import 'package:health_app/cubits/payment_cubit/payment_cubit.dart';
 import 'package:health_app/pages/appointment_screen.dart';
 import 'package:health_app/pages/cancelled_reason_page.dart';
 import 'package:health_app/pages/create_new_password_page.dart';
@@ -21,13 +22,13 @@ import 'package:health_app/pages/doctor_page_information.dart';
 import 'package:health_app/pages/doctor_rating.dart';
 import 'package:health_app/pages/home_page.dart';
 import 'package:health_app/pages/home_screen.dart';
-import 'package:health_app/pages/login.dart';
+import 'package:health_app/pages/login_page.dart';
 import 'package:health_app/pages/register_page.dart';
 import 'package:health_app/pages/review_page.dart';
 import 'package:health_app/pages/start_screen.dart';
+import 'package:health_app/pages/payment_success_page.dart';
 import 'package:health_app/pages/your_appoinment.dart';
 import 'package:health_app/simple_bloc_observer.dart';
-import 'package:health_app/tabs/calendar/calendar.dart';
 
 class MyHttpOverrides extends HttpOverrides {
   @override
@@ -45,6 +46,7 @@ void main() async {
   await CacheHelper().init();
   token = CacheHelper().getData(key: ApiKey.token);
   print("Token: $token");
+
   runApp(const MyApp());
 }
 
@@ -62,6 +64,9 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => DoctorCubit(DioConsumer(dio: Dio()))),
         BlocProvider(
             create: (context) => BookingCubit(DioConsumer(dio: Dio()))),
+        BlocProvider(
+          create: (context) => PaymentCubit(DioConsumer(dio: Dio())),
+        )
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -81,8 +86,8 @@ class MyApp extends StatelessWidget {
           YourAppoinment.id: (_) => const YourAppoinment(),
           Review.id: (_) => Review(),
           HomeScreen.id: (_) => HomeScreen(),
-          Calendar.id: (_) => Calendar(),
           CancelledReasonPage.id: (_) => CancelledReasonPage(),
+          payment_success.id: (_) => payment_success(),
         },
         initialRoute: token != null ? HomeScreen.id : StartScreen.id,
         theme: AppTheme.lightTheme,

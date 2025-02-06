@@ -40,13 +40,13 @@ class _DefaultTextformfieldState extends State<DefaultTextformfield> {
         fillColor: AppTheme.gray,
         filled: true,
         enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: AppTheme.gray),
+            borderSide: const BorderSide(color: AppTheme.gray),
             borderRadius: BorderRadius.circular(13)),
         border: OutlineInputBorder(
-            borderSide: BorderSide(color: AppTheme.gray),
+            borderSide: const BorderSide(color: AppTheme.gray),
             borderRadius: BorderRadius.circular(13)),
         focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: AppTheme.gray),
+            borderSide: const BorderSide(color: AppTheme.gray),
             borderRadius: BorderRadius.circular(13)),
         hintText: widget.hint,
         hintStyle: const TextStyle(color: AppTheme.green),

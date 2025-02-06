@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:health_app/app_theme.dart';
@@ -12,6 +11,8 @@ import 'package:health_app/widgets/top_icon_in_home_page.dart';
 
 class DoctorPage extends StatefulWidget {
   static const String routeName = '/doctor';
+
+  const DoctorPage({super.key});
 
   @override
   State<DoctorPage> createState() => _DoctorPageState();

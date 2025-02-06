@@ -231,7 +231,8 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
           backgroundColor: AppTheme.green,
         ),
         onPressed: () {
-          Navigator.of(context).pushNamed(YourAppoinment.id);
+          Navigator.of(context)
+              .pushNamed(YourAppoinment.id, arguments: doctorId);
         },
         child: const Text(
           'Booking',

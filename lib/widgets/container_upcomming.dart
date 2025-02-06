@@ -3,6 +3,8 @@ import 'package:health_app/app_theme.dart';
 import 'package:health_app/pages/cancelled_reason_page.dart';
 
 class ContainerUpcoming extends StatelessWidget {
+  const ContainerUpcoming({super.key});
+
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;

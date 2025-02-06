@@ -1,10 +1,11 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:health_app/app_theme.dart';
 import 'package:health_app/pages/appointment_screen.dart';
 import 'package:health_app/pages/doctor_page_information.dart';
 
 class ContainerDoctorFavorite extends StatefulWidget {
+  const ContainerDoctorFavorite({super.key});
+
   @override
   State<ContainerDoctorFavorite> createState() =>
       _ContainerDoctorFavoriteState();
@@ -25,7 +26,7 @@ class _ContainerDoctorFavoriteState extends State<ContainerDoctorFavorite> {
           Navigator.pushNamed(context, DoctorInformation.routeName);
         },
         child: Container(
-          margin: EdgeInsets.symmetric(vertical: 8, horizontal: 6),
+          margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 6),
           height: height * 0.20,
           width: width * 15,
           decoration: BoxDecoration(
@@ -33,8 +34,8 @@ class _ContainerDoctorFavoriteState extends State<ContainerDoctorFavorite> {
             borderRadius: BorderRadius.circular(18),
           ),
           child: Row(children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 14.0),
+            const Padding(
+              padding: EdgeInsets.only(left: 14.0),
               child: CircleAvatar(
                 radius: 37,
                 backgroundImage: AssetImage('assets/images/doctor_image.png'),
@@ -50,7 +51,7 @@ class _ContainerDoctorFavoriteState extends State<ContainerDoctorFavorite> {
                       Image.asset(
                         'assets/images/professional.png',
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 4,
                       ),
                       Text(
@@ -63,7 +64,7 @@ class _ContainerDoctorFavoriteState extends State<ContainerDoctorFavorite> {
                       )
                     ],
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 5,
                   ),
                   Column(
@@ -78,11 +79,11 @@ class _ContainerDoctorFavoriteState extends State<ContainerDoctorFavorite> {
                           borderRadius: BorderRadius.circular(15),
                         ),
                         child: Padding(
-                          padding:
-                              EdgeInsets.only(left: 20.0, top: 2, bottom: 2),
+                          padding: const EdgeInsets.only(
+                              left: 20.0, top: 2, bottom: 2),
                           child: Row(
                             children: [
-                              Column(
+                              const Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -103,9 +104,9 @@ class _ContainerDoctorFavoriteState extends State<ContainerDoctorFavorite> {
                                   ),
                                 ],
                               ),
-                              Spacer(),
+                              const Spacer(),
                               Padding(
-                                  padding: EdgeInsets.only(right: 9.0),
+                                  padding: const EdgeInsets.only(right: 9.0),
                                   child: IconButton(
                                       onPressed: () {
                                         setState(() {
@@ -113,11 +114,11 @@ class _ContainerDoctorFavoriteState extends State<ContainerDoctorFavorite> {
                                         });
                                       },
                                       icon: isFavorite
-                                          ? Icon(
+                                          ? const Icon(
                                               Icons.favorite_border,
                                               color: AppTheme.green,
                                             )
-                                          : Icon(
+                                          : const Icon(
                                               Icons.favorite,
                                               color: AppTheme.green,
                                             ))),
@@ -125,7 +126,7 @@ class _ContainerDoctorFavoriteState extends State<ContainerDoctorFavorite> {
                           ),
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
                       InkWell(

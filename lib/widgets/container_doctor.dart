@@ -14,7 +14,7 @@ class ContainerDoctor extends StatefulWidget {
   final String doctorNmae;
   final String descrabtion;
   final String doctorImage;
-  final DoctorModel doctorid; // استخدم DoctorModel بدلاً من الحقول الفردية
+  final DoctorModel doctorid;
 
   @override
   State<ContainerDoctor> createState() => _ContainerDoctorState();
@@ -28,7 +28,7 @@ class _ContainerDoctorState extends State<ContainerDoctor> {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       width: width * 0.17,
       height: height * 0.17,
       decoration: BoxDecoration(
@@ -61,7 +61,7 @@ class _ContainerDoctorState extends State<ContainerDoctor> {
                       .titleSmall
                       ?.copyWith(fontSize: 14),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 15,
                 ),
                 Row(
@@ -95,26 +95,26 @@ class _ContainerDoctorState extends State<ContainerDoctor> {
                     ),
                     Defaulticon(
                       onTap: () {},
-                      icon: Icon(
+                      icon: const Icon(
                         CupertinoIcons.exclamationmark,
                         size: 17,
                         color: AppTheme.green,
                       ),
                       containerClolor: AppTheme.white,
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 4,
                     ),
                     Defaulticon(
                       onTap: () {},
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.question_mark,
                         size: 17,
                         color: AppTheme.green,
                       ),
                       containerClolor: AppTheme.white,
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 4,
                     ),
                     Defaulticon(

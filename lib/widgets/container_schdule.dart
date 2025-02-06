@@ -12,7 +12,7 @@ class ContainerSchdule extends StatelessWidget {
         Navigator.pushNamed(context, AppointmentScreen.id, arguments: doctorId);
       },
       child: Container(
-        padding: EdgeInsets.only(left: 5),
+        padding: const EdgeInsets.only(left: 5),
         height: 30,
         width: 110,
         decoration: BoxDecoration(

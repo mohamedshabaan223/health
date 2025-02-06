@@ -16,7 +16,7 @@ class DoctorModel {
       id: json['id'] as int?,
       doctorName: json['doctorName'] as String,
       specializationName: json['specializationName'] as String,
-      photo: json['photo'] as String?, // Allow null for photo
+      photo: json['photo'] as String?,
     );
   }
 }

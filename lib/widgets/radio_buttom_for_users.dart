@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class RadioButtonForUsers extends StatefulWidget {
+  const RadioButtonForUsers({super.key});
+
   @override
   _RadioButtonForUsersState createState() => _RadioButtonForUsersState();
 }

@@ -7,6 +7,7 @@ import 'package:health_app/tabs/profile/profile.dart';
 
 class HomeScreen extends StatefulWidget {
   static const String id = '/home-screen';
+
   @override
   State<HomeScreen> createState() => _MyWidgetState();
 }

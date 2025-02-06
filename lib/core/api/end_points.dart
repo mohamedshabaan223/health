@@ -1,8 +1,10 @@
 class EndPoints {
-  static String baseUrl = "http://10.0.2.2:5282/Api/V1/";
-  static String login = "Account/Login";
-  static String register = "Account/Register";
-  static String getAllDoctors = "Doctors/GetAllDoctors";
+  static String baseUrl = "http://10.0.2.2:5282/Api/";
+  static String login = "V1/Account/Login";
+  static String register = "V1/Account/Register";
+  static String getAllDoctors = "V1/Doctors/GetAllDoctors";
+  static String payment = "Payment/Pay";
+  static String paymentConfirm = "Payment/payment-success";
 }
 
 class ApiKey {

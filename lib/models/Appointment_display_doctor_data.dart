@@ -1,4 +1,4 @@
-import 'package:intl/intl.dart'; // استيراد مكتبة intl لتنسيق الوقت
+import 'package:intl/intl.dart';
 
 class AppointmentDisplayDoctorData {
   final String time;
@@ -34,11 +34,10 @@ class AppointmentDisplayDoctorData {
     }
   }
 
-  /// ✅ **إضافة دالة استخراج الوقت فقط بصيغة `HH:mm` (مثال: "14:30")**
   String get formattedTime {
     try {
       DateTime parsedTime = DateTime.parse(time);
-      return DateFormat.Hm().format(parsedTime); // 🔥 "14:30"
+      return DateFormat.Hm().format(parsedTime);
     } catch (e) {
       return "Invalid Time";
     }

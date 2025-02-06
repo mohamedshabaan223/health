@@ -16,7 +16,7 @@ class StartScreenButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
-        fixedSize: Size(MediaQuery.of(context).size.width * 0.5, 20),
+        fixedSize: Size(MediaQuery.of(context).size.width * 0.7, 45),
         backgroundColor: buttonBackgroundColor,
         foregroundColor: buttonForegroundColor,
         shape: RoundedRectangleBorder(

@@ -1,8 +1,16 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:health_app/app_theme.dart';
+import 'package:health_app/core/api/api_consumer.dart';
+import 'package:health_app/core/api/dio_consumer.dart';
 import 'package:health_app/pages/appointment_screen.dart';
+import 'package:health_app/pages/payment_page.dart';
 import 'package:health_app/widgets/card_of_doctor.dart';
 import 'package:health_app/widgets/start_screen_button.dart';
+import 'package:health_app/cubits/payment_cubit/payment_cubit.dart'; // استيراد الـCubit
+import 'package:health_app/cubits/payment_cubit/payment_state.dart';
+import 'package:url_launcher/url_launcher.dart'; // استيراد حالة الـCubit
 
 class YourAppoinment extends StatelessWidget {
   const YourAppoinment({super.key});
@@ -10,17 +18,31 @@ class YourAppoinment extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final doctorId = ModalRoute.of(context)?.settings.arguments as int?;
+
+    // تأكد من وجود الـ doctorId
+    if (doctorId == null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _showErrorDialog(context, "Doctor ID is missing or invalid");
+      });
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      ); // إذا لم يكن doctorId موجودًا، إعرض الـ CircularProgressIndicator حتى يتم حل المشكلة
+    }
+
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
-    return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(15.0),
-          child: SingleChildScrollView(
-            scrollDirection: Axis.vertical,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15),
-              child: SingleChildScrollView(
+
+    return BlocProvider(
+      create: (_) => PaymentCubit(DioConsumer(dio: Dio())), // توفير الـCubit
+      child: Scaffold(
+        body: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: SingleChildScrollView(
+              scrollDirection: Axis.vertical,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
@@ -43,7 +65,7 @@ class YourAppoinment extends StatelessWidget {
                             width: width * 0.15,
                           ),
                           Text(
-                            'Your Appoinment',
+                            'Your Appointment',
                             style: Theme.of(context)
                                 .textTheme
                                 .titleMedium!
@@ -204,24 +226,102 @@ class YourAppoinment extends StatelessWidget {
                       style: TextStyle(fontSize: 13),
                     ),
                     SizedBox(
-                      height: height * 0.02,
+                      height: height * 0.05,
                     ),
                     StartScreenButton(
-                        label: 'Pay Cash',
-                        onPressed: () {},
-                        buttonBackgroundColor: AppTheme.green,
-                        buttonForegroundColor: AppTheme.white),
-                    StartScreenButton(
-                        label: 'Card or Debit',
-                        onPressed: () {},
-                        buttonBackgroundColor: AppTheme.green,
-                        buttonForegroundColor: AppTheme.white)
+                      label: 'Pay Cash',
+                      onPressed: () {
+                        if (doctorId != null) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text("Payment successfully!",
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      color: AppTheme.white,
+                                      fontWeight: FontWeight.bold)),
+                            ),
+                          );
+                        }
+                      },
+                      buttonBackgroundColor:
+                          doctorId != null ? AppTheme.green : Colors.grey,
+                      buttonForegroundColor: AppTheme.white,
+                    ),
+                    SizedBox(
+                      height: height * 0.01,
+                    ),
+                    BlocConsumer<PaymentCubit, PaymentState>(
+                      listener: (context, state) {
+                        if (state is PaymentSuccess) {
+                          _launchPaymentUrl(context, state.paymentUrl);
+                        }
+                        if (state is PaymentFailure) {
+                          _showErrorDialog(
+                              context, "Payment failed: ${state.errorMessage}");
+                        }
+                      },
+                      builder: (context, state) {
+                        if (state is PaymentLoading) {
+                          return const Center(
+                              child: CircularProgressIndicator());
+                        }
+
+                        return StartScreenButton(
+                          label: 'Card or Debit',
+                          onPressed: () {
+                            if (doctorId != null) {
+                              context
+                                  .read<PaymentCubit>()
+                                  .makePayment(doctorId: doctorId);
+                            } else {
+                              _showErrorDialog(context, "Doctor ID is invalid");
+                            }
+                          },
+                          buttonBackgroundColor:
+                              doctorId != null ? AppTheme.green : Colors.grey,
+                          buttonForegroundColor: AppTheme.white,
+                        );
+                      },
+                    ),
                   ],
                 ),
               ),
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Future<void> _launchPaymentUrl(BuildContext context, String? url) async {
+    if (url == null || url.isEmpty) {
+      debugPrint("Invalid payment URL");
+      _showErrorDialog(context, "Invalid payment URL");
+      return;
+    }
+
+    // Navigate to botumSheet with the payment URL
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => PaymentPage(paymentUrl: url),
+      ),
+    );
+  }
+
+  void _showErrorDialog(BuildContext context, String errorMessage) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text("Error"),
+        content: Text(errorMessage),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text("OK"),
+          ),
+        ],
       ),
     );
   }
