@@ -18,3 +18,15 @@ final class BookingCubitError extends BookingCubitState {
 
   BookingCubitError(this.errormessage);
 }
+
+class BookingCubitDataLoading extends BookingCubitState {}
+
+class BookingCubitDataSuccess extends BookingCubitState {
+  final BookingResponse bookingResponse;
+  BookingCubitDataSuccess(this.bookingResponse);
+}
+
+class BookingCubitDataError extends BookingCubitState {
+  final String message;
+  BookingCubitDataError(this.message);
+}

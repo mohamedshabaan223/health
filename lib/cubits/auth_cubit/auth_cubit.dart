@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:health_app/cache/cache_helper.dart';
 import 'package:health_app/core/api/api_consumer.dart';
@@ -60,12 +61,13 @@ class AuthCubit extends Cubit<AuthState> {
       final response = await api.post(
         EndPoints.register,
         data: {
+          ApiKey.username: registerUserName.text,
           ApiKey.email: registerEmail.text,
           ApiKey.password: registerPassword.text,
-          ApiKey.username: registerUserName.text,
           ApiKey.phone: registerPhoneNumber.text,
         },
       );
+
       emit(RegisterSuccess());
     } on ServerException catch (e) {
       print("Error caught in register: ${e.errorModel.errorMessage}");

@@ -42,7 +42,14 @@ class _CalendarState extends State<Calendar>
     //final pationToken = BlocProvider.of<AuthCubit>(context).user!.token!;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('All Appointment'),
+        title: Column(
+          children: [
+            SizedBox(
+              height: 10,
+            ),
+            Text('All Appointment'),
+          ],
+        ),
         bottom: TabBar(
           controller: _tabController,
           indicatorColor: AppTheme.green,

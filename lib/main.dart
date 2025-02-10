@@ -46,7 +46,6 @@ void main() async {
   await CacheHelper().init();
   token = CacheHelper().getData(key: ApiKey.token);
   print("Token: $token");
-
   runApp(const MyApp());
 }
 

@@ -12,12 +12,35 @@ class PaymentPage extends StatefulWidget {
 
 class _PaymentPageState extends State<PaymentPage> {
   late WebViewController controller;
+  bool isLoading = true;
+  bool isPaymentCompleted = false;
 
   @override
   void initState() {
     super.initState();
     controller = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..setNavigationDelegate(NavigationDelegate(
+        onPageFinished: (url) {
+          setState(() {
+            isLoading = false;
+          });
+        },
+        onNavigationRequest: (NavigationRequest request) {
+          if (request.url.contains("success")) {
+            setState(() {
+              isPaymentCompleted = true;
+            });
+            Future.delayed(const Duration(seconds: 1), () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => payment_success()),
+              );
+            });
+          }
+          return NavigationDecision.navigate;
+        },
+      ))
       ..loadRequest(Uri.parse(widget.paymentUrl));
   }
 
@@ -25,34 +48,32 @@ class _PaymentPageState extends State<PaymentPage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(
-          title: const Text("Payment"),
+        appBar: AppBar(title: const Text("Payment")),
+        body: Stack(
+          children: [
+            WebViewWidget(controller: controller),
+            if (isLoading) const Center(child: CircularProgressIndicator()),
+          ],
         ),
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              SizedBox(
-                height: 730,
-                child: WebViewWidget(
-                  controller: controller,
+        bottomNavigationBar: isPaymentCompleted
+            ? null
+            : Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 12, horizontal: 150),
+                  ),
+                  onPressed: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => payment_success()),
+                    );
+                  },
+                  child: const Text("Done"),
                 ),
               ),
-              const SizedBox(height: 15),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(
-                  vertical: 12,
-                  horizontal: 150,
-                )),
-                onPressed: () {
-                  Navigator.pushNamed(context, payment_success.id);
-                },
-                child: const Text("Done"),
-              ),
-              const SizedBox(height: 15),
-            ],
-          ),
-        ),
       ),
     );
   }

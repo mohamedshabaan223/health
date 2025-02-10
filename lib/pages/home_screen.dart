@@ -3,7 +3,7 @@ import 'package:health_app/app_theme.dart';
 import 'package:health_app/pages/home_page.dart';
 import 'package:health_app/tabs/calendar/calendar.dart';
 import 'package:health_app/tabs/chat/chat.dart';
-import 'package:health_app/tabs/profile/profile.dart';
+import 'package:health_app/tabs/notifaction/notifaction.dart';
 
 class HomeScreen extends StatefulWidget {
   static const String id = '/home-screen';
@@ -16,8 +16,8 @@ class _MyWidgetState extends State<HomeScreen> {
   int selectedIndex = 0;
   List<Widget> tabs = [
     HomePage(),
-    Chat(),
-    Profile(),
+    ChatScreen(),
+    Notifaction(),
     Calendar(),
   ];
   @override
@@ -53,8 +53,8 @@ class _MyWidgetState extends State<HomeScreen> {
                   label: 'Chat',
                 ),
                 BottomNavigationBarItem(
-                  icon: Icon(Icons.person_2_outlined, size: 22),
-                  label: 'Profile',
+                  icon: Icon(Icons.notification_add_outlined, size: 22),
+                  label: 'Notifaction',
                 ),
                 BottomNavigationBarItem(
                   icon: Icon(Icons.calendar_month_outlined, size: 22),

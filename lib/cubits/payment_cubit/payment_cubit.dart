@@ -1,9 +1,7 @@
-import 'dart:convert';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:health_app/core/api/api_consumer.dart';
 import 'package:health_app/core/errors/exceptions.dart';
-import 'package:health_app/models/payment_model.dart';
 import 'package:health_app/cubits/payment_cubit/payment_state.dart';
 
 class PaymentCubit extends Cubit<PaymentState> {
@@ -11,25 +9,27 @@ class PaymentCubit extends Cubit<PaymentState> {
 
   final ApiConsumer api;
 
-  Future<void> makePayment({required int doctorId}) async {
+  Future<void> makePayment(
+      {required int doctorId, required int bookingId}) async {
     try {
       emit(PaymentLoading());
-      debugPrint('Request Data: {"doctorId": $doctorId}');
+      debugPrint(
+          'Request Data: {"doctorId": $doctorId, "bookingId": $bookingId}');
 
       final response = await api.post(
         'http://10.0.2.2:5282/api/Payment/Pay',
+        data: {"doctorId": doctorId, "bookingId": bookingId},
         isFormData: true,
-        data: {"doctorId": doctorId},
       );
 
       if (response is Map<String, dynamic> &&
           response.containsKey("paymentUrl")) {
         final paymentUrl = response['paymentUrl'];
+        debugPrint('Payment URL: $paymentUrl');
 
-        // Emit success state with the payment URL
         emit(PaymentSuccess(paymentUrl: paymentUrl));
       } else {
-        throw Exception("Unexpected response or missing paymentUrl.");
+        throw Exception("Unexpected response format or missing paymentUrl.");
       }
     } on ServerException catch (e) {
       emit(PaymentFailure(errorMessage: e.errorModel.errorMessage));
@@ -44,8 +44,6 @@ class PaymentCubit extends Cubit<PaymentState> {
 
       final response = await api.get(
           "http://10.0.2.2:5282/api/Payment/payment-success?bookingId=$bookingId");
-
-      // Ensure response is a Map and contains the necessary status
       if (response != null &&
           response is Map<String, dynamic> &&
           response.containsKey('status') &&

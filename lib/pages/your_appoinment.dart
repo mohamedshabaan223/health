@@ -2,15 +2,15 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:health_app/app_theme.dart';
-import 'package:health_app/core/api/api_consumer.dart';
 import 'package:health_app/core/api/dio_consumer.dart';
+import 'package:health_app/cubits/auth_cubit/auth_cubit.dart';
+import 'package:health_app/cubits/booking_cubit/booking_cubit_cubit.dart';
 import 'package:health_app/pages/appointment_screen.dart';
 import 'package:health_app/pages/payment_page.dart';
 import 'package:health_app/widgets/card_of_doctor.dart';
 import 'package:health_app/widgets/start_screen_button.dart';
 import 'package:health_app/cubits/payment_cubit/payment_cubit.dart'; // استيراد الـCubit
 import 'package:health_app/cubits/payment_cubit/payment_state.dart';
-import 'package:url_launcher/url_launcher.dart'; // استيراد حالة الـCubit
 
 class YourAppoinment extends StatelessWidget {
   const YourAppoinment({super.key});
@@ -18,7 +18,28 @@ class YourAppoinment extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final doctorId = ModalRoute.of(context)?.settings.arguments as int?;
+    final Object? args = ModalRoute.of(context)?.settings.arguments;
+    final Map<String, dynamic> arguments =
+        (args is Map<String, dynamic>) ? args : {};
+
+    final int doctorId = arguments["doctorId"] ?? 0;
+    final String day = arguments["day"] ?? "Unknown";
+    final String time = arguments["time"] ?? "Unknown";
+    final bool forHimSelf = arguments["forHimSelf"] ?? false;
+
+    final String patientName = arguments["patientName"] != null &&
+            arguments["patientName"].toString().isNotEmpty
+        ? arguments["patientName"]
+        : (forHimSelf
+            ? context.read<AuthCubit>().registerUserName.text
+            : "Unknown");
+
+    final String gender = arguments["gender"] ?? "Unknown";
+    final int age = arguments["age"] ?? 0;
+    final int patientId = arguments["patientId"] ?? 0;
+    final String problemDescription = arguments["problemDescription"] ?? "";
+    final int bookingId =
+        arguments["bookingId"] ?? 0; // استقبال bookingId بالشكل الصحيح
 
     // تأكد من وجود الـ doctorId
     if (doctorId == null) {
@@ -27,7 +48,7 @@ class YourAppoinment extends StatelessWidget {
       });
       return const Scaffold(
         body: Center(child: CircularProgressIndicator()),
-      ); // إذا لم يكن doctorId موجودًا، إعرض الـ CircularProgressIndicator حتى يتم حل المشكلة
+      );
     }
 
     double height = MediaQuery.of(context).size.height;
@@ -43,247 +64,229 @@ class YourAppoinment extends StatelessWidget {
               scrollDirection: Axis.vertical,
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          IconButton(
-                            onPressed: () {
-                              Navigator.of(context).pop(AppointmentScreen.id);
-                            },
-                            icon: const Icon(
-                              Icons.arrow_back_ios_new_outlined,
-                              size: 25,
-                              color: AppTheme.green,
-                            ),
-                          ),
-                          SizedBox(
-                            width: width * 0.15,
-                          ),
-                          Text(
-                            'Your Appointment',
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleMedium!
-                                .copyWith(
-                                    fontSize: 20,
-                                    color: AppTheme.green,
-                                    fontWeight: FontWeight.bold),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const CardOfDoctor(),
-                    SizedBox(
-                      height: height * 0.03,
-                    ),
-                    const Divider(
-                      color: AppTheme.green,
-                      thickness: 1.2,
-                    ),
-                    SizedBox(
-                      height: height * 0.01,
-                    ),
-                    Row(
+                child: BlocBuilder<BookingCubit, BookingCubitState>(
+                  builder: (context, state) {
+                    if (state is BookingCubitDataLoading) {
+                      return const Center(child: CircularProgressIndicator());
+                    } else if (state is BookingCubitDataSuccess) {
+                      final bookingData = state.bookingResponse;
+                    }
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        _buildInfoContainer(
-                            text: '24 WED 2024', width: width * 0.5),
-                        SizedBox(
-                          width: width * 0.1,
-                        ),
-                        IconButton(
-                          onPressed: () {},
-                          icon: const Icon(
-                            Icons.check_circle,
-                            color: AppTheme.green,
-                            size: 32,
-                          ),
-                        ),
-                        IconButton(
-                          onPressed: () {},
-                          icon: const Icon(
-                            Icons.cancel,
-                            color: AppTheme.green,
-                            size: 32,
-                          ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Text(
-                          '             at 10:00 AM',
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleMedium!
-                              .copyWith(
-                                  fontSize: 15,
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              IconButton(
+                                onPressed: () {
+                                  Navigator.of(context)
+                                      .pop(AppointmentScreen.id);
+                                },
+                                icon: const Icon(
+                                  Icons.arrow_back_ios_new_outlined,
+                                  size: 25,
                                   color: AppTheme.green,
-                                  fontWeight: FontWeight.bold),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: height * 0.01,
-                    ),
-                    const Divider(
-                      color: AppTheme.green,
-                      thickness: 1.2,
-                    ),
-                    SizedBox(
-                      height: height * 0.01,
-                    ),
-                    const Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Booking For',
-                          style: TextStyle(fontSize: 15),
-                        ),
-                        Text(
-                          'Another Person',
-                          style: TextStyle(fontSize: 15),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: height * 0.012,
-                    ),
-                    const Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Full Name',
-                          style: TextStyle(fontSize: 15),
-                        ),
-                        Text(
-                          'Habiba',
-                          style: TextStyle(fontSize: 15),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: height * 0.012,
-                    ),
-                    const Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Age',
-                          style: TextStyle(fontSize: 15),
-                        ),
-                        Text(
-                          '22',
-                          style: TextStyle(fontSize: 15),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: height * 0.012,
-                    ),
-                    const Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Gender',
-                          style: TextStyle(fontSize: 15),
-                        ),
-                        Text(
-                          ' Female',
-                          style: TextStyle(fontSize: 15),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: width * 0.02,
-                    ),
-                    const Divider(
-                      color: AppTheme.green,
-                      thickness: 1.2,
-                    ),
-                    SizedBox(
-                      height: height * 0.02,
-                    ),
-                    const Row(
-                      children: [
-                        Text(
-                          'Problem',
-                          style: TextStyle(
-                            fontSize: 19,
+                                ),
+                              ),
+                              SizedBox(
+                                width: width * 0.15,
+                              ),
+                              Text(
+                                'Your Appointment',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleMedium!
+                                    .copyWith(
+                                        fontSize: 20,
+                                        color: AppTheme.green,
+                                        fontWeight: FontWeight.bold),
+                              ),
+                            ],
                           ),
                         ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: height * 0.01,
-                    ),
-                    const Text(
-                      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-                      style: TextStyle(fontSize: 13),
-                    ),
-                    SizedBox(
-                      height: height * 0.05,
-                    ),
-                    StartScreenButton(
-                      label: 'Pay Cash',
-                      onPressed: () {
-                        if (doctorId != null) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text("Payment successfully!",
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      color: AppTheme.white,
-                                      fontWeight: FontWeight.bold)),
+                        const CardOfDoctor(),
+                        SizedBox(
+                          height: height * 0.03,
+                        ),
+                        const Divider(
+                          color: AppTheme.green,
+                          thickness: 1.2,
+                        ),
+                        SizedBox(
+                          height: height * 0.02,
+                        ),
+                        Row(
+                          children: [
+                            const Text('Day:   ',
+                                style: TextStyle(
+                                    fontSize: 17,
+                                    color: AppTheme.green,
+                                    fontWeight: FontWeight.bold)),
+                            Text(
+                              day,
+                              style: const TextStyle(fontSize: 16),
                             ),
-                          );
-                        }
-                      },
-                      buttonBackgroundColor:
-                          doctorId != null ? AppTheme.green : Colors.grey,
-                      buttonForegroundColor: AppTheme.white,
-                    ),
-                    SizedBox(
-                      height: height * 0.01,
-                    ),
-                    BlocConsumer<PaymentCubit, PaymentState>(
-                      listener: (context, state) {
-                        if (state is PaymentSuccess) {
-                          _launchPaymentUrl(context, state.paymentUrl);
-                        }
-                        if (state is PaymentFailure) {
-                          _showErrorDialog(
-                              context, "Payment failed: ${state.errorMessage}");
-                        }
-                      },
-                      builder: (context, state) {
-                        if (state is PaymentLoading) {
-                          return const Center(
-                              child: CircularProgressIndicator());
-                        }
-
-                        return StartScreenButton(
-                          label: 'Card or Debit',
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            const Text('Time: ',
+                                style: TextStyle(
+                                    fontSize: 17,
+                                    color: AppTheme.green,
+                                    fontWeight: FontWeight.bold)),
+                            Text(
+                              time,
+                              style: const TextStyle(fontSize: 16),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: height * 0.03,
+                        ),
+                        const Divider(
+                          color: AppTheme.green,
+                          thickness: 1.2,
+                        ),
+                        SizedBox(
+                          height: height * 0.01,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text(
+                              'Booking For',
+                              style: TextStyle(fontSize: 15),
+                            ),
+                            Text(
+                              forHimSelf ? 'Yourself' : 'Another Person',
+                              style: const TextStyle(fontSize: 15),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: height * 0.012,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text(
+                              'Age',
+                              style: TextStyle(fontSize: 15),
+                            ),
+                            Text(
+                              age.toString(),
+                              style: const TextStyle(fontSize: 15),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: height * 0.012,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text(
+                              'Gender',
+                              style: TextStyle(fontSize: 15),
+                            ),
+                            Text(
+                              gender,
+                              style: const TextStyle(fontSize: 15),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: width * 0.02,
+                        ),
+                        const Divider(
+                          color: AppTheme.green,
+                          thickness: 1.2,
+                        ),
+                        SizedBox(
+                          height: height * 0.02,
+                        ),
+                        const Row(
+                          children: [
+                            Text(
+                              'Problem',
+                              style: TextStyle(
+                                fontSize: 19,
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: height * 0.01,
+                        ),
+                        Text(
+                          problemDescription,
+                          style: const TextStyle(fontSize: 13),
+                        ),
+                        SizedBox(
+                          height: height * 0.08,
+                        ),
+                        StartScreenButton(
+                          label: 'Pay Cash',
                           onPressed: () {
                             if (doctorId != null) {
-                              context
-                                  .read<PaymentCubit>()
-                                  .makePayment(doctorId: doctorId);
-                            } else {
-                              _showErrorDialog(context, "Doctor ID is invalid");
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text("Payment successfully!",
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          color: AppTheme.white,
+                                          fontWeight: FontWeight.bold)),
+                                ),
+                              );
                             }
                           },
                           buttonBackgroundColor:
                               doctorId != null ? AppTheme.green : Colors.grey,
                           buttonForegroundColor: AppTheme.white,
-                        );
-                      },
-                    ),
-                  ],
+                        ),
+                        SizedBox(
+                          height: height * 0.01,
+                        ),
+                        BlocConsumer<PaymentCubit, PaymentState>(
+                          listener: (context, state) {
+                            if (state is PaymentSuccess) {
+                              _launchPaymentUrl(context, state.paymentUrl);
+                            }
+                            if (state is PaymentFailure) {
+                              _showErrorDialog(context,
+                                  "Payment failed: ${state.errorMessage}");
+                            }
+                          },
+                          builder: (context, state) {
+                            if (state is PaymentLoading) {
+                              return const Center(
+                                  child: CircularProgressIndicator());
+                            }
+
+                            return StartScreenButton(
+                              label: 'Card or Debit',
+                              onPressed: () {
+                                if (doctorId != null) {
+                                  context.read<PaymentCubit>().makePayment(
+                                      doctorId: doctorId, bookingId: bookingId);
+                                } else {
+                                  _showErrorDialog(
+                                      context, "Doctor ID is invalid");
+                                }
+                              },
+                              buttonBackgroundColor: doctorId != null
+                                  ? AppTheme.green
+                                  : Colors.grey,
+                              buttonForegroundColor: AppTheme.white,
+                            );
+                          },
+                        ),
+                      ],
+                    );
+                  },
                 ),
               ),
             ),
@@ -312,14 +315,14 @@ class YourAppoinment extends StatelessWidget {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text("Error"),
+        title: const Text("Error"),
         content: Text(errorMessage),
         actions: [
           TextButton(
             onPressed: () {
               Navigator.of(context).pop();
             },
-            child: Text("OK"),
+            child: const Text("OK"),
           ),
         ],
       ),

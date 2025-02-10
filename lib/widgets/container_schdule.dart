@@ -25,7 +25,7 @@ class ContainerSchdule extends StatelessWidget {
               size: 25,
             ),
             Text(
-              'schedule',
+              ' booking',
               style: Theme.of(context).textTheme.labelMedium?.copyWith(
                     color: AppTheme.white,
                     fontSize: 15,

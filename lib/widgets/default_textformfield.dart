@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:health_app/app_theme.dart';
 
@@ -6,9 +8,11 @@ class DefaultTextformfield extends StatefulWidget {
       {required this.hint,
       required this.controller,
       this.isPassword = false,
-      required this.onChanged});
+      required this.onChanged,
+      this.enabled = true});
 
   String hint;
+  bool enabled;
   TextEditingController controller;
   bool isPassword;
   Function(String)? onChanged;
@@ -21,6 +25,7 @@ class _DefaultTextformfieldState extends State<DefaultTextformfield> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      enabled: widget.enabled,
       onChanged: widget.onChanged,
       validator: (value) {
         if (value!.isEmpty) {

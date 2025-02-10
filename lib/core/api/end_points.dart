@@ -15,7 +15,7 @@ class ApiKey {
   static String token = 'token';
   static String id = 'id';
   static String message = 'message';
-  static String username = 'username';
+  static String username = 'userName';
   static String phone = 'phone';
   static String doctorId = 'id';
   static String doctorName = 'doctorName';

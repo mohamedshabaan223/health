@@ -4,6 +4,7 @@ import 'package:health_app/app_theme.dart';
 import 'package:health_app/cubits/auth_cubit/auth_cubit.dart';
 import 'package:health_app/pages/create_new_password_page.dart';
 import 'package:health_app/pages/home_page.dart';
+import 'package:health_app/pages/home_screen.dart';
 import 'package:health_app/pages/register_page.dart';
 import 'package:health_app/widgets/default_textbutton.dart';
 import 'package:health_app/widgets/default_textformfield.dart';
@@ -38,8 +39,8 @@ class _LoginState extends State<Login> {
               content: Text('Login Success'),
             ),
           );
-          Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (context) => const HomePage()));
+          Navigator.pushReplacement(
+              context, MaterialPageRoute(builder: (context) => HomeScreen()));
         } else if (state is LoginFailure) {
           isLoading = false;
           ScaffoldMessenger.of(context).showSnackBar(

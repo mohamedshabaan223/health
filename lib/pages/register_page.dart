@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:health_app/app_theme.dart';
 import 'package:health_app/cubits/auth_cubit/auth_cubit.dart';
 import 'package:health_app/pages/home_page.dart';
+import 'package:health_app/pages/home_screen.dart';
 import 'package:health_app/widgets/default_textbutton.dart';
 import 'package:health_app/widgets/default_textformfield.dart';
 import 'package:health_app/widgets/list_view_icons.dart';
@@ -33,8 +34,8 @@ class RegisterPage extends StatelessWidget {
               content: Text('Register Success'),
             ),
           );
-          Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (context) => const HomePage()));
+          Navigator.pushReplacement(
+              context, MaterialPageRoute(builder: (context) => HomeScreen()));
           isLoading = false;
         } else if (state is RegisterFailure) {
           isLoading = false;
