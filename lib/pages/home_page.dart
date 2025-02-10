@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:health_app/app_theme.dart';
+import 'package:health_app/pages/Specializations_page.dart';
 import 'package:health_app/pages/doctor_favorite.dart';
 import 'package:health_app/pages/doctor_page.dart';
 import 'package:health_app/pages/doctor_page_information.dart';
+import 'package:health_app/widgets/CustomSpecializationsContainer.dart';
 import 'package:health_app/widgets/card_of_doctor.dart';
 import 'package:health_app/widgets/custom_user_information.dart';
 import 'package:health_app/widgets/doctors_and_favourite.dart';
@@ -78,14 +80,16 @@ class HomePage extends StatelessWidget {
             Row(
               children: [
                 Text(
-                  'Specialties',
+                  'Specializations',
                   style: Theme.of(context).textTheme.titleLarge!.copyWith(
                         color: AppTheme.green3,
                       ),
                 ),
                 const Spacer(),
                 TextButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.of(context).push(_createRoute());
+                  },
                   child: Text(
                     'See all',
                     style: Theme.of(context).textTheme.titleMedium!.copyWith(
@@ -100,47 +104,46 @@ class HomePage extends StatelessWidget {
             SizedBox(height: height * 0.03),
 
             // Specialties items (row 1)
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SpecialtiesItem(
-                  onTap: () {},
-                  image: 'assets/images/Cardiology Specialties Button.png',
-                ),
-                SizedBox(width: width * 0.03),
-                SpecialtiesItem(
-                  onTap: () {},
-                  image: 'assets/images/Dermatology Specialties Button.png',
-                ),
-                SizedBox(width: width * 0.03),
-                SpecialtiesItem(
-                  onTap: () {},
-                  image: 'assets/images/General Medicane Button.png',
-                ),
-              ],
-            ),
-            SizedBox(height: height * 0.014),
+            // استبدال الصفوف الحالية بهذه الـ GridView
+            GridView.builder(
+              shrinkWrap: true,
+              physics:
+                  const NeverScrollableScrollPhysics(), // منع التمرير الداخلي
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3, // عدد العناصر في كل صف
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 15,
+                childAspectRatio: 1,
+              ),
+              itemCount: 6, // عدد التخصصات
+              itemBuilder: (context, index) {
+                List<String> images = [
+                  'assets/images/heart.png',
+                  'assets/images/hair.png',
+                  'assets/images/general.png',
+                  'assets/images/Gynecology.png',
+                  'assets/images/Odontology.png',
+                  'assets/images/Oncology.png',
+                ];
+                List<String> specializationsTitles = [
+                  'Cardiology',
+                  'Dermatology',
+                  'General',
+                  'Gynecology',
+                  'Odontology',
+                  'Oncology',
+                ];
 
-            // Specialties items (row 2)
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SpecialtiesItem(
-                  onTap: () {},
-                  image: 'assets/images/Gynecology Specialties Button.png',
-                ),
-                SizedBox(width: width * 0.03),
-                SpecialtiesItem(
-                  onTap: () {},
-                  image: 'assets/images/Odontology Specialties Button.png',
-                ),
-                SizedBox(width: width * 0.03),
-                SpecialtiesItem(
-                  onTap: () {},
-                  image: 'assets/images/Oncology Specialties Button.png',
-                ),
-              ],
+                return GestureDetector(
+                    onTap: () {},
+                    child: SpecializationContainer(
+                      imagePath: images[index],
+                      title: specializationsTitles[index],
+                      onTap: () {},
+                    ));
+              },
             ),
+
             SizedBox(height: height * 0.03),
 
             // Doctors list with constrained height
@@ -166,4 +169,24 @@ class HomePage extends StatelessWidget {
       ),
     );
   }
+}
+
+Route _createRoute() {
+  return PageRouteBuilder(
+    pageBuilder: (context, animation, secondaryAnimation) =>
+        const SpecializationsPage(),
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      const begin = Offset(1.0, 0.0); // يبدأ من اليمين
+      const end = Offset.zero; // ينتهي في مكانه الطبيعي
+      const curve = Curves.easeInOut; // تسهيل الحركة
+
+      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+      var offsetAnimation = animation.drive(tween);
+
+      return SlideTransition(
+        position: offsetAnimation,
+        child: child,
+      );
+    },
+  );
 }

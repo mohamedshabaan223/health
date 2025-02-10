@@ -5,6 +5,7 @@ class EndPoints {
   static String getAllDoctors = "V1/Doctors/GetAllDoctors";
   static String payment = "Payment/Pay";
   static String paymentConfirm = "Payment/payment-success";
+  static String allSpecialities = "V1/Specialization/GetAllSpecializations";
 }
 
 class ApiKey {

@@ -11,6 +11,7 @@ import 'package:health_app/cubits/auth_cubit/auth_cubit.dart';
 import 'package:health_app/cubits/booking_cubit/booking_cubit_cubit.dart';
 import 'package:health_app/cubits/doctors_cubit/doctor_cubit.dart';
 import 'package:health_app/cubits/payment_cubit/payment_cubit.dart';
+import 'package:health_app/pages/Specializations_page.dart';
 import 'package:health_app/pages/appointment_screen.dart';
 import 'package:health_app/pages/cancelled_reason_page.dart';
 import 'package:health_app/pages/create_new_password_page.dart';
@@ -87,6 +88,7 @@ class MyApp extends StatelessWidget {
           HomeScreen.id: (_) => HomeScreen(),
           CancelledReasonPage.id: (_) => CancelledReasonPage(),
           payment_success.id: (_) => payment_success(),
+          SpecializationsPage.id: (_) => SpecializationsPage(),
         },
         initialRoute: token != null ? HomeScreen.id : StartScreen.id,
         theme: AppTheme.lightTheme,
