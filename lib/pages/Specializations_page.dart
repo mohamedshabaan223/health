@@ -15,7 +15,13 @@ class SpecializationsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('All Specializations')),
+      appBar: AppBar(
+          title: const Column(
+        children: [
+          SizedBox(height: 15),
+          Text('All Specializations'),
+        ],
+      )),
       body: BlocProvider(
         create: (context) => SpecializationsCubit(DioConsumer(dio: Dio()))
           ..getAllSpecializations(),

@@ -84,18 +84,15 @@ class _DoctorPageState extends State<DoctorPage> {
                   ),
                   Row(
                     children: [
-                      const TopIconInHomePage(
+                      TopIconInHomePage(
+                        onPressed: () {},
                         icons: Icon(
                           Icons.search,
                           color: AppTheme.green,
                         ),
                         containerBackgroundColor: AppTheme.gray,
                       ),
-                      const SizedBox(width: 8),
-                      InkWell(
-                        onTap: () {},
-                        child: Image.asset('assets/images/filter1.png'),
-                      ),
+                      SizedBox(width: 8),
                     ],
                   ),
                 ],

@@ -52,7 +52,8 @@ class _MaleState extends State<Male> {
                   ),
                   Row(
                     children: [
-                      const TopIconInHomePage(
+                      TopIconInHomePage(
+                        onPressed: () {},
                         icons: Icon(
                           Icons.search,
                           color: AppTheme.green,
@@ -60,10 +61,6 @@ class _MaleState extends State<Male> {
                         containerBackgroundColor: AppTheme.gray,
                       ),
                       const SizedBox(width: 8),
-                      InkWell(
-                        onTap: () {},
-                        child: Image.asset('assets/images/filter1.png'),
-                      ),
                     ],
                   ),
                 ],

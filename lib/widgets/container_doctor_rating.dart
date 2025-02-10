@@ -19,8 +19,7 @@ class _ContainrDoctorRatingState extends State<ContainrDoctorRating> {
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
       body: Container(
-        margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 6),
-        height: height * 0.17,
+        margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 6),
         width: width * 15,
         decoration: BoxDecoration(
           color: AppTheme.gray,
@@ -158,28 +157,12 @@ class _ContainrDoctorRatingState extends State<ContainrDoctorRating> {
                           ),
                         ),
                         SizedBox(
-                          width: width * 0.22,
+                          width: width * 0.2,
                         ),
-                        Defaulticon(
+                        _buildInfoContainer(
+                          text: 'Location',
+                          width: 100,
                           onTap: () {},
-                          icon: const Icon(
-                            CupertinoIcons.exclamationmark,
-                            size: 17,
-                            color: AppTheme.green,
-                          ),
-                          containerClolor: AppTheme.white,
-                        ),
-                        const SizedBox(
-                          width: 4,
-                        ),
-                        Defaulticon(
-                          onTap: () {},
-                          icon: const Icon(
-                            Icons.question_mark,
-                            size: 17,
-                            color: AppTheme.green,
-                          ),
-                          containerClolor: AppTheme.white,
                         ),
                         const SizedBox(
                           width: 4,
@@ -207,4 +190,31 @@ class _ContainrDoctorRatingState extends State<ContainrDoctorRating> {
       ),
     );
   }
+}
+
+Widget _buildInfoContainer(
+    {required String text,
+    required double width,
+    required void Function()? onTap}) {
+  return InkWell(
+    onTap: onTap,
+    child: Container(
+      width: width,
+      height: 30,
+      decoration: BoxDecoration(
+        color: AppTheme.green3,
+        borderRadius: BorderRadius.circular(15),
+      ),
+      child: Center(
+        child: Text(
+          text,
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 15,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+    ),
+  );
 }

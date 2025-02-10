@@ -10,6 +10,8 @@ import 'package:health_app/widgets/top_icon_in_home_page.dart';
 class Rating extends StatelessWidget {
   static const String routeName = '/rating';
 
+  const Rating({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,7 +27,7 @@ class Rating extends StatelessWidget {
                       onPressed: () {
                         Navigator.of(context).pop();
                       },
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.arrow_back_ios_new_outlined,
                         size: 25,
                         color: AppTheme.green,
@@ -37,17 +39,15 @@ class Rating extends StatelessWidget {
                   Row(
                     children: [
                       TopIconInHomePage(
+                          onPressed: () {},
                           icons: Icon(
                             Icons.search,
                             color: AppTheme.green,
                           ),
                           containerBackgroundColor: AppTheme.gray),
-                      SizedBox(
+                      const SizedBox(
                         width: 8,
                       ),
-                      InkWell(
-                          onTap: () {},
-                          child: Image.asset('assets/images/filter1.png')),
                     ],
                   ),
                 ],
@@ -62,54 +62,54 @@ class Rating extends StatelessWidget {
                             Theme.of(context).textTheme.titleMedium!.copyWith(
                                   color: AppTheme.green,
                                 )),
-                    SizedBox(
+                    const SizedBox(
                       width: 5,
                     ),
                     Defaulticon(
                       onTap: () {
                         Navigator.of(context).pushNamed(DoctorPage.routeName);
                       },
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.sort_by_alpha_outlined,
                         size: 18,
                         color: AppTheme.green,
                       ),
                       containerClolor: AppTheme.gray,
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 5,
                     ),
                     Defaulticon(
                       onTap: () {},
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.star_border,
                         size: 17,
                         color: AppTheme.white,
                       ),
                       containerClolor: AppTheme.green,
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 5,
                     ),
                     Defaulticon(
                       onTap: () {
                         Navigator.of(context).pushNamed(Female.routeName);
                       },
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.female,
                         size: 17,
                         color: AppTheme.green,
                       ),
                       containerClolor: AppTheme.gray,
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 5,
                     ),
                     Defaulticon(
                       onTap: () {
                         Navigator.of(context).pushNamed(Male.routeName);
                       },
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.male,
                         size: 17,
                         color: AppTheme.green,
@@ -121,7 +121,7 @@ class Rating extends StatelessWidget {
               ),
               Expanded(
                 child: ListView.builder(
-                  itemBuilder: (_, index) => ContainrDoctorRating(),
+                  itemBuilder: (_, index) => const ContainrDoctorRating(),
                   itemCount: 3,
                   itemExtent: 145,
                 ),

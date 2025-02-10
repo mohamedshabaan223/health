@@ -10,7 +10,6 @@ import 'package:health_app/widgets/card_of_doctor.dart';
 import 'package:health_app/widgets/custom_user_information.dart';
 import 'package:health_app/widgets/doctors_and_favourite.dart';
 import 'package:health_app/widgets/search_field.dart';
-import 'package:health_app/widgets/specialties_item.dart';
 import 'package:health_app/widgets/top_icon_in_home_page.dart';
 
 class HomePage extends StatelessWidget {
@@ -32,18 +31,20 @@ class HomePage extends StatelessWidget {
               children: [
                 const CustomUserInformation(),
                 const Spacer(),
-                const TopIconInHomePage(
+                TopIconInHomePage(
+                  onPressed: () {},
                   containerBackgroundColor: AppTheme.gray,
-                  icons: Icon(
+                  icons: const Icon(
                     Icons.notifications_outlined,
                     size: 22,
                     color: AppTheme.green,
                   ),
                 ),
                 SizedBox(width: width * 0.02),
-                const TopIconInHomePage(
+                TopIconInHomePage(
+                  onPressed: () {},
                   containerBackgroundColor: AppTheme.gray,
-                  icons: Icon(
+                  icons: const Icon(
                     Icons.settings_outlined,
                     size: 22,
                     color: AppTheme.green,

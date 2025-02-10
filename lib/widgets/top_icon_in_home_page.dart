@@ -5,9 +5,11 @@ class TopIconInHomePage extends StatelessWidget {
     super.key,
     required this.icons,
     required this.containerBackgroundColor,
+    required this.onPressed,
   });
   final Icon icons;
   final Color containerBackgroundColor;
+  final void Function()? onPressed;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -16,7 +18,7 @@ class TopIconInHomePage extends StatelessWidget {
       decoration: BoxDecoration(
           color: containerBackgroundColor,
           borderRadius: BorderRadius.circular(30)),
-      child: IconButton(onPressed: () {}, icon: icons),
+      child: IconButton(onPressed: onPressed, icon: icons),
     );
   }
 }

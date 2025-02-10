@@ -75,7 +75,7 @@ class _ContainerDoctorState extends State<ContainerDoctor> {
                       },
                       child: Container(
                         height: 29,
-                        width: 50,
+                        width: 55,
                         decoration: BoxDecoration(
                             color: AppTheme.green,
                             borderRadius: BorderRadius.circular(18)),
@@ -91,28 +91,12 @@ class _ContainerDoctorState extends State<ContainerDoctor> {
                       ),
                     ),
                     SizedBox(
-                      width: width * 0.13,
+                      width: width * 0.09,
                     ),
-                    Defaulticon(
+                    _buildInfoContainer(
+                      text: 'Location',
+                      width: 100,
                       onTap: () {},
-                      icon: const Icon(
-                        CupertinoIcons.exclamationmark,
-                        size: 17,
-                        color: AppTheme.green,
-                      ),
-                      containerClolor: AppTheme.white,
-                    ),
-                    const SizedBox(
-                      width: 4,
-                    ),
-                    Defaulticon(
-                      onTap: () {},
-                      icon: const Icon(
-                        Icons.question_mark,
-                        size: 17,
-                        color: AppTheme.green,
-                      ),
-                      containerClolor: AppTheme.white,
                     ),
                     const SizedBox(
                       width: 4,
@@ -137,4 +121,31 @@ class _ContainerDoctorState extends State<ContainerDoctor> {
       ),
     );
   }
+}
+
+Widget _buildInfoContainer(
+    {required String text,
+    required double width,
+    required void Function()? onTap}) {
+  return InkWell(
+    onTap: onTap,
+    child: Container(
+      width: width,
+      height: 30,
+      decoration: BoxDecoration(
+        color: AppTheme.green3,
+        borderRadius: BorderRadius.circular(15),
+      ),
+      child: Center(
+        child: Text(
+          text,
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 15,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+    ),
+  );
 }
