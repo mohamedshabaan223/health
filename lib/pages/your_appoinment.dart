@@ -56,6 +56,7 @@ class YourAppoinment extends StatelessWidget {
 
     return BlocProvider(
       create: (_) => PaymentCubit(DioConsumer(dio: Dio())), // توفير الـCubit
+
       child: Scaffold(
         body: SafeArea(
           child: Padding(

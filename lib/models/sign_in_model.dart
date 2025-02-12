@@ -1,13 +1,27 @@
-import 'package:health_app/core/api/end_points.dart';
-
 class SignInModel {
   final String message;
-  final String token;
+  final int id;
+  final TokenModel token;
 
-  SignInModel({required this.message, required this.token});
+  SignInModel({required this.message, required this.id, required this.token});
 
-  factory SignInModel.fromJson(json) {
+  factory SignInModel.fromJson(Map<String, dynamic> json) {
     return SignInModel(
-        message: json[ApiKey.message], token: json[ApiKey.token]);
+      message: json['message'],
+      id: json['id'],
+      token: TokenModel.fromJson(json['token']),
+    );
+  }
+}
+
+class TokenModel {
+  final String result;
+
+  TokenModel({required this.result});
+
+  factory TokenModel.fromJson(Map<String, dynamic> json) {
+    return TokenModel(
+      result: json['result'],
+    );
   }
 }

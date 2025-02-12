@@ -18,8 +18,7 @@ class SpecializationsCubit extends Cubit<SpecialityState> {
       final List<SpecializationModel> specializations =
           data.map((json) => SpecializationModel.fromJson(json)).toList();
 
-      emit(SpecialitySuccess(
-          specializations)); // تأكد من تمرير القائمة بشكل صحيح
+      emit(SpecialitySuccess(specializations));
     } on ServerException catch (e) {
       emit(SpecialityFailure(errorMessage: e.errorModel.errorMessage));
     } catch (e) {

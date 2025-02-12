@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:health_app/cache/cache_helper.dart';
 import 'package:health_app/core/api/api_consumer.dart';
 import 'package:health_app/core/api/end_points.dart';
@@ -41,7 +42,9 @@ class AuthCubit extends Cubit<AuthState> {
       );
 
       user = SignInModel.fromJson(response);
-      await CacheHelper().saveData(key: ApiKey.token, value: user!.token);
+      await CacheHelper()
+          .saveData(key: ApiKey.token, value: user!.token.result);
+      await CacheHelper().saveData(key: ApiKey.id, value: user!.id);
 
       emit(LoginSuccess());
     } on ServerException catch (e) {

@@ -3,6 +3,7 @@ import 'package:health_app/core/api/api_consumer.dart';
 import 'package:health_app/core/api/end_points.dart';
 import 'package:health_app/core/errors/exceptions.dart';
 import 'package:health_app/models/doctor_model.dart';
+import 'package:health_app/models/get_doctor_info_by_id.dart';
 import 'package:meta/meta.dart';
 
 part 'doctor_state.dart';
@@ -54,6 +55,27 @@ class DoctorCubit extends Cubit<DoctorState> {
     } catch (e) {
       print("Unexpected error in getDoctorsByGender: $e");
       emit(DoctorFailure(errorMessage: "Unexpected error occurred: $e"));
+    }
+  }
+
+  Future<void> getDoctorById({required int doctorId}) async {
+    try {
+      emit(GetDoctorInfoLoading());
+
+      final response =
+          await api.get("http://10.0.2.2:5282/GetDoctorDetails/$doctorId");
+
+      final doctorInfo = GetDoctorInfoById.fromJson(response);
+
+      emit(GetDoctorInfoSuccess(doctorInfo));
+    } on ServerException catch (e) {
+      print("Error caught in getDoctorById: ${e.errorModel.errorMessage}");
+      emit(GetDoctorInfoFailure(
+        errorMessage: e.errorModel.errorMessage,
+      ));
+    } catch (e) {
+      print("Unexpected error in getDoctorById: $e");
+      emit(GetDoctorInfoFailure(errorMessage: "Unexpected error occurred: $e"));
     }
   }
 }

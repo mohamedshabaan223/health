@@ -22,13 +22,13 @@ class ContainerSchdule extends StatelessWidget {
             const Icon(
               Icons.calendar_month,
               color: AppTheme.white,
-              size: 25,
+              size: 22,
             ),
             Text(
               ' booking',
               style: Theme.of(context).textTheme.labelMedium?.copyWith(
                     color: AppTheme.white,
-                    fontSize: 15,
+                    fontSize: 16,
                   ),
             )
           ],

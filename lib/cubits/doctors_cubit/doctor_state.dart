@@ -18,3 +18,17 @@ final class DoctorFailure extends DoctorState {
 
   DoctorFailure({required this.errorMessage});
 }
+
+final class GetDoctorInfoSuccess extends DoctorState {
+  final GetDoctorInfoById doctorInfo;
+
+  GetDoctorInfoSuccess(this.doctorInfo);
+}
+
+final class GetDoctorInfoFailure extends DoctorState {
+  final String errorMessage;
+
+  GetDoctorInfoFailure({required this.errorMessage});
+}
+
+final class GetDoctorInfoLoading extends DoctorState {}

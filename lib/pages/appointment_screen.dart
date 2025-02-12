@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:health_app/app_theme.dart';
+import 'package:health_app/cache/cache_helper.dart';
+import 'package:health_app/core/api/end_points.dart';
 import 'package:health_app/cubits/auth_cubit/auth_cubit.dart';
 import 'package:health_app/cubits/booking_cubit/booking_cubit_cubit.dart';
 import 'package:health_app/models/Appointment_display_doctor_data.dart';
@@ -24,6 +26,7 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
   String? fullName;
   int? age;
   int? doctorId;
+  int? patientId = CacheHelper().getData(key: ApiKey.id);
   String? problemDescription;
   List<AppointmentDisplayDoctorData> availableSlots = [];
 
@@ -70,7 +73,13 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
       );
       return;
     }
-
+    if (ageController.text.isEmpty || problemController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+            content: Text('Please enter both Age and Problem Description!')),
+      );
+      return;
+    }
     final bookingRequest = BookingRequest(
       doctorId: doctorId!,
       day: availableSlots[selectedDayIndex].day,
@@ -81,7 +90,7 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
       gender: selectedGender,
       age: int.tryParse(ageController.text) ?? 0,
       forHimSelf: selectedPatientType == 'Yourself',
-      patientId: 32,
+      patientId: patientId ?? 0,
       problemDescription: problemController.text,
     );
 
@@ -104,7 +113,7 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
             "gender": selectedGender,
             "age": int.tryParse(ageController.text) ?? 0,
             "forHimSelf": selectedPatientType == 'Yourself',
-            "patientId": 32,
+            "patientId": patientId ?? 0,
             "problemDescription": problemController.text,
           });
         } else if (state is BookingCubitDataError) {

@@ -46,6 +46,8 @@ void main() async {
   HttpOverrides.global = MyHttpOverrides();
   await CacheHelper().init();
   token = CacheHelper().getData(key: ApiKey.token);
+  patientId = CacheHelper().getData(key: ApiKey.id);
+  print("Patient ID: $patientId");
   print("Token: $token");
   runApp(const MyApp());
 }

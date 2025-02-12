@@ -80,19 +80,22 @@ class _DoctorPageState extends State<DoctorPage> {
                   ),
                   Text(
                     'Doctors',
-                    style: Theme.of(context).textTheme.titleLarge,
+                    style: Theme.of(context)
+                        .textTheme
+                        .titleLarge!
+                        .copyWith(fontSize: 22),
                   ),
                   Row(
                     children: [
                       TopIconInHomePage(
                         onPressed: () {},
-                        icons: Icon(
+                        icons: const Icon(
                           Icons.search,
                           color: AppTheme.green,
                         ),
                         containerBackgroundColor: AppTheme.gray,
                       ),
-                      SizedBox(width: 8),
+                      const SizedBox(width: 8),
                     ],
                   ),
                 ],
