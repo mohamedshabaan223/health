@@ -12,6 +12,7 @@ import 'package:health_app/cubits/booking_cubit/booking_cubit_cubit.dart';
 import 'package:health_app/cubits/chat_cubit/chat_cubit.dart';
 import 'package:health_app/cubits/doctors_cubit/doctor_cubit.dart';
 import 'package:health_app/cubits/payment_cubit/payment_cubit.dart';
+import 'package:health_app/navigator_observar.dart';
 import 'package:health_app/pages/Specializations_page.dart';
 import 'package:health_app/pages/appointment_screen.dart';
 import 'package:health_app/pages/cancelled_reason_page.dart';
@@ -65,40 +66,58 @@ class MyApp extends StatelessWidget {
         BlocProvider<AuthCubit>(
           create: (context) => AuthCubit(DioConsumer(dio: Dio())),
         ),
-        BlocProvider(create: (context) => DoctorCubit(DioConsumer(dio: Dio()))),
+        BlocProvider<DoctorCubit>(
+          create: (context) => DoctorCubit(DioConsumer(dio: Dio()))
+            ..getAllDoctorsByOrderType(orderType: 'ASC'),
+        ),
         BlocProvider(
-            create: (context) => BookingCubit(DioConsumer(dio: Dio()))),
+          create: (context) => BookingCubit(DioConsumer(dio: Dio())),
+        ),
         BlocProvider(
           create: (context) => PaymentCubit(DioConsumer(dio: Dio())),
         ),
-        BlocProvider(create: (context) => ChatCubit(DioConsumer(dio: Dio()))),
+        BlocProvider(
+          create: (context) => ChatCubit(DioConsumer(dio: Dio())),
+        ),
       ],
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        routes: {
-          Login.routeName: (_) => Login(),
-          StartScreen.id: (_) => const StartScreen(),
-          RegisterPage.id: (_) => RegisterPage(),
-          CreateNewPasswordPage.id: (_) => CreateNewPasswordPage(),
-          HomePage.id: (_) => const HomePage(),
-          DoctorPage.routeName: (_) => DoctorPage(),
-          DoctorInformation.routeName: (_) => DoctorInformation(),
-          Rating.routeName: (_) => Rating(),
-          Favorite.routeName: (_) => Favorite(),
-          Female.routeName: (_) => Female(),
-          Male.routeName: (_) => Male(),
-          AppointmentScreen.id: (_) => const AppointmentScreen(),
-          YourAppoinment.id: (_) => const YourAppoinment(),
-          Review.id: (_) => Review(),
-          HomeScreen.id: (_) => HomeScreen(),
-          CancelledReasonPage.id: (_) => CancelledReasonPage(),
-          payment_success.id: (_) => payment_success(),
-          SpecializationsPage.id: (_) => SpecializationsPage(),
-          ChatScreen.id: (_) => ChatScreen(),
+      child: Builder(
+        builder: (context) {
+          final doctorCubit = BlocProvider.of<DoctorCubit>(context);
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            navigatorObservers: [
+              MyNavigatorObserver(
+                onPopNext: () {
+                  doctorCubit.getAllDoctorsByOrderType(orderType: 'ASC');
+                },
+              ),
+            ],
+            routes: {
+              Login.routeName: (_) => Login(),
+              StartScreen.id: (_) => const StartScreen(),
+              RegisterPage.id: (_) => RegisterPage(),
+              CreateNewPasswordPage.id: (_) => CreateNewPasswordPage(),
+              HomePage.id: (_) => const HomePage(),
+              DoctorPage.routeName: (_) => DoctorPage(),
+              DoctorInformation.routeName: (_) => DoctorInformation(),
+              Rating.routeName: (_) => Rating(),
+              Favorite.routeName: (_) => Favorite(),
+              Female.routeName: (_) => Female(),
+              Male.routeName: (_) => Male(),
+              AppointmentScreen.id: (_) => const AppointmentScreen(),
+              YourAppoinment.id: (_) => const YourAppoinment(),
+              Review.id: (_) => Review(),
+              HomeScreen.id: (_) => HomeScreen(),
+              CancelledReasonPage.id: (_) => CancelledReasonPage(),
+              payment_success.id: (_) => payment_success(),
+              SpecializationsPage.id: (_) => SpecializationsPage(),
+              ChatScreen.id: (_) => ChatScreen(),
+            },
+            initialRoute: token != null ? HomeScreen.id : StartScreen.id,
+            theme: AppTheme.lightTheme,
+            themeMode: ThemeMode.light,
+          );
         },
-        initialRoute: token != null ? HomeScreen.id : StartScreen.id,
-        theme: AppTheme.lightTheme,
-        themeMode: ThemeMode.light,
       ),
     );
   }

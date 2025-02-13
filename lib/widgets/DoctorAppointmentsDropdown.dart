@@ -11,7 +11,7 @@ class DoctorAppointmentsDropdown extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 240,
+      width: 200,
       height: 35,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
@@ -32,7 +32,7 @@ class DoctorAppointmentsDropdown extends StatelessWidget {
                 Text(
                   availableAppointments.isNotEmpty
                       ? "${availableAppointments.first.day} - ${availableAppointments.first.time}"
-                      : "No Appointments Available",
+                      : "No Time Available",
                   style: const TextStyle(color: AppTheme.green, fontSize: 14),
                 ),
               ],

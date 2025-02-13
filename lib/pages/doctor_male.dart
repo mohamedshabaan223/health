@@ -89,19 +89,27 @@ class _MaleState extends State<Male> {
                             ),
                           ),
                   ),
-                  IconButton(
-                    onPressed: () {
-                      setState(() {
-                        isSearching = !isSearching;
-                        if (!isSearching) {
-                          _searchController.clear();
-                          filteredDoctors = [];
-                        }
-                      });
-                    },
-                    icon: Icon(
-                      isSearching ? Icons.close : Icons.search,
-                      color: AppTheme.green,
+                  Container(
+                    height: 38,
+                    width: 38,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: AppTheme.gray,
+                    ),
+                    child: IconButton(
+                      onPressed: () {
+                        setState(() {
+                          isSearching = !isSearching;
+                          if (!isSearching) {
+                            _searchController.clear();
+                            filteredDoctors = [];
+                          }
+                        });
+                      },
+                      icon: Icon(
+                        isSearching ? Icons.close : Icons.search,
+                        color: AppTheme.green,
+                      ),
                     ),
                   ),
                 ],

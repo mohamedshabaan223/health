@@ -176,6 +176,7 @@ class _ContainerDoctorInfoState extends State<ContainerDoctorInfo> {
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
+                        SizedBox(width: width * 0.02),
                         InkWell(
                           onTap: () {},
                           child: _buildInfoContainer(
@@ -184,7 +185,7 @@ class _ContainerDoctorInfoState extends State<ContainerDoctorInfo> {
                             width: width * 0.12,
                           ),
                         ),
-                        SizedBox(width: width * 0.01),
+                        SizedBox(width: width * 0.03),
                         InkWell(
                           onTap: () {},
                           child: _buildInfoContainer(
@@ -193,7 +194,7 @@ class _ContainerDoctorInfoState extends State<ContainerDoctorInfo> {
                             width: width * 0.14,
                           ),
                         ),
-                        SizedBox(width: width * 0.03),
+                        SizedBox(width: width * 0.07),
                         DoctorAppointmentsDropdown(
                             availableAppointments: doctor.availableAppointments)
                       ],

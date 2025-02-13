@@ -52,11 +52,15 @@ class _DoctorPageState extends State<DoctorPage> {
     'assets/images/doctor_image.png',
   ];
 
+  DoctorCubit? _doctorCubit;
+
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<DoctorCubit>(context)
-        .getAllDoctorsByOrderType(orderType: 'ASC');
+    Future.microtask(() {
+      _doctorCubit = BlocProvider.of<DoctorCubit>(context);
+      _doctorCubit?.getAllDoctorsByOrderType(orderType: 'ASC');
+    });
   }
 
   void _filterDoctors(String query) {
@@ -118,19 +122,27 @@ class _DoctorPageState extends State<DoctorPage> {
                             ),
                           ),
                   ),
-                  IconButton(
-                    onPressed: () {
-                      setState(() {
-                        isSearching = !isSearching;
-                        if (!isSearching) {
-                          _searchController.clear();
-                          filteredDoctors = [];
-                        }
-                      });
-                    },
-                    icon: Icon(
-                      isSearching ? Icons.close : Icons.search,
-                      color: AppTheme.green,
+                  Container(
+                    height: 38,
+                    width: 38,
+                    decoration: const BoxDecoration(
+                      color: AppTheme.gray,
+                      shape: BoxShape.circle,
+                    ),
+                    child: IconButton(
+                      onPressed: () {
+                        setState(() {
+                          isSearching = !isSearching;
+                          if (!isSearching) {
+                            _searchController.clear();
+                            filteredDoctors = [];
+                          }
+                        });
+                      },
+                      icon: Icon(
+                        isSearching ? Icons.close : Icons.search,
+                        color: AppTheme.green,
+                      ),
                     ),
                   ),
                 ],
