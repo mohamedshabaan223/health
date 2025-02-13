@@ -6,6 +6,8 @@ class EndPoints {
   static String payment = "Payment/Pay";
   static String paymentConfirm = "Payment/payment-success";
   static String allSpecialities = "V1/Specialization/GetAllSpecializations";
+  static String getAllMessages = "V1/Chat/GetMessage";
+  static String sendMessage = "V1/Chat/SaveMessage";
 }
 
 class ApiKey {

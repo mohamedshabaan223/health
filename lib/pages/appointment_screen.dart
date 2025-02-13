@@ -98,32 +98,6 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
       bookingRequest,
       BlocProvider.of<AuthCubit>(context).patientName.text,
     );
-
-    BlocListener<BookingCubit, BookingCubitState>(
-      listener: (context, state) {
-        if (state is BookingCubitDataSuccess) {
-          Navigator.of(context).pushNamed(YourAppoinment.id, arguments: {
-            "bookingId": state.bookingResponse.bookingId,
-            "doctorId": doctorId,
-            "day": availableSlots[selectedDayIndex].day,
-            "time": availableSlots[selectedTimeIndex].time,
-            "patientName": selectedPatientType == 'Yourself'
-                ? BlocProvider.of<AuthCubit>(context).registerUserName.text
-                : fullNameController.text ?? "Unknown",
-            "gender": selectedGender,
-            "age": int.tryParse(ageController.text) ?? 0,
-            "forHimSelf": selectedPatientType == 'Yourself',
-            "patientId": patientId ?? 0,
-            "problemDescription": problemController.text,
-          });
-        } else if (state is BookingCubitDataError) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.message)),
-          );
-        }
-      },
-      child: Container(),
-    );
   }
 
   @override
@@ -145,7 +119,7 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
               "gender": selectedGender,
               "age": int.tryParse(ageController.text) ?? 0,
               "forHimSelf": selectedPatientType == 'Yourself',
-              "patientId": 32,
+              "patientId": patientId ?? 0,
               "problemDescription": problemController.text,
             },
           );

@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:health_app/app_theme.dart';
 
 class ReceiveMessage extends StatelessWidget {
+  ReceiveMessage({super.key, required this.message, required this.messageTime});
+  String message;
+  DateTime messageTime;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -23,17 +26,19 @@ class ReceiveMessage extends StatelessWidget {
                         topRight: Radius.circular(18),
                         bottomRight: Radius.circular(18))),
                 child: Text(
-                  'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ',
+                  message,
                   style: Theme.of(context)
                       .textTheme
                       .titleSmall
-                      ?.copyWith(fontWeight: FontWeight.w300),
+                      ?.copyWith(fontSize: 18),
                 ),
               ),
               Text(
-                '09:00',
-                style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                    color: AppTheme.green, fontWeight: FontWeight.w300),
+                '${messageTime.hour}:${messageTime.minute}',
+                style: Theme.of(context)
+                    .textTheme
+                    .titleSmall
+                    ?.copyWith(color: AppTheme.black, fontSize: 13),
               )
             ],
           ),

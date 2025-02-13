@@ -9,11 +9,13 @@ import 'package:health_app/core/api/dio_consumer.dart';
 import 'package:health_app/core/api/end_points.dart';
 import 'package:health_app/cubits/auth_cubit/auth_cubit.dart';
 import 'package:health_app/cubits/booking_cubit/booking_cubit_cubit.dart';
+import 'package:health_app/cubits/chat_cubit/chat_cubit.dart';
 import 'package:health_app/cubits/doctors_cubit/doctor_cubit.dart';
 import 'package:health_app/cubits/payment_cubit/payment_cubit.dart';
 import 'package:health_app/pages/Specializations_page.dart';
 import 'package:health_app/pages/appointment_screen.dart';
 import 'package:health_app/pages/cancelled_reason_page.dart';
+import 'package:health_app/pages/chat_page.dart';
 import 'package:health_app/pages/create_new_password_page.dart';
 import 'package:health_app/pages/doctor_favorite.dart';
 import 'package:health_app/pages/doctor_female.dart';
@@ -30,6 +32,7 @@ import 'package:health_app/pages/start_screen.dart';
 import 'package:health_app/pages/payment_success_page.dart';
 import 'package:health_app/pages/your_appoinment.dart';
 import 'package:health_app/simple_bloc_observer.dart';
+import 'package:health_app/tabs/chat/display_all_chat.dart';
 
 class MyHttpOverrides extends HttpOverrides {
   @override
@@ -68,7 +71,8 @@ class MyApp extends StatelessWidget {
             create: (context) => BookingCubit(DioConsumer(dio: Dio()))),
         BlocProvider(
           create: (context) => PaymentCubit(DioConsumer(dio: Dio())),
-        )
+        ),
+        BlocProvider(create: (context) => ChatCubit(DioConsumer(dio: Dio()))),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -91,6 +95,7 @@ class MyApp extends StatelessWidget {
           CancelledReasonPage.id: (_) => CancelledReasonPage(),
           payment_success.id: (_) => payment_success(),
           SpecializationsPage.id: (_) => SpecializationsPage(),
+          ChatScreen.id: (_) => ChatScreen(),
         },
         initialRoute: token != null ? HomeScreen.id : StartScreen.id,
         theme: AppTheme.lightTheme,

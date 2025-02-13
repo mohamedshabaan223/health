@@ -23,13 +23,14 @@ class ContainerDoctor extends StatefulWidget {
 class _ContainerDoctorState extends State<ContainerDoctor> {
   bool isSelected = false;
   bool isFavorite = false;
+  bool isRating = false;
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-      width: width * 0.17,
+      width: double.infinity,
       height: height * 0.17,
       decoration: BoxDecoration(
           color: AppTheme.gray, borderRadius: BorderRadius.circular(17)),
@@ -54,12 +55,42 @@ class _ContainerDoctorState extends State<ContainerDoctor> {
                       .titleSmall
                       ?.copyWith(fontSize: 16, color: AppTheme.green),
                 ),
-                Text(
-                  widget.descrabtion,
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleSmall
-                      ?.copyWith(fontSize: 14),
+                Row(
+                  children: [
+                    Text(
+                      widget.descrabtion,
+                      style: Theme.of(context)
+                          .textTheme
+                          .titleSmall
+                          ?.copyWith(fontSize: 14),
+                    ),
+                    SizedBox(
+                      width: width * 0.2,
+                    ),
+                    Defaulticon(
+                      onTap: () {
+                        isFavorite = !isFavorite;
+                        setState(() {});
+                      },
+                      icon: Icon(
+                          isFavorite ? Icons.favorite : Icons.favorite_border,
+                          size: 19,
+                          color: AppTheme.green),
+                      containerClolor: AppTheme.white,
+                    ),
+                    SizedBox(
+                      width: width * 0.03,
+                    ),
+                    Defaulticon(
+                      onTap: () {
+                        isRating = !isRating;
+                        setState(() {});
+                      },
+                      icon: Icon(isRating ? Icons.star : Icons.star_border,
+                          size: 20, color: AppTheme.green),
+                      containerClolor: AppTheme.white,
+                    ),
+                  ],
                 ),
                 const SizedBox(
                   height: 15,
@@ -75,7 +106,7 @@ class _ContainerDoctorState extends State<ContainerDoctor> {
                       },
                       child: Container(
                         height: 29,
-                        width: 55,
+                        width: 70,
                         decoration: BoxDecoration(
                             color: AppTheme.green,
                             borderRadius: BorderRadius.circular(18)),
@@ -91,26 +122,12 @@ class _ContainerDoctorState extends State<ContainerDoctor> {
                       ),
                     ),
                     SizedBox(
-                      width: width * 0.09,
+                      width: width * 0.13,
                     ),
                     _buildInfoContainer(
                       text: 'Location',
                       width: 100,
                       onTap: () {},
-                    ),
-                    const SizedBox(
-                      width: 4,
-                    ),
-                    Defaulticon(
-                      onTap: () {
-                        isFavorite = !isFavorite;
-                        setState(() {});
-                      },
-                      icon: Icon(
-                          isFavorite ? Icons.favorite : Icons.favorite_border,
-                          size: 17,
-                          color: AppTheme.green),
-                      containerClolor: AppTheme.white,
                     ),
                   ],
                 )

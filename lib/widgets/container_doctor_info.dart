@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:health_app/app_theme.dart';
+import 'package:health_app/cache/cache_helper.dart';
+import 'package:health_app/core/api/end_points.dart';
 import 'package:health_app/cubits/doctors_cubit/doctor_cubit.dart';
+import 'package:health_app/pages/chat_page.dart';
 import 'package:health_app/widgets/DoctorAppointmentsDropdown.dart';
 import 'package:health_app/widgets/container_schdule.dart';
 import 'package:health_app/widgets/default_icon.dart';
@@ -17,6 +20,7 @@ class ContainerDoctorInfo extends StatefulWidget {
 class _ContainerDoctorInfoState extends State<ContainerDoctorInfo> {
   bool isFavorite = false;
   bool isRating = false;
+  int? patientId = CacheHelper().getData(key: ApiKey.id);
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
@@ -205,7 +209,16 @@ class _ContainerDoctorInfoState extends State<ContainerDoctorInfo> {
                         width: width * 0.2,
                       ),
                       InkWell(
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.pushNamed(
+                            context,
+                            ChatScreen.id,
+                            arguments: {
+                              'doctorId': widget.doctorId,
+                              'patientId': patientId,
+                            },
+                          );
+                        },
                         child: _buildInfoContainer(
                           icon: Icons.chat,
                           text: 'Chat',
@@ -222,7 +235,7 @@ class _ContainerDoctorInfoState extends State<ContainerDoctorInfo> {
                         },
                         icon: Icon(
                           isRating ? Icons.star : Icons.star_border,
-                          size: 17,
+                          size: 20,
                           color: AppTheme.green,
                         ),
                         containerClolor: AppTheme.white,
@@ -237,7 +250,7 @@ class _ContainerDoctorInfoState extends State<ContainerDoctorInfo> {
                         },
                         icon: Icon(
                           isFavorite ? Icons.favorite : Icons.favorite_border,
-                          size: 17,
+                          size: 18,
                           color: AppTheme.green,
                         ),
                         containerClolor: AppTheme.white,

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:health_app/app_theme.dart';
 import 'package:health_app/pages/home_page.dart';
 import 'package:health_app/tabs/calendar/calendar.dart';
-import 'package:health_app/tabs/chat/chat.dart';
+import 'package:health_app/tabs/chat/display_all_chat.dart';
 import 'package:health_app/tabs/notifaction/notifaction.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -16,7 +16,7 @@ class _MyWidgetState extends State<HomeScreen> {
   int selectedIndex = 0;
   List<Widget> tabs = [
     HomePage(),
-    ChatScreen(),
+    DisplayAllChat(),
     Notifaction(),
     Calendar(),
   ];
