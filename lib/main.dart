@@ -32,7 +32,6 @@ import 'package:health_app/pages/start_screen.dart';
 import 'package:health_app/pages/payment_success_page.dart';
 import 'package:health_app/pages/your_appoinment.dart';
 import 'package:health_app/simple_bloc_observer.dart';
-import 'package:health_app/tabs/chat/display_all_chat.dart';
 
 class MyHttpOverrides extends HttpOverrides {
   @override

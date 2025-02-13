@@ -78,4 +78,14 @@ class DoctorCubit extends Cubit<DoctorState> {
       emit(GetDoctorInfoFailure(errorMessage: "Unexpected error occurred: $e"));
     }
   }
+
+  void searchDoctorByName(String query) {
+    final filteredDoctors = (state as DoctorSuccess)
+        .doctorsList
+        .where((doctor) =>
+            doctor.doctorName!.toLowerCase().contains(query.toLowerCase()))
+        .toList();
+
+    emit(DoctorSuccess(filteredDoctors));
+  }
 }

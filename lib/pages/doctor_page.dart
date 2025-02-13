@@ -2,18 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:health_app/app_theme.dart';
 import 'package:health_app/cubits/doctors_cubit/doctor_cubit.dart';
+import 'package:health_app/models/doctor_model.dart';
 import 'package:health_app/pages/doctor_female.dart';
 import 'package:health_app/pages/doctor_male.dart';
+import 'package:health_app/pages/doctor_page_information.dart';
 import 'package:health_app/pages/doctor_rating.dart';
 import 'package:health_app/widgets/container_doctor.dart';
 import 'package:health_app/widgets/default_icon.dart';
-import 'package:health_app/widgets/top_icon_in_home_page.dart';
 
 class DoctorPage extends StatefulWidget {
   static const String routeName = '/doctor';
-
   const DoctorPage({super.key});
-
   @override
   State<DoctorPage> createState() => _DoctorPageState();
 }
@@ -23,6 +22,9 @@ class _DoctorPageState extends State<DoctorPage> {
   bool isRating = false;
   bool isFemale = false;
   bool isMale = false;
+  bool isSearching = false;
+  List<DoctorModel> filteredDoctors = [];
+  final TextEditingController _searchController = TextEditingController();
   List<String> doctorsImage = [
     'assets/images/male.png',
     'assets/images/doctor_image.png',
@@ -57,6 +59,22 @@ class _DoctorPageState extends State<DoctorPage> {
         .getAllDoctorsByOrderType(orderType: 'ASC');
   }
 
+  void _filterDoctors(String query) {
+    final state = BlocProvider.of<DoctorCubit>(context).state;
+    if (state is DoctorSuccess) {
+      final allDoctors = state.doctorsList;
+      setState(
+        () {
+          filteredDoctors = allDoctors
+              .where((doctor) => doctor.doctorName!
+                  .toLowerCase()
+                  .contains(query.toLowerCase()))
+              .toList();
+        },
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -78,25 +96,42 @@ class _DoctorPageState extends State<DoctorPage> {
                       color: AppTheme.green,
                     ),
                   ),
-                  Text(
-                    'Doctors',
-                    style: Theme.of(context)
-                        .textTheme
-                        .titleLarge!
-                        .copyWith(fontSize: 22),
+                  Expanded(
+                    child: isSearching
+                        ? TextField(
+                            controller: _searchController,
+                            autofocus: true,
+                            onChanged: _filterDoctors,
+                            decoration: const InputDecoration(
+                              hintText: 'Search for a doctor...',
+                              hintStyle: TextStyle(color: Colors.grey),
+                              border: InputBorder.none,
+                            ),
+                          )
+                        : Center(
+                            child: Text(
+                              'All Doctors',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleLarge!
+                                  .copyWith(fontSize: 22),
+                            ),
+                          ),
                   ),
-                  Row(
-                    children: [
-                      TopIconInHomePage(
-                        onPressed: () {},
-                        icons: const Icon(
-                          Icons.search,
-                          color: AppTheme.green,
-                        ),
-                        containerBackgroundColor: AppTheme.gray,
-                      ),
-                      const SizedBox(width: 8),
-                    ],
+                  IconButton(
+                    onPressed: () {
+                      setState(() {
+                        isSearching = !isSearching;
+                        if (!isSearching) {
+                          _searchController.clear();
+                          filteredDoctors = [];
+                        }
+                      });
+                    },
+                    icon: Icon(
+                      isSearching ? Icons.close : Icons.search,
+                      color: AppTheme.green,
+                    ),
                   ),
                 ],
               ),
@@ -169,7 +204,31 @@ class _DoctorPageState extends State<DoctorPage> {
                   ],
                 ),
               ),
-              // Doctors list display
+              if (isSearching && _searchController.text.isNotEmpty)
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: filteredDoctors.length,
+                    itemBuilder: (context, index) {
+                      final doctor = filteredDoctors[index];
+                      return ListTile(
+                        title: Text(
+                          doctor.doctorName ?? 'Unknown',
+                          style: const TextStyle(color: Colors.black),
+                        ),
+                        subtitle: Text(
+                          doctor.specializationName ?? 'No Specialty',
+                          style: const TextStyle(color: Colors.grey),
+                        ),
+                        onTap: () {
+                          Navigator.of(context).pushNamed(
+                              DoctorInformation.routeName,
+                              arguments: doctor.id);
+                        },
+                      );
+                    },
+                  ),
+                ),
+              // Doctors List Display
               Expanded(
                 child: BlocBuilder<DoctorCubit, DoctorState>(
                   builder: (context, state) {
@@ -187,7 +246,7 @@ class _DoctorPageState extends State<DoctorPage> {
                               doctors[index].doctorName ?? 'Dr. Unknown',
                           descrabtion: doctors[index].specializationName ??
                               'No Specialty',
-                          doctorImage: doctorsImage[index],
+                          doctorImage: 'assets/images/doctor_image.png',
                           doctorid: doctors[index],
                         ),
                       );

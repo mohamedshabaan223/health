@@ -26,20 +26,12 @@ class HomePage extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
         child: Column(
           children: [
+            SizedBox(height: height * 0.01),
             // User info and top icons
             Row(
               children: [
                 const CustomUserInformation(),
                 const Spacer(),
-                TopIconInHomePage(
-                  onPressed: () {},
-                  containerBackgroundColor: AppTheme.gray,
-                  icons: const Icon(
-                    Icons.notifications_outlined,
-                    size: 22,
-                    color: AppTheme.green,
-                  ),
-                ),
                 SizedBox(width: width * 0.02),
                 TopIconInHomePage(
                   onPressed: () {},

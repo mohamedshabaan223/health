@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:health_app/app_theme.dart';
 import 'package:health_app/cubits/doctors_cubit/doctor_cubit.dart';
+import 'package:health_app/models/doctor_model.dart';
 import 'package:health_app/pages/doctor_male.dart';
 import 'package:health_app/pages/doctor_page.dart';
+import 'package:health_app/pages/doctor_page_information.dart';
 import 'package:health_app/pages/doctor_rating.dart';
 import 'package:health_app/widgets/container_doctor.dart';
 import 'package:health_app/widgets/default_icon.dart';
-import 'package:health_app/widgets/top_icon_in_home_page.dart';
 
 class Female extends StatefulWidget {
   static const String routeName = '/female';
@@ -17,11 +18,30 @@ class Female extends StatefulWidget {
 }
 
 class _FemaleState extends State<Female> {
+  bool isSearching = false;
+  List<DoctorModel> filteredDoctors = [];
+  final TextEditingController _searchController = TextEditingController();
   @override
   void initState() {
     super.initState();
     // Fetch female doctors on initialization
     BlocProvider.of<DoctorCubit>(context).getDoctorsByGender(gender: '1');
+  }
+
+  void _filterDoctors(String query) {
+    final state = BlocProvider.of<DoctorCubit>(context).state;
+    if (state is DoctorSuccess) {
+      final allDoctors = state.doctorsList;
+      setState(
+        () {
+          filteredDoctors = allDoctors
+              .where((doctor) => doctor.doctorName!
+                  .toLowerCase()
+                  .contains(query.toLowerCase()))
+              .toList();
+        },
+      );
+    }
   }
 
   @override
@@ -46,22 +66,42 @@ class _FemaleState extends State<Female> {
                       color: AppTheme.green,
                     ),
                   ),
-                  Text(
-                    'Female Doctors',
-                    style: Theme.of(context).textTheme.titleLarge,
+                  Expanded(
+                    child: isSearching
+                        ? TextField(
+                            controller: _searchController,
+                            autofocus: true,
+                            onChanged: _filterDoctors,
+                            decoration: const InputDecoration(
+                              hintText: 'Search for a doctor...',
+                              hintStyle: TextStyle(color: Colors.grey),
+                              border: InputBorder.none,
+                            ),
+                          )
+                        : Center(
+                            child: Text(
+                              'Female Doctors',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleLarge!
+                                  .copyWith(fontSize: 22),
+                            ),
+                          ),
                   ),
-                  Row(
-                    children: [
-                      TopIconInHomePage(
-                        onPressed: () {},
-                        icons: Icon(
-                          Icons.search,
-                          color: AppTheme.green,
-                        ),
-                        containerBackgroundColor: AppTheme.gray,
-                      ),
-                      const SizedBox(width: 8),
-                    ],
+                  IconButton(
+                    onPressed: () {
+                      setState(() {
+                        isSearching = !isSearching;
+                        if (!isSearching) {
+                          _searchController.clear();
+                          filteredDoctors = [];
+                        }
+                      });
+                    },
+                    icon: Icon(
+                      isSearching ? Icons.close : Icons.search,
+                      color: AppTheme.green,
+                    ),
                   ),
                 ],
               ),
@@ -127,6 +167,30 @@ class _FemaleState extends State<Female> {
                   ],
                 ),
               ),
+              if (isSearching && _searchController.text.isNotEmpty)
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: filteredDoctors.length,
+                    itemBuilder: (context, index) {
+                      final doctor = filteredDoctors[index];
+                      return ListTile(
+                        title: Text(
+                          doctor.doctorName ?? 'Unknown',
+                          style: const TextStyle(color: Colors.black),
+                        ),
+                        subtitle: Text(
+                          doctor.specializationName ?? 'No Specialty',
+                          style: const TextStyle(color: Colors.grey),
+                        ),
+                        onTap: () {
+                          Navigator.of(context).pushNamed(
+                              DoctorInformation.routeName,
+                              arguments: doctor.id);
+                        },
+                      );
+                    },
+                  ),
+                ),
               // Female Doctors List
               Expanded(
                 child: BlocBuilder<DoctorCubit, DoctorState>(
