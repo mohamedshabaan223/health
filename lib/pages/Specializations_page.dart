@@ -5,6 +5,7 @@ import 'package:health_app/core/api/dio_consumer.dart';
 import 'package:health_app/cubits/specializations_cubit/specializations_cubit.dart';
 import 'package:health_app/cubits/specializations_cubit/specializations_state.dart';
 import 'package:health_app/models/specializations_model.dart';
+import 'package:health_app/pages/all_doctors_basedOn_specialization.dart';
 import 'package:health_app/widgets/CustomSpecializationsContainer.dart';
 
 class SpecializationsPage extends StatelessWidget {
@@ -44,7 +45,16 @@ class SpecializationsPage extends StatelessWidget {
                         state.specializations[index];
                     return SpecializationContainer(
                       imagePath: 'assets/images/heart.png',
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.pushNamed(
+                          context,
+                          AllDoctorsBasedOnSpecialization.id,
+                          arguments: {
+                            'specializationId': specialization.id,
+                            'specializationName': specialization.name
+                          },
+                        );
+                      },
                       title: specialization.name,
                     );
                   },

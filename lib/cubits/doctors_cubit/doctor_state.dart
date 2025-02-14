@@ -32,3 +32,17 @@ final class GetDoctorInfoFailure extends DoctorState {
 }
 
 final class GetDoctorInfoLoading extends DoctorState {}
+
+final class GetDoctorBySpecializationLoading extends DoctorState {}
+
+final class GetDoctorBySpecializationSuccess extends DoctorState {
+  final List<GetDoctorBySpecialization> doctorsList;
+
+  GetDoctorBySpecializationSuccess(this.doctorsList);
+}
+
+final class GetDoctorBySpecializationFailure extends DoctorState {
+  final String errorMessage;
+
+  GetDoctorBySpecializationFailure({required this.errorMessage});
+}

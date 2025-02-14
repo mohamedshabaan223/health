@@ -3,6 +3,7 @@ import 'package:health_app/core/api/api_consumer.dart';
 import 'package:health_app/core/api/end_points.dart';
 import 'package:health_app/core/errors/exceptions.dart';
 import 'package:health_app/models/doctor_model.dart';
+import 'package:health_app/models/get_doctor_based_on_specialization.dart';
 import 'package:health_app/models/get_doctor_info_by_id.dart';
 import 'package:meta/meta.dart';
 
@@ -87,5 +88,30 @@ class DoctorCubit extends Cubit<DoctorState> {
         .toList();
 
     emit(DoctorSuccess(filteredDoctors));
+  }
+
+  Future<void> getDoctorsBySpecialization(
+      {required int specializationId}) async {
+    try {
+      emit(GetDoctorBySpecializationLoading());
+
+      final response = await api.get(
+        "http://10.0.2.2:5282/Api/V1/Specialization/GetDoctorsBySpecializationID",
+        queryParameters: {"specializationId": specializationId},
+      );
+
+      final List<GetDoctorBySpecialization> doctors =
+          List<GetDoctorBySpecialization>.from(
+        response.map((doctor) => GetDoctorBySpecialization.fromJson(doctor)),
+      );
+
+      emit(GetDoctorBySpecializationSuccess(doctors));
+    } on ServerException catch (e) {
+      emit(GetDoctorBySpecializationFailure(
+          errorMessage: e.errorModel.errorMessage));
+    } catch (e) {
+      emit(GetDoctorBySpecializationFailure(
+          errorMessage: "Unexpected error occurred: $e"));
+    }
   }
 }

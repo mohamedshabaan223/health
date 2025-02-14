@@ -11,7 +11,7 @@ class DoctorAppointmentsDropdown extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 200,
+      width: 210,
       height: 35,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),

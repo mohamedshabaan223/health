@@ -14,6 +14,7 @@ import 'package:health_app/cubits/doctors_cubit/doctor_cubit.dart';
 import 'package:health_app/cubits/payment_cubit/payment_cubit.dart';
 import 'package:health_app/navigator_observar.dart';
 import 'package:health_app/pages/Specializations_page.dart';
+import 'package:health_app/pages/all_doctors_basedOn_specialization.dart';
 import 'package:health_app/pages/appointment_screen.dart';
 import 'package:health_app/pages/cancelled_reason_page.dart';
 import 'package:health_app/pages/chat_page.dart';
@@ -112,6 +113,8 @@ class MyApp extends StatelessWidget {
               payment_success.id: (_) => payment_success(),
               SpecializationsPage.id: (_) => SpecializationsPage(),
               ChatScreen.id: (_) => ChatScreen(),
+              AllDoctorsBasedOnSpecialization.id: (_) =>
+                  AllDoctorsBasedOnSpecialization(),
             },
             initialRoute: token != null ? HomeScreen.id : StartScreen.id,
             theme: AppTheme.lightTheme,

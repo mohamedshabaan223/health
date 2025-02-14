@@ -194,7 +194,7 @@ class _ContainerDoctorInfoState extends State<ContainerDoctorInfo> {
                             width: width * 0.14,
                           ),
                         ),
-                        SizedBox(width: width * 0.07),
+                        SizedBox(width: width * 0.05),
                         DoctorAppointmentsDropdown(
                             availableAppointments: doctor.availableAppointments)
                       ],
@@ -217,6 +217,7 @@ class _ContainerDoctorInfoState extends State<ContainerDoctorInfo> {
                             arguments: {
                               'doctorId': widget.doctorId,
                               'patientId': patientId,
+                              'doctorName': doctor.name
                             },
                           );
                         },
