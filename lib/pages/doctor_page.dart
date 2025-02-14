@@ -254,6 +254,7 @@ class _DoctorPageState extends State<DoctorPage> {
                       return ListView.builder(
                         itemCount: doctors.length,
                         itemBuilder: (_, index) => ContainerDoctor(
+                          doctorAddress: doctors[index].address ?? 'No Address',
                           doctorNmae:
                               doctors[index].doctorName ?? 'Dr. Unknown',
                           descrabtion: doctors[index].specializationName ??

@@ -3,12 +3,14 @@ class DoctorModel {
   final String doctorName;
   final String specializationName;
   final String? photo;
+  final String address; // تمت إضافته
 
   DoctorModel({
+    required this.id,
     required this.doctorName,
     required this.specializationName,
     this.photo,
-    required this.id,
+    required this.address, // تمت إضافته
   });
 
   factory DoctorModel.fromJson(Map<String, dynamic> json) {
@@ -17,6 +19,7 @@ class DoctorModel {
       doctorName: json['doctorName'] as String,
       specializationName: json['specializationName'] as String,
       photo: json['photo'] as String?,
+      address: json['address'] as String, // تمت إضافته
     );
   }
 }

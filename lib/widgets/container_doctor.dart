@@ -10,11 +10,13 @@ class ContainerDoctor extends StatefulWidget {
       {required this.doctorNmae,
       required this.descrabtion,
       required this.doctorImage,
-      required this.doctorid});
+      required this.doctorid,
+      required this.doctorAddress});
   final String doctorNmae;
   final String descrabtion;
   final String doctorImage;
   final DoctorModel doctorid;
+  final String doctorAddress;
 
   @override
   State<ContainerDoctor> createState() => _ContainerDoctorState();
@@ -65,7 +67,7 @@ class _ContainerDoctorState extends State<ContainerDoctor> {
                           ?.copyWith(fontSize: 14),
                     ),
                     SizedBox(
-                      width: width * 0.2,
+                      width: width * 0.08,
                     ),
                     Defaulticon(
                       onTap: () {
@@ -81,14 +83,12 @@ class _ContainerDoctorState extends State<ContainerDoctor> {
                     SizedBox(
                       width: width * 0.03,
                     ),
-                    Defaulticon(
-                      onTap: () {
-                        isRating = !isRating;
-                        setState(() {});
-                      },
-                      icon: Icon(isRating ? Icons.star : Icons.star_border,
-                          size: 20, color: AppTheme.green),
-                      containerClolor: AppTheme.white,
+                    _buildInfoContainer(
+                      backgroundColor: AppTheme.white,
+                      textColor: AppTheme.green3,
+                      text: 'Price',
+                      width: 70,
+                      onTap: () {},
                     ),
                   ],
                 ),
@@ -122,11 +122,13 @@ class _ContainerDoctorState extends State<ContainerDoctor> {
                       ),
                     ),
                     SizedBox(
-                      width: width * 0.13,
+                      width: width * 0.06,
                     ),
                     _buildInfoContainer(
-                      text: 'Location',
-                      width: 100,
+                      backgroundColor: AppTheme.green3,
+                      textColor: AppTheme.white,
+                      text: widget.doctorAddress,
+                      width: 130,
                       onTap: () {},
                     ),
                   ],
@@ -143,21 +145,23 @@ class _ContainerDoctorState extends State<ContainerDoctor> {
 Widget _buildInfoContainer(
     {required String text,
     required double width,
-    required void Function()? onTap}) {
+    required void Function()? onTap,
+    required Color backgroundColor,
+    required Color textColor}) {
   return InkWell(
     onTap: onTap,
     child: Container(
       width: width,
       height: 30,
       decoration: BoxDecoration(
-        color: AppTheme.green3,
+        color: backgroundColor,
         borderRadius: BorderRadius.circular(15),
       ),
       child: Center(
         child: Text(
           text,
-          style: const TextStyle(
-            color: Colors.white,
+          style: TextStyle(
+            color: textColor,
             fontSize: 15,
             fontWeight: FontWeight.bold,
           ),
