@@ -1,6 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:health_app/app_theme.dart';
+import 'package:health_app/cache/cache_helper.dart';
+import 'package:health_app/core/api/end_points.dart';
+import 'package:health_app/cubits/doctors_cubit/doctor_cubit.dart';
 import 'package:health_app/models/doctor_model.dart';
 import 'package:health_app/pages/doctor_page_information.dart';
 import 'package:health_app/widgets/default_icon.dart';
@@ -23,9 +27,7 @@ class ContainerDoctor extends StatefulWidget {
 }
 
 class _ContainerDoctorState extends State<ContainerDoctor> {
-  bool isSelected = false;
   bool isFavorite = false;
-  bool isRating = false;
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
@@ -33,20 +35,24 @@ class _ContainerDoctorState extends State<ContainerDoctor> {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       width: double.infinity,
-      height: height * 0.17,
+      height: height * 0.16,
       decoration: BoxDecoration(
           color: AppTheme.gray, borderRadius: BorderRadius.circular(17)),
       child: Row(
         children: [
           Padding(
             padding: const EdgeInsets.only(left: 14.0),
-            child: CircleAvatar(
-              radius: 50,
-              backgroundImage: AssetImage(widget.doctorImage),
+            child: SizedBox(
+              height: 80,
+              width: 80,
+              child: CircleAvatar(
+                radius: 50,
+                backgroundImage: AssetImage(widget.doctorImage),
+              ),
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(top: 30, left: 10, bottom: 15),
+            padding: const EdgeInsets.only(top: 20, left: 10, bottom: 15),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -57,85 +63,117 @@ class _ContainerDoctorState extends State<ContainerDoctor> {
                       .titleSmall
                       ?.copyWith(fontSize: 16, color: AppTheme.green),
                 ),
+                SizedBox(height: 5),
+                Text(
+                  widget.descrabtion,
+                  style: Theme.of(context)
+                      .textTheme
+                      .titleSmall
+                      ?.copyWith(fontSize: 14),
+                ),
+                const SizedBox(height: 5),
                 Row(
                   children: [
+                    const Icon(Icons.location_on,
+                        color: AppTheme.green3, size: 18),
+                    const SizedBox(width: 5),
                     Text(
-                      widget.descrabtion,
+                      widget.doctorAddress,
                       style: Theme.of(context)
                           .textTheme
                           .titleSmall
-                          ?.copyWith(fontSize: 14),
-                    ),
-                    SizedBox(
-                      width: width * 0.08,
-                    ),
-                    Defaulticon(
-                      onTap: () {
-                        isFavorite = !isFavorite;
-                        setState(() {});
-                      },
-                      icon: Icon(
-                          isFavorite ? Icons.favorite : Icons.favorite_border,
-                          size: 19,
-                          color: AppTheme.green),
-                      containerClolor: AppTheme.white,
-                    ),
-                    SizedBox(
-                      width: width * 0.03,
-                    ),
-                    _buildInfoContainer(
-                      backgroundColor: AppTheme.white,
-                      textColor: AppTheme.green3,
-                      text: 'Price',
-                      width: 70,
-                      onTap: () {},
+                          ?.copyWith(fontSize: 14, color: Colors.grey),
                     ),
                   ],
                 ),
-                const SizedBox(
-                  height: 15,
-                ),
+                const SizedBox(height: 5),
                 Row(
                   children: [
-                    InkWell(
-                      onTap: () {
-                        Navigator.of(context).pushNamed(
-                          DoctorInformation.routeName,
-                          arguments: widget.doctorid.id,
-                        );
-                      },
-                      child: Container(
-                        height: 29,
-                        width: 70,
-                        decoration: BoxDecoration(
-                            color: AppTheme.green,
-                            borderRadius: BorderRadius.circular(18)),
-                        child: Center(
-                          child: Text(
-                            'info',
-                            style: Theme.of(context)
-                                .textTheme
-                                .labelMedium
-                                ?.copyWith(color: AppTheme.white, fontSize: 16),
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      width: width * 0.06,
-                    ),
-                    _buildInfoContainer(
-                      backgroundColor: AppTheme.green3,
-                      textColor: AppTheme.white,
-                      text: widget.doctorAddress,
-                      width: 130,
-                      onTap: () {},
+                    const Icon(Icons.attach_money,
+                        color: AppTheme.green3, size: 18),
+                    const SizedBox(width: 5),
+                    Text(
+                      'Price  EGP',
+                      style: Theme.of(context)
+                          .textTheme
+                          .titleSmall
+                          ?.copyWith(fontSize: 14, color: Colors.grey),
                     ),
                   ],
-                )
+                ),
               ],
             ),
           ),
+          Spacer(),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              BlocListener<DoctorCubit, DoctorState>(
+                listener: (context, state) {
+                  if (state is AddFavoriteDoctorSuccess) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('تمت إضافة الطبيب إلى المفضلة بنجاح'),
+                        backgroundColor: Colors.green,
+                      ),
+                    );
+                    setState(() {
+                      isFavorite = true;
+                    });
+                  } else if (state is AddFavoriteDoctorFailure) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('فشل في إضافة الطبيب إلى المفضلة'),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
+                    setState(() {
+                      isFavorite = false;
+                    });
+                  }
+                },
+                child: Defaulticon(
+                  onTap: () {
+                    context.read<DoctorCubit>().addDoctorToFavorites(
+                          doctorId: widget.doctorid.id as int,
+                          patientId: CacheHelper().getData(key: ApiKey.id),
+                        );
+                  },
+                  icon: Icon(
+                      isFavorite ? Icons.favorite : Icons.favorite_border,
+                      size: 19,
+                      color: AppTheme.green),
+                  containerClolor: AppTheme.white,
+                ),
+              ),
+              SizedBox(height: 10),
+              InkWell(
+                onTap: () {
+                  Navigator.of(context).pushNamed(
+                    DoctorInformation.routeName,
+                    arguments: widget.doctorid.id,
+                  );
+                },
+                child: Container(
+                  height: 29,
+                  width: 70,
+                  decoration: BoxDecoration(
+                      color: AppTheme.green,
+                      borderRadius: BorderRadius.circular(18)),
+                  child: Center(
+                    child: Text(
+                      'info',
+                      style: Theme.of(context)
+                          .textTheme
+                          .labelMedium
+                          ?.copyWith(color: AppTheme.white, fontSize: 16),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(width: 15),
         ],
       ),
     );

@@ -46,3 +46,13 @@ final class GetDoctorBySpecializationFailure extends DoctorState {
 
   GetDoctorBySpecializationFailure({required this.errorMessage});
 }
+
+final class AddFavoriteDoctorSuccess extends DoctorState {}
+
+final class AddFavoriteDoctorFailure extends DoctorState {
+  final String errorMessage;
+
+  AddFavoriteDoctorFailure({required this.errorMessage});
+}
+
+final class AddFavoriteDoctorLoading extends DoctorState {}

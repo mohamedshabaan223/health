@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:health_app/app_theme.dart';
+import 'package:health_app/cubits/specializations_cubit/specializations_cubit.dart';
+import 'package:health_app/cubits/specializations_cubit/specializations_state.dart';
 import 'package:health_app/pages/Specializations_page.dart';
+import 'package:health_app/pages/all_doctors_basedOn_specialization.dart';
 import 'package:health_app/pages/doctor_favorite.dart';
 import 'package:health_app/pages/doctor_page.dart';
 import 'package:health_app/pages/doctor_page_information.dart';
@@ -98,42 +102,75 @@ class HomePage extends StatelessWidget {
 
             // Specialties items (row 1)
             // استبدال الصفوف الحالية بهذه الـ GridView
-            GridView.builder(
-              shrinkWrap: true,
-              physics:
-                  const NeverScrollableScrollPhysics(), // منع التمرير الداخلي
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3, // عدد العناصر في كل صف
-                crossAxisSpacing: 10,
-                mainAxisSpacing: 15,
-                childAspectRatio: 1,
-              ),
-              itemCount: 6, // عدد التخصصات
-              itemBuilder: (context, index) {
-                List<String> images = [
-                  'assets/images/heart.png',
-                  'assets/images/hair.png',
-                  'assets/images/general.png',
-                  'assets/images/Gynecology.png',
-                  'assets/images/Odontology.png',
-                  'assets/images/Oncology.png',
-                ];
-                List<String> specializationsTitles = [
-                  'Cardiology',
-                  'Dermatology',
-                  'General',
-                  'Gynecology',
-                  'Odontology',
-                  'Oncology',
-                ];
+            BlocBuilder<SpecializationsCubit, SpecialityState>(
+              builder: (context, state) {
+                if (state is SpecialityLoading) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (state is SpecialityFailure) {
+                  return Center(
+                    child: Text(
+                      "Error: ${state.errorMessage}",
+                      style: const TextStyle(color: Colors.red),
+                    ),
+                  );
+                } else if (state is SpecialitySuccess) {
+                  final specializations =
+                      state.specializations.take(6).toList();
+                  print("Specializations: $specializations"); // طباعة البيانات
 
-                return GestureDetector(
-                    onTap: () {},
-                    child: SpecializationContainer(
-                      imagePath: images[index],
-                      title: specializationsTitles[index],
-                      onTap: () {},
-                    ));
+                  if (specializations.isEmpty) {
+                    return const Center(
+                        child: Text("No specializations available."));
+                  }
+
+                  if (specializations.isEmpty) {
+                    return const Center(
+                        child: Text("No specializations available."));
+                  }
+
+                  return GridView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 3,
+                      crossAxisSpacing: 10,
+                      mainAxisSpacing: 15,
+                      childAspectRatio: 1,
+                    ),
+                    itemCount: specializations.length,
+                    itemBuilder: (context, index) {
+                      final specialization = specializations[index];
+
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).pushNamed(
+                            AllDoctorsBasedOnSpecialization.id,
+                            arguments: {
+                              'specializationId': specialization.id,
+                              'specializationName': specialization.name
+                            },
+                          );
+                        },
+                        child: SpecializationContainer(
+                          imagePath: 'assets/images/Oncology.png',
+                          title: specialization.name,
+                          onTap: () {
+                            Navigator.of(context).pushNamed(
+                              AllDoctorsBasedOnSpecialization.id,
+                              arguments: {
+                                'specializationId': specialization.id,
+                                'specializationName': specialization.name
+                              },
+                            );
+                          },
+                        ),
+                      );
+                    },
+                  );
+                } else {
+                  return const Center(child: Text("Something went wrong."));
+                }
               },
             ),
 

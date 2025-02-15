@@ -128,7 +128,7 @@ class ContainerUpcoming extends StatelessWidget {
               ],
             ),
             const SizedBox(
-              height: 10,
+              height: 16,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -137,40 +137,17 @@ class ContainerUpcoming extends StatelessWidget {
                   onTap: () {},
                   child: Container(
                     alignment: Alignment.center,
-                    height: 27,
-                    width: 140,
+                    height: 30,
+                    width: 300,
                     decoration: BoxDecoration(
                         color: AppTheme.green,
                         borderRadius: BorderRadius.circular(18)),
                     child: Text(
-                      'Details',
+                      'Update Booking',
                       style: Theme.of(context)
                           .textTheme
                           .titleLarge
                           ?.copyWith(color: AppTheme.white),
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  width: 10,
-                ),
-                InkWell(
-                  onTap: () {
-                    Navigator.pushNamed(context, CancelledReasonPage.id);
-                  },
-                  child: Container(
-                    alignment: Alignment.center,
-                    height: 27,
-                    width: 140,
-                    decoration: BoxDecoration(
-                        color: AppTheme.white,
-                        borderRadius: BorderRadius.circular(18)),
-                    child: Text(
-                      'Cancel',
-                      style: Theme.of(context)
-                          .textTheme
-                          .titleLarge
-                          ?.copyWith(color: AppTheme.green),
                     ),
                   ),
                 ),

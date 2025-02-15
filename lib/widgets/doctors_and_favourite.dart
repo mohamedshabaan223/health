@@ -32,7 +32,7 @@ class DoctorsAndFavourite extends StatelessWidget {
               style: const TextStyle(
                 color: AppTheme.green,
                 fontWeight: FontWeight.w500,
-                fontSize: 12,
+                fontSize: 13,
               ),
             ),
           ],

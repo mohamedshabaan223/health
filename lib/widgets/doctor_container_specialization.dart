@@ -4,11 +4,13 @@ import 'package:health_app/pages/doctor_page_information.dart';
 import 'package:health_app/widgets/default_icon.dart';
 
 class DoctorContainerSpecialization extends StatefulWidget {
-  DoctorContainerSpecialization(
-      {required this.doctorNmae,
-      required this.address,
-      required this.doctorImage,
-      required this.doctorid});
+  DoctorContainerSpecialization({
+    required this.doctorNmae,
+    required this.address,
+    required this.doctorImage,
+    required this.doctorid,
+  });
+
   final String doctorNmae;
   final String address;
   final String doctorImage;
@@ -21,36 +23,39 @@ class DoctorContainerSpecialization extends StatefulWidget {
 
 class _DoctorContainerSpecializationState
     extends State<DoctorContainerSpecialization> {
-  bool isSelected = false;
   bool isFavorite = false;
 
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
+
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-      width: double.infinity,
+      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
       height: height * 0.17,
       decoration: BoxDecoration(
-          color: AppTheme.gray, borderRadius: BorderRadius.circular(17)),
+        color: AppTheme.gray,
+        borderRadius: BorderRadius.circular(17),
+      ),
       child: Row(
         children: [
           Padding(
             padding: const EdgeInsets.only(left: 14.0),
-            child: CircleAvatar(
-              radius: 50,
-              backgroundImage: AssetImage(widget.doctorImage),
+            child: SizedBox(
+              height: 80,
+              width: 80,
+              child: CircleAvatar(
+                radius: 50,
+                backgroundImage: AssetImage(widget.doctorImage),
+              ),
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(top: 10, left: 10, bottom: 15),
+            padding: const EdgeInsets.only(top: 12, left: 10, bottom: 10),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(
-                  height: 15,
-                ),
+                const SizedBox(height: 5),
                 Text(
                   widget.doctorNmae,
                   style: Theme.of(context)
@@ -58,42 +63,40 @@ class _DoctorContainerSpecializationState
                       .titleSmall
                       ?.copyWith(fontSize: 17, color: AppTheme.green),
                 ),
-                SizedBox(
-                  width: width * 0.01,
+                const Row(
+                  children: [
+                    Icon(Icons.attach_money, color: AppTheme.green, size: 18),
+                    Text('price',
+                        style: TextStyle(color: Colors.grey, fontSize: 15)),
+                  ],
                 ),
-                SizedBox(
-                  height: height * 0.01,
+                SizedBox(height: height * 0.01),
+                Row(
+                  children: [
+                    const Icon(Icons.location_on,
+                        color: AppTheme.green, size: 18),
+                    Text(widget.address,
+                        style:
+                            const TextStyle(color: Colors.grey, fontSize: 15)),
+                  ],
                 ),
+                SizedBox(height: height * 0.01),
                 Row(
                   children: [
                     Defaulticon(
                       onTap: () {
-                        isFavorite = !isFavorite;
-                        setState(() {});
+                        setState(() {
+                          isFavorite = !isFavorite;
+                        });
                       },
                       icon: Icon(
-                          isFavorite ? Icons.favorite : Icons.favorite_border,
-                          size: 19,
-                          color: AppTheme.green),
+                        isFavorite ? Icons.favorite : Icons.favorite_border,
+                        size: 19,
+                        color: AppTheme.green,
+                      ),
                       containerClolor: AppTheme.white,
                     ),
-                    SizedBox(
-                      width: width * 0.26,
-                    ),
-                    _buildInfoContainer(
-                      textColor: AppTheme.green,
-                      backgroundColor: AppTheme.white,
-                      text: 'Price ${50} \$',
-                      width: 100,
-                      onTap: () {},
-                    )
-                  ],
-                ),
-                SizedBox(
-                  height: height * 0.01,
-                ),
-                Row(
-                  children: [
+                    SizedBox(width: width * 0.1),
                     InkWell(
                       onTap: () {
                         Navigator.of(context).pushNamed(
@@ -105,11 +108,12 @@ class _DoctorContainerSpecializationState
                         height: 29,
                         width: 70,
                         decoration: BoxDecoration(
-                            color: AppTheme.green,
-                            borderRadius: BorderRadius.circular(18)),
+                          color: AppTheme.green,
+                          borderRadius: BorderRadius.circular(18),
+                        ),
                         child: Center(
                           child: Text(
-                            'info',
+                            'Info',
                             style: Theme.of(context)
                                 .textTheme
                                 .labelMedium
@@ -118,18 +122,8 @@ class _DoctorContainerSpecializationState
                         ),
                       ),
                     ),
-                    SizedBox(
-                      width: width * 0.12,
-                    ),
-                    _buildInfoContainer(
-                      textColor: AppTheme.white,
-                      backgroundColor: AppTheme.green,
-                      text: widget.address,
-                      width: 130,
-                      onTap: () {},
-                    ),
                   ],
-                )
+                ),
               ],
             ),
           ),
@@ -139,15 +133,17 @@ class _DoctorContainerSpecializationState
   }
 }
 
-Widget _buildInfoContainer(
-    {required String text,
-    required double width,
-    required void Function()? onTap,
-    required Color backgroundColor,
-    required Color textColor}) {
+Widget _buildInfoContainer({
+  required String text,
+  required double width,
+  required void Function()? onTap,
+  required Color backgroundColor,
+  required Color textColor,
+}) {
   return InkWell(
     onTap: onTap,
     child: Container(
+      margin: const EdgeInsets.symmetric(horizontal: 5),
       width: width,
       height: 30,
       decoration: BoxDecoration(

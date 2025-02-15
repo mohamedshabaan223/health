@@ -10,7 +10,7 @@ class DoctorModel {
     required this.doctorName,
     required this.specializationName,
     this.photo,
-    required this.address, // تمت إضافته
+    required this.address,
   });
 
   factory DoctorModel.fromJson(Map<String, dynamic> json) {
@@ -19,7 +19,7 @@ class DoctorModel {
       doctorName: json['doctorName'] as String,
       specializationName: json['specializationName'] as String,
       photo: json['photo'] as String?,
-      address: json['address'] as String, // تمت إضافته
+      address: json['address'] as String,
     );
   }
 }

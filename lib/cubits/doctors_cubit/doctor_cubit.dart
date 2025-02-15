@@ -26,11 +26,8 @@ class DoctorCubit extends Cubit<DoctorState> {
 
       emit(DoctorSuccess(doctors));
     } on ServerException catch (e) {
-      print(
-          "Error caught in getAllDoctorsByOrderType: ${e.errorModel.errorMessage}");
       emit(DoctorFailure(errorMessage: e.errorModel.errorMessage));
     } catch (e) {
-      print("Unexpected error in getAllDoctorsByOrderType: $e");
       emit(DoctorFailure(errorMessage: "Unexpected error occurred: $e"));
     }
   }
@@ -40,21 +37,15 @@ class DoctorCubit extends Cubit<DoctorState> {
       emit(DoctorLoading());
       final response = await api.get(
         EndPoints.getAllDoctors,
-        queryParameters: {
-          'Gender': gender,
-        },
+        queryParameters: {'Gender': gender},
       );
       final List<DoctorModel> doctors = List<DoctorModel>.from(
         response.map((doctor) => DoctorModel.fromJson(doctor)),
       );
       emit(DoctorSuccess(doctors));
     } on ServerException catch (e) {
-      print("Error caught in getDoctorsByGender: ${e.errorModel.errorMessage}");
-      emit(DoctorFailure(
-        errorMessage: e.errorModel.errorMessage,
-      ));
+      emit(DoctorFailure(errorMessage: e.errorModel.errorMessage));
     } catch (e) {
-      print("Unexpected error in getDoctorsByGender: $e");
       emit(DoctorFailure(errorMessage: "Unexpected error occurred: $e"));
     }
   }
@@ -70,12 +61,8 @@ class DoctorCubit extends Cubit<DoctorState> {
 
       emit(GetDoctorInfoSuccess(doctorInfo));
     } on ServerException catch (e) {
-      print("Error caught in getDoctorById: ${e.errorModel.errorMessage}");
-      emit(GetDoctorInfoFailure(
-        errorMessage: e.errorModel.errorMessage,
-      ));
+      emit(GetDoctorInfoFailure(errorMessage: e.errorModel.errorMessage));
     } catch (e) {
-      print("Unexpected error in getDoctorById: $e");
       emit(GetDoctorInfoFailure(errorMessage: "Unexpected error occurred: $e"));
     }
   }
@@ -112,6 +99,39 @@ class DoctorCubit extends Cubit<DoctorState> {
     } catch (e) {
       emit(GetDoctorBySpecializationFailure(
           errorMessage: "Unexpected error occurred: $e"));
+    }
+  }
+
+  Future<void> addDoctorToFavorites({
+    required int doctorId,
+    required int patientId,
+  }) async {
+    try {
+      emit(AddFavoriteDoctorLoading());
+
+      final response = await api.post(
+        "http://10.0.2.2:5282/Api/V1/Doctors/AddFavoriteDR",
+        data: {
+          'doctorId': doctorId,
+          'patientId': patientId,
+        },
+      );
+
+      if (response.statusCode == 200 &&
+          response.data == "Doctor added to favorites.") {
+        emit(AddFavoriteDoctorSuccess());
+      } else if (response.statusCode == 400 ||
+          response.data == "Doctor already added to favorites") {
+        emit(AddFavoriteDoctorFailure(
+            errorMessage: "هذا الطبيب موجود بالفعل في المفضلة ⭐"));
+      } else {
+        emit(AddFavoriteDoctorFailure(
+            errorMessage: "فشل في إضافة الطبيب إلى المفضلة ❌"));
+      }
+    } on ServerException catch (e) {
+      emit(AddFavoriteDoctorFailure(errorMessage: e.errorModel.errorMessage));
+    } catch (e) {
+      emit(AddFavoriteDoctorFailure(errorMessage: "حدث خطأ غير متوقع: $e"));
     }
   }
 }
