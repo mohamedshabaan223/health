@@ -20,7 +20,7 @@ class ContainerDoctorInfo extends StatefulWidget {
 class _ContainerDoctorInfoState extends State<ContainerDoctorInfo> {
   bool isFavorite = false;
   bool isRating = false;
-  int? patientId = CacheHelper().getData(key: ApiKey.id);
+  int? patientId = CacheHelper().getData(key: 'id');
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;

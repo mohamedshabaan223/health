@@ -14,10 +14,13 @@ class Rating extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double width = MediaQuery.of(context).size.width;
+    final double height = MediaQuery.of(context).size.height;
+
     return Scaffold(
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: EdgeInsets.all(width * 0.03),
           child: Column(
             children: [
               Row(
@@ -27,93 +30,76 @@ class Rating extends StatelessWidget {
                       onPressed: () {
                         Navigator.of(context).pop();
                       },
-                      icon: const Icon(
+                      icon: Icon(
                         Icons.arrow_back_ios_new_outlined,
-                        size: 25,
+                        size: width * 0.05,
                         color: AppTheme.green,
                       )),
                   Text(
                     'Rating',
-                    style: Theme.of(context).textTheme.titleLarge,
+                    style: Theme.of(context)
+                        .textTheme
+                        .titleLarge
+                        ?.copyWith(fontSize: width * 0.05),
                   ),
                   Row(
                     children: [
                       TopIconInHomePage(
-                          onPressed: () {},
-                          icons: Icon(
-                            Icons.search,
-                            color: AppTheme.green,
-                          ),
-                          containerBackgroundColor: AppTheme.gray),
-                      const SizedBox(
-                        width: 8,
+                        onPressed: () {},
+                        icons: Icon(Icons.search,
+                            color: AppTheme.green, size: width * 0.045),
+                        containerBackgroundColor: AppTheme.gray,
                       ),
+                      SizedBox(width: width * 0.02),
                     ],
                   ),
                 ],
               ),
               Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                padding: EdgeInsets.symmetric(
+                    vertical: width * 0.02, horizontal: width * 0.03),
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Text('Sort By',
-                        style:
-                            Theme.of(context).textTheme.titleMedium!.copyWith(
-                                  color: AppTheme.green,
-                                )),
-                    const SizedBox(
-                      width: 5,
+                    Text(
+                      'Sort By',
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                            fontSize: width * 0.04,
+                            color: AppTheme.green,
+                          ),
                     ),
+                    SizedBox(width: width * 0.02),
                     Defaulticon(
                       onTap: () {
                         Navigator.of(context).pushNamed(DoctorPage.routeName);
                       },
-                      icon: const Icon(
-                        Icons.sort_by_alpha_outlined,
-                        size: 18,
-                        color: AppTheme.green,
-                      ),
+                      icon: Icon(Icons.sort_by_alpha_outlined,
+                          size: width * 0.045, color: AppTheme.green),
                       containerClolor: AppTheme.gray,
                     ),
-                    const SizedBox(
-                      width: 5,
-                    ),
+                    SizedBox(width: width * 0.02),
                     Defaulticon(
                       onTap: () {},
-                      icon: const Icon(
-                        Icons.star_border,
-                        size: 17,
-                        color: AppTheme.white,
-                      ),
+                      icon: Icon(Icons.star_border,
+                          size: width * 0.045, color: AppTheme.white),
                       containerClolor: AppTheme.green,
                     ),
-                    const SizedBox(
-                      width: 5,
-                    ),
+                    SizedBox(width: width * 0.02),
                     Defaulticon(
                       onTap: () {
                         Navigator.of(context).pushNamed(Female.routeName);
                       },
-                      icon: const Icon(
-                        Icons.female,
-                        size: 17,
-                        color: AppTheme.green,
-                      ),
+                      icon: Icon(Icons.female,
+                          size: width * 0.045, color: AppTheme.green),
                       containerClolor: AppTheme.gray,
                     ),
-                    const SizedBox(
-                      width: 5,
-                    ),
+                    SizedBox(width: width * 0.02),
                     Defaulticon(
                       onTap: () {
                         Navigator.of(context).pushNamed(Male.routeName);
                       },
-                      icon: const Icon(
-                        Icons.male,
-                        size: 17,
-                        color: AppTheme.green,
-                      ),
+                      icon: Icon(Icons.male,
+                          size: width * 0.045, color: AppTheme.green),
                       containerClolor: AppTheme.gray,
                     ),
                   ],
@@ -123,7 +109,7 @@ class Rating extends StatelessWidget {
                 child: ListView.builder(
                   itemBuilder: (_, index) => const ContainrDoctorRating(),
                   itemCount: 3,
-                  itemExtent: 145,
+                  itemExtent: height * 0.18,
                 ),
               ),
             ],

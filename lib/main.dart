@@ -18,6 +18,7 @@ import 'package:health_app/pages/Specializations_page.dart';
 import 'package:health_app/pages/all_doctors_basedOn_specialization.dart';
 import 'package:health_app/pages/appointment_screen.dart';
 import 'package:health_app/pages/cancelled_reason_page.dart';
+import 'package:health_app/pages/change_password.dart';
 import 'package:health_app/pages/chat_page.dart';
 import 'package:health_app/pages/create_new_password_page.dart';
 import 'package:health_app/pages/doctor_favorite.dart';
@@ -29,10 +30,12 @@ import 'package:health_app/pages/doctor_rating.dart';
 import 'package:health_app/pages/home_page.dart';
 import 'package:health_app/pages/home_screen.dart';
 import 'package:health_app/pages/login_page.dart';
+import 'package:health_app/pages/profile_page.dart';
 import 'package:health_app/pages/register_page.dart';
 import 'package:health_app/pages/review_page.dart';
 import 'package:health_app/pages/start_screen.dart';
 import 'package:health_app/pages/payment_success_page.dart';
+import 'package:health_app/pages/update_profile_page.dart';
 import 'package:health_app/pages/your_appoinment.dart';
 import 'package:health_app/simple_bloc_observer.dart';
 
@@ -51,7 +54,7 @@ void main() async {
   HttpOverrides.global = MyHttpOverrides();
   await CacheHelper().init();
   token = CacheHelper().getData(key: ApiKey.token);
-  patientId = CacheHelper().getData(key: ApiKey.id);
+  patientId = CacheHelper().getData(key: 'id');
   print("Patient ID: $patientId");
   print("Token: $token");
   runApp(const MyApp());
@@ -104,9 +107,9 @@ class MyApp extends StatelessWidget {
               RegisterPage.id: (_) => RegisterPage(),
               CreateNewPasswordPage.id: (_) => CreateNewPasswordPage(),
               HomePage.id: (_) => const HomePage(),
-              DoctorPage.routeName: (_) => DoctorPage(),
+              DoctorPage.routeName: (_) => const DoctorPage(),
               DoctorInformation.routeName: (_) => DoctorInformation(),
-              Rating.routeName: (_) => Rating(),
+              Rating.routeName: (_) => const Rating(),
               Favorite.routeName: (_) => Favorite(),
               Female.routeName: (_) => Female(),
               Male.routeName: (_) => Male(),
@@ -116,10 +119,13 @@ class MyApp extends StatelessWidget {
               HomeScreen.id: (_) => HomeScreen(),
               CancelledReasonPage.id: (_) => CancelledReasonPage(),
               payment_success.id: (_) => payment_success(),
-              SpecializationsPage.id: (_) => SpecializationsPage(),
-              ChatScreen.id: (_) => ChatScreen(),
+              SpecializationsPage.id: (_) => const SpecializationsPage(),
+              ChatScreen.id: (_) => const ChatScreen(),
               AllDoctorsBasedOnSpecialization.id: (_) =>
-                  AllDoctorsBasedOnSpecialization(),
+                  const AllDoctorsBasedOnSpecialization(),
+              Profile.id: (_) => const Profile(),
+              UpdateProfile.id: (_) => UpdateProfile(),
+              ChangePassword.id: (_) => ChangePassword(),
             },
             initialRoute: token != null ? HomeScreen.id : StartScreen.id,
             theme: AppTheme.lightTheme,

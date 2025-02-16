@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:health_app/app_theme.dart';
 import 'package:health_app/cache/cache_helper.dart';
-import 'package:health_app/core/api/end_points.dart';
 import 'package:health_app/cubits/auth_cubit/auth_cubit.dart';
 import 'package:health_app/cubits/booking_cubit/booking_cubit_cubit.dart';
 import 'package:health_app/models/Appointment_display_doctor_data.dart';
@@ -26,7 +25,7 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
   String? fullName;
   int? age;
   int? doctorId;
-  int? patientId = CacheHelper().getData(key: ApiKey.id);
+  int? patientId = CacheHelper().getData(key: 'id');
   String? problemDescription;
   List<AppointmentDisplayDoctorData> availableSlots = [];
 

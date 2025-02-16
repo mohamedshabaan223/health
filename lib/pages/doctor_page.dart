@@ -13,45 +13,16 @@ import 'package:health_app/widgets/default_icon.dart';
 class DoctorPage extends StatefulWidget {
   static const String routeName = '/doctor';
   const DoctorPage({super.key});
+
   @override
   State<DoctorPage> createState() => _DoctorPageState();
 }
 
 class _DoctorPageState extends State<DoctorPage> {
   bool isSortByAlpha = false;
-  bool isRating = false;
-  bool isFemale = false;
-  bool isMale = false;
   bool isSearching = false;
   List<DoctorModel> filteredDoctors = [];
   final TextEditingController _searchController = TextEditingController();
-  List<String> doctorsImage = [
-    'assets/images/male.png',
-    'assets/images/doctor_image.png',
-    'assets/images/male.png',
-    'assets/images/doctor_image.png',
-    'assets/images/male.png',
-    'assets/images/doctor_image.png',
-    'assets/images/male.png',
-    'assets/images/doctor_image.png',
-    'assets/images/male.png',
-    'assets/images/doctor_image.png',
-    'assets/images/male.png',
-    'assets/images/doctor_image.png',
-    'assets/images/male.png',
-    'assets/images/doctor_image.png',
-    'assets/images/male.png',
-    'assets/images/doctor_image.png',
-    'assets/images/male.png',
-    'assets/images/doctor_image.png',
-    'assets/images/male.png',
-    'assets/images/doctor_image.png',
-    'assets/images/male.png',
-    'assets/images/doctor_image.png',
-    'assets/images/male.png',
-    'assets/images/doctor_image.png',
-  ];
-
   DoctorCubit? _doctorCubit;
 
   @override
@@ -67,38 +38,33 @@ class _DoctorPageState extends State<DoctorPage> {
     final state = BlocProvider.of<DoctorCubit>(context).state;
     if (state is DoctorSuccess) {
       final allDoctors = state.doctorsList;
-      setState(
-        () {
-          filteredDoctors = allDoctors
-              .where((doctor) => doctor.doctorName!
-                  .toLowerCase()
-                  .contains(query.toLowerCase()))
-              .toList();
-        },
-      );
+      setState(() {
+        filteredDoctors = allDoctors
+            .where((doctor) =>
+                doctor.doctorName!.toLowerCase().contains(query.toLowerCase()))
+            .toList();
+      });
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final double width = MediaQuery.of(context).size.width;
+
     return Scaffold(
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(15.0),
+          padding: EdgeInsets.symmetric(horizontal: width * 0.03, vertical: 10),
           child: Column(
             children: [
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   IconButton(
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
-                    icon: const Icon(
-                      Icons.arrow_back_ios_new_outlined,
-                      size: 25,
-                      color: AppTheme.green,
-                    ),
+                    icon: Icon(Icons.arrow_back_ios_new_outlined,
+                        size: width * 0.05, color: AppTheme.green),
                   ),
                   Expanded(
                     child: isSearching
@@ -106,9 +72,10 @@ class _DoctorPageState extends State<DoctorPage> {
                             controller: _searchController,
                             autofocus: true,
                             onChanged: _filterDoctors,
-                            decoration: const InputDecoration(
+                            decoration: InputDecoration(
                               hintText: 'Search for a doctor...',
-                              hintStyle: TextStyle(color: Colors.grey),
+                              hintStyle: TextStyle(
+                                  fontSize: width * 0.04, color: Colors.grey),
                               border: InputBorder.none,
                             ),
                           )
@@ -118,13 +85,13 @@ class _DoctorPageState extends State<DoctorPage> {
                               style: Theme.of(context)
                                   .textTheme
                                   .titleLarge!
-                                  .copyWith(fontSize: 22),
+                                  .copyWith(fontSize: width * 0.05),
                             ),
                           ),
                   ),
                   Container(
-                    height: 38,
-                    width: 38,
+                    height: width * 0.1,
+                    width: width * 0.1,
                     decoration: const BoxDecoration(
                       color: AppTheme.gray,
                       shape: BoxShape.circle,
@@ -141,26 +108,26 @@ class _DoctorPageState extends State<DoctorPage> {
                       },
                       icon: Icon(
                         isSearching ? Icons.close : Icons.search,
+                        size: width * 0.05,
                         color: AppTheme.green,
                       ),
                     ),
                   ),
                 ],
               ),
-              // Sort and filter section
               Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                padding: EdgeInsets.symmetric(
+                    vertical: 10, horizontal: width * 0.02),
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Text(
-                      'Sort By',
-                      style: Theme.of(context)
-                          .textTheme
-                          .titleMedium
-                          ?.copyWith(color: AppTheme.green),
-                    ),
-                    const SizedBox(width: 5),
+                    Text('Sort By',
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleMedium
+                            ?.copyWith(
+                                fontSize: width * 0.04, color: AppTheme.green)),
+                    SizedBox(width: width * 0.02),
                     Defaulticon(
                       onTap: () {
                         setState(() {
@@ -170,47 +137,35 @@ class _DoctorPageState extends State<DoctorPage> {
                             .getAllDoctorsByOrderType(
                                 orderType: isSortByAlpha ? "ASC" : "DESC");
                       },
-                      icon: const Icon(
-                        Icons.sort_by_alpha_outlined,
-                        size: 18,
-                        color: AppTheme.white,
-                      ),
+                      icon: Icon(Icons.sort_by_alpha_outlined,
+                          size: width * 0.045, color: AppTheme.white),
                       containerClolor: AppTheme.green,
                     ),
-                    const SizedBox(width: 5),
+                    SizedBox(width: width * 0.02),
                     Defaulticon(
                       onTap: () {
                         Navigator.of(context).pushNamed(Rating.routeName);
                       },
-                      icon: const Icon(
-                        Icons.star_border,
-                        size: 17,
-                        color: AppTheme.green,
-                      ),
+                      icon: Icon(Icons.star_border,
+                          size: width * 0.04, color: AppTheme.green),
                       containerClolor: AppTheme.gray,
                     ),
-                    const SizedBox(width: 5),
+                    SizedBox(width: width * 0.02),
                     Defaulticon(
                       onTap: () {
                         Navigator.of(context).pushNamed(Female.routeName);
                       },
-                      icon: const Icon(
-                        Icons.female,
-                        size: 17,
-                        color: AppTheme.green,
-                      ),
+                      icon: Icon(Icons.female,
+                          size: width * 0.04, color: AppTheme.green),
                       containerClolor: AppTheme.gray,
                     ),
-                    const SizedBox(width: 5),
+                    SizedBox(width: width * 0.02),
                     Defaulticon(
                       onTap: () {
                         Navigator.of(context).pushNamed(Male.routeName);
                       },
-                      icon: const Icon(
-                        Icons.male,
-                        size: 17,
-                        color: AppTheme.green,
-                      ),
+                      icon: Icon(Icons.male,
+                          size: width * 0.04, color: AppTheme.green),
                       containerClolor: AppTheme.gray,
                     ),
                   ],
@@ -225,11 +180,13 @@ class _DoctorPageState extends State<DoctorPage> {
                       return ListTile(
                         title: Text(
                           doctor.doctorName ?? 'Unknown',
-                          style: const TextStyle(color: Colors.black),
+                          style: TextStyle(
+                              fontSize: width * 0.04, color: Colors.black),
                         ),
                         subtitle: Text(
                           doctor.specializationName ?? 'No Specialty',
-                          style: const TextStyle(color: Colors.grey),
+                          style: TextStyle(
+                              fontSize: width * 0.035, color: Colors.grey),
                         ),
                         onTap: () {
                           Navigator.of(context).pushNamed(
@@ -240,7 +197,6 @@ class _DoctorPageState extends State<DoctorPage> {
                     },
                   ),
                 ),
-              // Doctors List Display
               Expanded(
                 child: BlocBuilder<DoctorCubit, DoctorState>(
                   builder: (context, state) {

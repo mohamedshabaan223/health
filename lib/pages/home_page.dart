@@ -9,6 +9,7 @@ import 'package:health_app/pages/all_doctors_basedOn_specialization.dart';
 import 'package:health_app/pages/doctor_favorite.dart';
 import 'package:health_app/pages/doctor_page.dart';
 import 'package:health_app/pages/doctor_page_information.dart';
+import 'package:health_app/pages/profile_page.dart';
 import 'package:health_app/widgets/CustomSpecializationsContainer.dart';
 import 'package:health_app/widgets/card_of_doctor.dart';
 import 'package:health_app/widgets/custom_user_information.dart';
@@ -31,14 +32,15 @@ class HomePage extends StatelessWidget {
         child: Column(
           children: [
             SizedBox(height: height * 0.01),
-            // User info and top icons
             Row(
               children: [
                 const CustomUserInformation(),
                 const Spacer(),
                 SizedBox(width: width * 0.02),
                 TopIconInHomePage(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.of(context).pushNamed(Profile.id);
+                  },
                   containerBackgroundColor: AppTheme.gray,
                   icons: const Icon(
                     Icons.settings_outlined,
@@ -49,8 +51,6 @@ class HomePage extends StatelessWidget {
               ],
             ),
             SizedBox(height: height * 0.03),
-
-            // Doctors and favourites with search field
             Row(
               children: [
                 DoctorsAndFavourite(
@@ -72,8 +72,6 @@ class HomePage extends StatelessWidget {
               ],
             ),
             SizedBox(height: height * 0.07),
-
-            // Specialties section header
             Row(
               children: [
                 Text(
@@ -99,9 +97,6 @@ class HomePage extends StatelessWidget {
             ),
             const Divider(color: AppTheme.gray, thickness: 2),
             SizedBox(height: height * 0.03),
-
-            // Specialties items (row 1)
-            // استبدال الصفوف الحالية بهذه الـ GridView
             BlocBuilder<SpecializationsCubit, SpecialityState>(
               builder: (context, state) {
                 if (state is SpecialityLoading) {
@@ -116,7 +111,7 @@ class HomePage extends StatelessWidget {
                 } else if (state is SpecialitySuccess) {
                   final specializations =
                       state.specializations.take(6).toList();
-                  print("Specializations: $specializations"); // طباعة البيانات
+                  print("Specializations: $specializations");
 
                   if (specializations.isEmpty) {
                     return const Center(
@@ -173,12 +168,9 @@ class HomePage extends StatelessWidget {
                 }
               },
             ),
-
             SizedBox(height: height * 0.03),
-
-            // Doctors list with constrained height
             SizedBox(
-              height: height * 0.4, // Adjust height as needed
+              height: height * (width > 600 ? 0.5 : 0.4),
               child: ListView.builder(
                 itemCount: 5,
                 itemBuilder: (context, index) {
@@ -206,9 +198,9 @@ Route _createRoute() {
     pageBuilder: (context, animation, secondaryAnimation) =>
         const SpecializationsPage(),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      const begin = Offset(1.0, 0.0); // يبدأ من اليمين
-      const end = Offset.zero; // ينتهي في مكانه الطبيعي
-      const curve = Curves.easeInOut; // تسهيل الحركة
+      const begin = Offset(1.0, 0.0);
+      const end = Offset.zero;
+      const curve = Curves.easeInOut;
 
       var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
       var offsetAnimation = animation.drive(tween);

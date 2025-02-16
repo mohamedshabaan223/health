@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-
 import 'package:health_app/app_theme.dart';
-import 'package:health_app/pages/settings.dart';
 import 'package:health_app/widgets/container_icon.dart';
 import 'package:health_app/widgets/update_text_field.dart';
 
@@ -35,7 +33,7 @@ class UpdateProfile extends StatelessWidget {
                           color: AppTheme.green,
                         )),
                     const Text(
-                      ' Profile',
+                      'My Profile',
                       style: TextStyle(
                           color: AppTheme.green,
                           fontSize: 24,
@@ -43,7 +41,7 @@ class UpdateProfile extends StatelessWidget {
                     ),
                     ContainerIcon(
                         onTap: () {
-                          Navigator.of(context).pushNamed(Setting.id);
+                          Navigator.of(context).pushNamed(UpdateProfile.id);
                         },
                         iconName: Icons.settings,
                         containerColor: AppTheme.green,
@@ -56,7 +54,8 @@ class UpdateProfile extends StatelessWidget {
                   children: [
                     const CircleAvatar(
                       radius: 52,
-                      backgroundImage: AssetImage('assets/images/female.png'),
+                      backgroundImage:
+                          AssetImage('assets/images/doctor_image.png'),
                     ),
                     Positioned(
                         bottom: 0,

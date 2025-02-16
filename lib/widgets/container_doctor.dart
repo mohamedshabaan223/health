@@ -1,9 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:health_app/app_theme.dart';
 import 'package:health_app/cache/cache_helper.dart';
-import 'package:health_app/core/api/end_points.dart';
 import 'package:health_app/cubits/doctors_cubit/doctor_cubit.dart';
 import 'package:health_app/models/doctor_model.dart';
 import 'package:health_app/pages/doctor_page_information.dart';
@@ -136,7 +134,7 @@ class _ContainerDoctorState extends State<ContainerDoctor> {
                   onTap: () {
                     context.read<DoctorCubit>().addDoctorToFavorites(
                           doctorId: widget.doctorid.id as int,
-                          patientId: CacheHelper().getData(key: ApiKey.id),
+                          patientId: CacheHelper().getData(key: 'id'),
                         );
                   },
                   icon: Icon(
@@ -146,7 +144,7 @@ class _ContainerDoctorState extends State<ContainerDoctor> {
                   containerClolor: AppTheme.white,
                 ),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               InkWell(
                 onTap: () {
                   Navigator.of(context).pushNamed(

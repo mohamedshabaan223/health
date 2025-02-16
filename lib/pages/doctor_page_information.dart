@@ -26,31 +26,36 @@ class _DoctorInformationState extends State<DoctorInformation> {
 
   @override
   Widget build(BuildContext context) {
-    double height = MediaQuery.of(context).size.height;
-    double width = MediaQuery.of(context).size.width;
+    final size = MediaQuery.of(context).size;
     final doctorId = ModalRoute.of(context)?.settings.arguments as int?;
+
     if (doctorId == null) {
       return Scaffold(
         appBar: AppBar(title: const Text('Error')),
         body: const Center(child: Text('No doctor ID provided.')),
       );
     }
+
     return Scaffold(
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(15.0),
+          padding: EdgeInsets.symmetric(
+              horizontal: size.width * 0.04, vertical: size.height * 0.02),
           child: SingleChildScrollView(
-            scrollDirection: Axis.vertical,
             child: BlocBuilder<DoctorCubit, DoctorState>(
               builder: (context, state) {
                 if (state is GetDoctorInfoLoading) {
-                  return const Center(child: CircularProgressIndicator());
+                  return SizedBox(
+                    height: size.height * 0.7,
+                    child: const Center(child: CircularProgressIndicator()),
+                  );
                 }
                 if (state is GetDoctorInfoFailure) {
                   return Center(
                     child: Text(
                       "Error: ${state.errorMessage}",
-                      style: const TextStyle(color: Colors.red),
+                      style: TextStyle(
+                          color: Colors.red, fontSize: size.width * 0.045),
                     ),
                   );
                 }
@@ -59,66 +64,59 @@ class _DoctorInformationState extends State<DoctorInformation> {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            IconButton(
-                              onPressed: () {
-                                Navigator.of(context).pop(DoctorPage.routeName);
-                              },
-                              icon: const Icon(
-                                Icons.arrow_back_ios_new_outlined,
-                                size: 25,
-                                color: AppTheme.green,
+                      Row(
+                        children: [
+                          IconButton(
+                            onPressed: () {
+                              Navigator.of(context).pop(DoctorPage.routeName);
+                            },
+                            icon: Icon(
+                              Icons.arrow_back_ios_new_outlined,
+                              size: size.width * 0.06,
+                              color: AppTheme.green,
+                            ),
+                          ),
+                          Expanded(
+                            child: Center(
+                              child: Text(
+                                'Doctor Information',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleMedium!
+                                    .copyWith(
+                                      fontSize: size.width * 0.05,
+                                    ),
                               ),
                             ),
-                            SizedBox(
-                              width: width * 0.15,
-                            ),
-                            Text(
-                              'Doctor Information',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .titleMedium!
-                                  .copyWith(fontSize: 22),
-                            ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
-                      const SizedBox(
-                        height: 15,
-                      ),
+                      SizedBox(height: size.height * 0.02),
                       ContainerDoctorInfo(doctorId: doctorId),
-                      SizedBox(
-                        height: height * 0.05,
-                      ),
+                      SizedBox(height: size.height * 0.04),
                       Text(
                         'Profile',
-                        style: Theme.of(context)
-                            .textTheme
-                            .labelMedium!
-                            .copyWith(fontSize: 20, color: AppTheme.green),
+                        style:
+                            Theme.of(context).textTheme.labelMedium!.copyWith(
+                                  fontSize: size.width * 0.05,
+                                  color: AppTheme.green,
+                                ),
                       ),
-                      const SizedBox(
-                        height: 10,
-                      ),
+                      SizedBox(height: size.height * 0.02),
                       Text(
                         doctor.focus ?? 'There is no profile.',
-                        style: const TextStyle(
-                          fontSize: 16,
+                        style: TextStyle(
+                          fontSize: size.width * 0.045,
                         ),
                       ),
-                      SizedBox(
-                        height: height * 0.05,
-                      ),
+                      SizedBox(height: size.height * 0.05),
                     ],
                   );
                 } else {
-                  return Container(
-                    alignment: Alignment.center,
-                    child: const Text('No doctor information available.'),
+                  return SizedBox(
+                    height: size.height * 0.7,
+                    child: const Center(
+                        child: Text('No doctor information available.')),
                   );
                 }
               },

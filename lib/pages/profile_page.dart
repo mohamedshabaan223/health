@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:health_app/app_theme.dart';
-import 'package:health_app/pages/settings.dart';
+import 'package:health_app/pages/change_password.dart';
 import 'package:health_app/pages/update_profile_page.dart';
 import 'package:health_app/widgets/row_profile.dart';
 import 'package:health_app/widgets/show_logout.dart';
 
 class Profile extends StatelessWidget {
   static const String id = "/profile";
+
+  const Profile({super.key});
+
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.sizeOf(context).height;
@@ -31,7 +34,7 @@ class Profile extends StatelessWidget {
                     flex: 2,
                   ),
                   const Text(
-                    'My Profile',
+                    'Profile',
                     style: TextStyle(
                         color: AppTheme.green,
                         fontSize: 24,
@@ -48,7 +51,8 @@ class Profile extends StatelessWidget {
                 children: [
                   const CircleAvatar(
                     radius: 52,
-                    backgroundImage: AssetImage('assets/images/female.png'),
+                    backgroundImage:
+                        AssetImage('assets/images/doctor_image.png'),
                   ),
                   Positioned(
                       bottom: 0,
@@ -75,25 +79,35 @@ class Profile extends StatelessWidget {
                 ],
               ),
             ),
-            SizedBox(height: height * 0.09),
+            SizedBox(height: height * 0.1),
             RowProfile(
               onTap: () {
                 Navigator.of(context).pushNamed(UpdateProfile.id);
               },
-              label: 'Profile',
+              label: 'Update Profile',
               containerColor: AppTheme.gray,
               iconColor: AppTheme.green,
               iconName: Icons.person_outline,
             ),
+            SizedBox(height: height * 0.02),
             RowProfile(
               onTap: () {
-                Navigator.of(context).pushNamed(Setting.id);
+                Navigator.of(context).pushNamed(ChangePassword.id);
               },
-              label: 'Setting',
+              label: 'Password Manager',
               containerColor: AppTheme.gray,
               iconColor: AppTheme.green,
               iconName: Icons.settings,
             ),
+            SizedBox(height: height * 0.02),
+            RowProfile(
+              onTap: () {},
+              label: 'Delete Account',
+              iconName: Icons.delete_forever,
+              containerColor: AppTheme.gray,
+              iconColor: AppTheme.green,
+            ),
+            SizedBox(height: height * 0.02),
             RowProfile(
               onTap: () => showModalBottomSheet(
                   context: context, builder: (context) => const ShowLogout()),
