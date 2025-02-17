@@ -8,6 +8,8 @@ class EndPoints {
   static String allSpecialities = "V1/Specialization/GetAllSpecializations";
   static String getAllMessages = "V1/Chat/GetMessage";
   static String sendMessage = "V1/Chat/SaveMessage";
+  static String getUserProfile = "V1/Profile/GetUserProfile";
+  static String updateUserProfile = "V1/Profile/UpdateUserProfile";
 }
 
 class ApiKey {

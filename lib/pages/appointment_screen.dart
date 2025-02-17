@@ -72,13 +72,19 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
       );
       return;
     }
-    if (ageController.text.isEmpty || problemController.text.isEmpty) {
+    if (ageController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-            content: Text('Please enter both Age and Problem Description!')),
+        const SnackBar(content: Text('Please enter your age!')),
       );
       return;
     }
+    if (problemController.text.trim().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please describe your problem!')),
+      );
+      return;
+    }
+
     final bookingRequest = BookingRequest(
       doctorId: doctorId!,
       day: availableSlots[selectedDayIndex].day,

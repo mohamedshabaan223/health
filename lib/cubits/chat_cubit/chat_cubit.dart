@@ -76,4 +76,8 @@ class ChatCubit extends Cubit<ChatState> {
       emit(ChatFailure("Unexpected error occurred: $e"));
     }
   }
+
+  void resetState() {
+    emit(ChatInitial());
+  }
 }

@@ -82,4 +82,8 @@ class AuthCubit extends Cubit<AuthState> {
       emit(RegisterFailure(errorMessage: "Unexpected error occurred: $e"));
     }
   }
+
+  void resetState() {
+    emit(AuthInitial());
+  }
 }

@@ -1,37 +1,40 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:health_app/cache/cache_helper.dart';
+import 'package:health_app/cubits/profile_cubit/profile_state.dart';
 import 'package:health_app/app_theme.dart';
+import 'package:health_app/cubits/profile_cubit/profile_cubit.dart';
 import 'package:health_app/widgets/container_icon.dart';
 import 'package:health_app/widgets/update_text_field.dart';
 
 class UpdateProfile extends StatelessWidget {
   static const String id = "/update_profile";
-  TextEditingController nameController = TextEditingController();
-  TextEditingController phoneController = TextEditingController();
-  TextEditingController emailController = TextEditingController();
+
+  const UpdateProfile({super.key});
+
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.sizeOf(context).height;
+    final profileCubit = BlocProvider.of<UserProfileCubit>(context);
+    int userId = CacheHelper().getData(key: 'id');
+
     return Scaffold(
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.only(left: 20, right: 20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Row(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 20),
+                Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     IconButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        icon: const Icon(
-                          Icons.arrow_back_ios,
-                          size: 25,
-                          color: AppTheme.green,
-                        )),
+                      onPressed: () => Navigator.of(context).pop(),
+                      icon: const Icon(Icons.arrow_back_ios,
+                          color: AppTheme.green),
+                    ),
                     const Text(
                       'My Profile',
                       style: TextStyle(
@@ -40,28 +43,37 @@ class UpdateProfile extends StatelessWidget {
                           fontWeight: FontWeight.w600),
                     ),
                     ContainerIcon(
-                        onTap: () {
-                          Navigator.of(context).pushNamed(UpdateProfile.id);
-                        },
-                        iconName: Icons.settings,
-                        containerColor: AppTheme.green,
-                        iconColor: AppTheme.white)
+                      onTap: () =>
+                          Navigator.of(context).pushNamed(UpdateProfile.id),
+                      iconName: Icons.settings,
+                      containerColor: AppTheme.green,
+                      iconColor: AppTheme.white,
+                    ),
                   ],
                 ),
-              ),
-              Center(
-                child: Stack(
-                  children: [
-                    const CircleAvatar(
-                      radius: 52,
-                      backgroundImage:
-                          AssetImage('assets/images/doctor_image.png'),
-                    ),
-                    Positioned(
+                const SizedBox(height: 20),
+                Center(
+                  child: Stack(
+                    children: [
+                      BlocBuilder<UserProfileCubit, UserProfileState>(
+                        builder: (context, state) {
+                          return CircleAvatar(
+                            radius: 52,
+                            backgroundImage: profileCubit
+                                    .profilePhotoPath.isNotEmpty
+                                ? FileImage(
+                                    profileCubit.profilePhotoPath as dynamic)
+                                : const AssetImage(
+                                        'assets/images/doctor_image.png')
+                                    as ImageProvider,
+                          );
+                        },
+                      ),
+                      Positioned(
                         bottom: 0,
                         right: 0,
                         child: InkWell(
-                          onTap: () {},
+                          onTap: () async => await profileCubit.pickImage(),
                           child: Container(
                             width: 35,
                             height: 35,
@@ -71,97 +83,105 @@ class UpdateProfile extends StatelessWidget {
                                   Border.all(width: 2, color: AppTheme.white),
                               shape: BoxShape.circle,
                             ),
-                            child: const Icon(
-                              Icons.edit,
-                              size: 20,
-                              color: AppTheme.white,
-                            ),
+                            child: const Icon(Icons.edit,
+                                size: 20, color: AppTheme.white),
                           ),
-                        ))
-                  ],
-                ),
-              ),
-              const SizedBox(
-                height: 30,
-              ),
-              Text(
-                'Full Name ',
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
-              const SizedBox(
-                height: 12,
-              ),
-              UpdateTextField(
-                hintText: 'John Doe',
-                controller: nameController,
-              ),
-              const SizedBox(
-                height: 15,
-              ),
-              Text(
-                'Phone number ',
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
-              const SizedBox(
-                height: 12,
-              ),
-              UpdateTextField(
-                hintText: '+123 567 89000',
-                controller: nameController,
-              ),
-              const SizedBox(
-                height: 15,
-              ),
-              Text(
-                'email ',
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
-              const SizedBox(
-                height: 12,
-              ),
-              UpdateTextField(
-                hintText: 'Johndoe@example.com',
-                controller: nameController,
-              ),
-              const SizedBox(
-                height: 15,
-              ),
-              Text(
-                'Date of birth ',
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
-              const SizedBox(
-                height: 12,
-              ),
-              UpdateTextField(
-                hintText: 'dd / mm / yy',
-                controller: nameController,
-              ),
-              SizedBox(
-                height: height * 0.06,
-              ),
-              Center(
-                child: InkWell(
-                  onTap: () {},
-                  child: Container(
-                    alignment: Alignment.center,
-                    height: 45,
-                    width: 207,
-                    decoration: BoxDecoration(
-                        color: AppTheme.green,
-                        borderRadius: BorderRadius.circular(30)),
-                    child: const Text(
-                      'Update Profile',
-                      style: TextStyle(
-                          color: AppTheme.white,
-                          fontSize: 24,
-                          fontWeight: FontWeight.w500),
-                    ),
+                        ),
+                      )
+                    ],
                   ),
                 ),
-              )
-            ],
+                const SizedBox(height: 30),
+                _buildProfileField(
+                    context, 'Full Name', profileCubit.nameController),
+                _buildProfileField(
+                    context, 'Phone number', profileCubit.phoneController),
+                _buildProfileField(
+                    context, 'Email', profileCubit.emailController),
+                _buildProfileField(
+                    context, 'Password', profileCubit.passwordController,
+                    isPassword: true),
+                SizedBox(height: height * 0.06),
+                _buildUpdateButton(context, profileCubit, userId),
+              ],
+            ),
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildProfileField(
+      BuildContext context, String label, TextEditingController controller,
+      {bool isPassword = false}) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 15),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(label, style: Theme.of(context).textTheme.titleLarge),
+          const SizedBox(height: 8),
+          UpdateTextField(
+            hintText:
+                controller.text.isNotEmpty ? controller.text : 'Enter $label',
+            controller: controller,
+            isPassword: isPassword,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildUpdateButton(
+      BuildContext context, UserProfileCubit profileCubit, int userId) {
+    return BlocListener<UserProfileCubit, UserProfileState>(
+      listener: (context, state) {
+        if (state is UpdateProfileSuccess) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+                content: Text("Profile updated successfully!"),
+                backgroundColor: AppTheme.green2),
+          );
+        } else if (state is UpdateProfileFailure) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+                content:
+                    Text("Failed to update profile: ${state.errorMessage}"),
+                backgroundColor: Colors.red),
+          );
+        }
+      },
+      child: Center(
+        child: BlocBuilder<UserProfileCubit, UserProfileState>(
+          builder: (context, state) {
+            return InkWell(
+              onTap: () => profileCubit.updateProfile(userId),
+              child: Container(
+                alignment: Alignment.center,
+                height: 50,
+                width: 220,
+                decoration: BoxDecoration(
+                  color: AppTheme.green,
+                  borderRadius: BorderRadius.circular(30),
+                  boxShadow: const [
+                    BoxShadow(
+                        color: Colors.black26,
+                        blurRadius: 4,
+                        offset: Offset(0, 2))
+                  ],
+                ),
+                child: state is UpdateProfileLoading
+                    ? const CircularProgressIndicator(color: Colors.white)
+                    : const Text(
+                        'Update Profile',
+                        style: TextStyle(
+                            color: AppTheme.white,
+                            fontSize: 22,
+                            fontWeight: FontWeight.w500),
+                      ),
+              ),
+            );
+          },
         ),
       ),
     );

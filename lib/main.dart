@@ -12,6 +12,7 @@ import 'package:health_app/cubits/booking_cubit/booking_cubit_cubit.dart';
 import 'package:health_app/cubits/chat_cubit/chat_cubit.dart';
 import 'package:health_app/cubits/doctors_cubit/doctor_cubit.dart';
 import 'package:health_app/cubits/payment_cubit/payment_cubit.dart';
+import 'package:health_app/cubits/profile_cubit/profile_cubit.dart';
 import 'package:health_app/cubits/specializations_cubit/specializations_cubit.dart';
 import 'package:health_app/navigator_observar.dart';
 import 'package:health_app/pages/Specializations_page.dart';
@@ -53,8 +54,13 @@ void main() async {
   Bloc.observer = SimpleBlocObserver();
   HttpOverrides.global = MyHttpOverrides();
   await CacheHelper().init();
+
   token = CacheHelper().getData(key: ApiKey.token);
-  patientId = CacheHelper().getData(key: 'id');
+  patientId = CacheHelper().getData(key: "id");
+  if (token == null || patientId == null) {
+    token = await CacheHelper().getData(key: ApiKey.token);
+    patientId = await CacheHelper().getData(key: "id");
+  }
   print("Patient ID: $patientId");
   print("Token: $token");
   runApp(const MyApp());
@@ -88,6 +94,9 @@ class MyApp extends StatelessWidget {
           create: (context) => SpecializationsCubit(DioConsumer(dio: Dio()))
             ..getAllSpecializations(),
         ),
+        BlocProvider(
+          create: (context) => UserProfileCubit(DioConsumer(dio: Dio())),
+        ),
       ],
       child: Builder(
         builder: (context) {
@@ -111,8 +120,8 @@ class MyApp extends StatelessWidget {
               DoctorInformation.routeName: (_) => DoctorInformation(),
               Rating.routeName: (_) => const Rating(),
               Favorite.routeName: (_) => Favorite(),
-              Female.routeName: (_) => Female(),
-              Male.routeName: (_) => Male(),
+              Female.routeName: (_) => const Female(),
+              Male.routeName: (_) => const Male(),
               AppointmentScreen.id: (_) => const AppointmentScreen(),
               YourAppoinment.id: (_) => const YourAppoinment(),
               Review.id: (_) => Review(),
@@ -124,8 +133,8 @@ class MyApp extends StatelessWidget {
               AllDoctorsBasedOnSpecialization.id: (_) =>
                   const AllDoctorsBasedOnSpecialization(),
               Profile.id: (_) => const Profile(),
-              UpdateProfile.id: (_) => UpdateProfile(),
-              ChangePassword.id: (_) => ChangePassword(),
+              UpdateProfile.id: (_) => const UpdateProfile(),
+              ChangePassword.id: (_) => const ChangePassword(),
             },
             initialRoute: token != null ? HomeScreen.id : StartScreen.id,
             theme: AppTheme.lightTheme,

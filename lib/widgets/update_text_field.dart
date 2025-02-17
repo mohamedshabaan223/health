@@ -31,7 +31,10 @@ class _UpdateTextFieldState extends State<UpdateTextField> {
         filled: true,
         fillColor: AppTheme.gray,
         hintText: widget.hintText,
-        hintStyle: Theme.of(context).textTheme.titleLarge,
+        hintStyle: Theme.of(context).textTheme.titleSmall?.copyWith(
+              color: AppTheme.green,
+              fontSize: 17,
+            ),
         suffixIcon: widget.isPassword
             ? IconButton(
                 onPressed: () {

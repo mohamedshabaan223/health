@@ -92,4 +92,8 @@ class BookingCubit extends Cubit<BookingCubitState> {
       emit(BookingCubitDataError("Unexpected error occurred: $e"));
     }
   }
+
+  void resetState() {
+    emit(BookingCubitInitial());
+  }
 }

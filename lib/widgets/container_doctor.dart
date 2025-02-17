@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:health_app/app_theme.dart';
-import 'package:health_app/cache/cache_helper.dart';
-import 'package:health_app/cubits/doctors_cubit/doctor_cubit.dart';
 import 'package:health_app/models/doctor_model.dart';
 import 'package:health_app/pages/doctor_page_information.dart';
 import 'package:health_app/widgets/default_icon.dart';
@@ -61,7 +58,7 @@ class _ContainerDoctorState extends State<ContainerDoctor> {
                       .titleSmall
                       ?.copyWith(fontSize: 16, color: AppTheme.green),
                 ),
-                SizedBox(height: 5),
+                const SizedBox(height: 5),
                 Text(
                   widget.descrabtion,
                   style: Theme.of(context)
@@ -102,47 +99,19 @@ class _ContainerDoctorState extends State<ContainerDoctor> {
               ],
             ),
           ),
-          Spacer(),
+          const Spacer(),
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              BlocListener<DoctorCubit, DoctorState>(
-                listener: (context, state) {
-                  if (state is AddFavoriteDoctorSuccess) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('تمت إضافة الطبيب إلى المفضلة بنجاح'),
-                        backgroundColor: Colors.green,
-                      ),
-                    );
-                    setState(() {
-                      isFavorite = true;
-                    });
-                  } else if (state is AddFavoriteDoctorFailure) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('فشل في إضافة الطبيب إلى المفضلة'),
-                        backgroundColor: Colors.red,
-                      ),
-                    );
-                    setState(() {
-                      isFavorite = false;
-                    });
-                  }
+              Defaulticon(
+                onTap: () {
+                  setState(() {
+                    isFavorite = !isFavorite;
+                  });
                 },
-                child: Defaulticon(
-                  onTap: () {
-                    context.read<DoctorCubit>().addDoctorToFavorites(
-                          doctorId: widget.doctorid.id as int,
-                          patientId: CacheHelper().getData(key: 'id'),
-                        );
-                  },
-                  icon: Icon(
-                      isFavorite ? Icons.favorite : Icons.favorite_border,
-                      size: 19,
-                      color: AppTheme.green),
-                  containerClolor: AppTheme.white,
-                ),
+                icon: Icon(isFavorite ? Icons.favorite : Icons.favorite_border,
+                    size: 19, color: AppTheme.green),
+                containerClolor: AppTheme.white,
               ),
               const SizedBox(height: 10),
               InkWell(

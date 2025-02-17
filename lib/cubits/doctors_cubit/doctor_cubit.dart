@@ -102,36 +102,7 @@ class DoctorCubit extends Cubit<DoctorState> {
     }
   }
 
-  Future<void> addDoctorToFavorites({
-    required int doctorId,
-    required int patientId,
-  }) async {
-    try {
-      emit(AddFavoriteDoctorLoading());
-
-      final response = await api.post(
-        "http://10.0.2.2:5282/Api/V1/Doctors/AddFavoriteDR",
-        data: {
-          'doctorId': doctorId,
-          'patientId': patientId,
-        },
-      );
-
-      if (response.statusCode == 200 &&
-          response.data == "Doctor added to favorites.") {
-        emit(AddFavoriteDoctorSuccess());
-      } else if (response.statusCode == 400 ||
-          response.data == "Doctor already added to favorites") {
-        emit(AddFavoriteDoctorFailure(
-            errorMessage: "هذا الطبيب موجود بالفعل في المفضلة ⭐"));
-      } else {
-        emit(AddFavoriteDoctorFailure(
-            errorMessage: "فشل في إضافة الطبيب إلى المفضلة ❌"));
-      }
-    } on ServerException catch (e) {
-      emit(AddFavoriteDoctorFailure(errorMessage: e.errorModel.errorMessage));
-    } catch (e) {
-      emit(AddFavoriteDoctorFailure(errorMessage: "حدث خطأ غير متوقع: $e"));
-    }
+  void resetState() {
+    emit(DoctorInitial());
   }
 }

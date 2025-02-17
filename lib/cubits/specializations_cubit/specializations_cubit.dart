@@ -25,4 +25,8 @@ class SpecializationsCubit extends Cubit<SpecialityState> {
       emit(SpecialityFailure(errorMessage: "Unexpected error occurred: $e"));
     }
   }
+
+  void resetState() {
+    emit(SpecialityInitial());
+  }
 }

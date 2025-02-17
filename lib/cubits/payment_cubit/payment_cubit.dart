@@ -59,4 +59,8 @@ class PaymentCubit extends Cubit<PaymentState> {
       emit(PaymentConfirmFailure(errorMessage: "Unexpected error: $e"));
     }
   }
+
+  void resetState() {
+    emit(PaymentInitial());
+  }
 }
