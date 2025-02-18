@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:health_app/pages/doctor_page_information.dart';
 import 'package:health_app/tabs/chat/display_all_chat.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:health_app/app_theme.dart';

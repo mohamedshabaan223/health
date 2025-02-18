@@ -3,10 +3,11 @@ import 'package:health_app/app_theme.dart';
 import 'package:health_app/pages/home_page.dart';
 import 'package:health_app/tabs/calendar/calendar.dart';
 import 'package:health_app/tabs/chat/display_all_chat.dart';
-import 'package:health_app/tabs/notifaction/notifaction.dart';
 
 class HomeScreen extends StatefulWidget {
   static const String id = '/home-screen';
+
+  const HomeScreen({super.key});
 
   @override
   State<HomeScreen> createState() => _MyWidgetState();
@@ -14,12 +15,13 @@ class HomeScreen extends StatefulWidget {
 
 class _MyWidgetState extends State<HomeScreen> {
   int selectedIndex = 0;
+
   List<Widget> tabs = [
-    HomePage(),
-    DisplayAllChat(),
-    Notifaction(),
-    Calendar(),
+    const HomePage(),
+    const DisplayAllChat(),
+    const Calendar(),
   ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,36 +33,33 @@ class _MyWidgetState extends State<HomeScreen> {
             Radius.circular(30),
           ),
           child: BottomNavigationBar(
-              type: BottomNavigationBarType.fixed,
-              backgroundColor: AppTheme.green3,
-              currentIndex: selectedIndex,
-              onTap: (index) {
-                setState(() {
-                  selectedIndex = index;
-                });
-              },
-              unselectedFontSize: 13,
-              selectedFontSize: 15,
-              selectedItemColor: const Color.fromARGB(255, 59, 133, 106),
-              unselectedItemColor: AppTheme.white,
-              items: const [
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.home_outlined, size: 22),
-                  label: 'Home',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.chat_bubble_outline, size: 22),
-                  label: 'Chat',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.notification_add_outlined, size: 22),
-                  label: 'Notifaction',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.calendar_month_outlined, size: 22),
-                  label: 'Calendar',
-                ),
-              ]),
+            type: BottomNavigationBarType.fixed,
+            backgroundColor: AppTheme.green3,
+            currentIndex: selectedIndex,
+            onTap: (index) {
+              setState(() {
+                selectedIndex = index;
+              });
+            },
+            unselectedFontSize: 13,
+            selectedFontSize: 15,
+            selectedItemColor: const Color.fromARGB(255, 59, 133, 106),
+            unselectedItemColor: AppTheme.white,
+            items: const [
+              BottomNavigationBarItem(
+                icon: Icon(Icons.home_outlined, size: 22),
+                label: 'Home',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.chat_bubble_outline, size: 22),
+                label: 'Chat',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.calendar_month_outlined, size: 22),
+                label: 'Calendar',
+              ),
+            ],
+          ),
         ),
       ),
     );

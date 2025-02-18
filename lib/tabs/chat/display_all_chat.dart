@@ -95,7 +95,6 @@ class DisplayAllChat extends StatelessWidget {
                                     'doctorName': chat.otherUserName,
                                   },
                                 ).then((_) {
-                                  // تحديث القائمة عند الرجوع
                                   context.read<ChatCubit>().fetchChatList(
                                       userId: userId, userType: userType);
                                 });
