@@ -10,6 +10,7 @@ class EndPoints {
   static String sendMessage = "V1/Chat/SaveMessage";
   static String getUserProfile = "V1/Profile/GetUserProfile";
   static String updateUserProfile = "V1/Profile/UpdateUserProfile";
+  static String getAllChats = "V1/Chat/GetAllChats";
 }
 
 class ApiKey {

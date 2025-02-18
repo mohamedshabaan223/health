@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:health_app/app_theme.dart';
 import 'package:health_app/models/get_all_booking_model.dart';
+import 'package:health_app/pages/update_booking_page.dart';
 
 class ContainerUpcoming extends StatelessWidget {
   final GetAllBooking booking;
@@ -152,7 +153,16 @@ class ContainerUpcoming extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.pushNamed(
+                      context,
+                      UpdateBookingPage.id,
+                      arguments: {
+                        //'bookingId': booking.bookingId,
+                        // 'doctorId': booking.doctorId
+                      }, //هبعت هنا ال booking id و ال doctor id
+                    );
+                  },
                   child: Container(
                     alignment: Alignment.center,
                     height: height * 0.04,

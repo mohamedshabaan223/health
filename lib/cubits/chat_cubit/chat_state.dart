@@ -1,3 +1,4 @@
+import 'package:health_app/models/get_all_chats.dart';
 import 'package:health_app/models/get_all_message_between_doctor_and_patient.dart';
 
 abstract class ChatState {}
@@ -16,4 +17,9 @@ class ChatFailure extends ChatState {
   final String errorMessage;
 
   ChatFailure(this.errorMessage);
+}
+
+class ChatListSuccess extends ChatState {
+  final List<ChatSummary> chatList;
+  ChatListSuccess(this.chatList);
 }

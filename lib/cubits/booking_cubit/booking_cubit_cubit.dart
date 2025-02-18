@@ -131,6 +131,41 @@ class BookingCubit extends Cubit<BookingCubitState> {
     }
   }
 
+  Future<void> updateBooking(
+      {required int bookingId,
+      required String day,
+      required String time}) async {
+    try {
+      emit(BookingCubitLoading());
+
+      final Map<String, dynamic> updateRequest = {
+        "day": day,
+        "time": time,
+      };
+
+      final response = await api.put(
+        'http://10.0.2.2:5282/api/Booking/Api/V1/Booking/UpdateBooking?bookingId=$bookingId',
+        data: jsonEncode(updateRequest),
+      );
+
+      final dynamic decodedResponse =
+          response is String ? jsonDecode(response) : response;
+
+      if (decodedResponse is Map<String, dynamic> &&
+          decodedResponse.containsKey("message")) {
+        emit(BookingCubitSuccessUpdate(decodedResponse["message"]));
+      } else {
+        emit(BookingCubitError("Unexpected response format"));
+      }
+    } on FormatException catch (e) {
+      emit(BookingCubitError("Invalid response format"));
+    } on ServerException catch (e) {
+      emit(BookingCubitError(e.errorModel.errorMessage));
+    } catch (e) {
+      emit(BookingCubitError("Unexpected error occurred: $e"));
+    }
+  }
+
   void resetState() {
     emit(BookingCubitInitial());
   }

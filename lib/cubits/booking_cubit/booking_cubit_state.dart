@@ -44,3 +44,9 @@ final class BookingCubitGetAllError extends BookingCubitState {
 
   BookingCubitGetAllError(this.errormessage);
 }
+
+class BookingCubitSuccessUpdate extends BookingCubitState {
+  final String message;
+
+  BookingCubitSuccessUpdate(this.message);
+}

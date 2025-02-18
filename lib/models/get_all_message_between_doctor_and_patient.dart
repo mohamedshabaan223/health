@@ -1,20 +1,22 @@
 class GetAllMessageBetweenDoctorAndPatient {
   final int id;
-  final String message;
+  final String? message;
   final DateTime sendTime;
   final int senderId;
   final int receiverId;
   final String senderType;
   final String receiverType;
+  final String? image;
 
   GetAllMessageBetweenDoctorAndPatient({
     required this.id,
-    required this.message,
+    this.message,
     required this.sendTime,
     required this.senderId,
     required this.receiverId,
     required this.senderType,
     required this.receiverType,
+    this.image,
   });
 
   factory GetAllMessageBetweenDoctorAndPatient.fromJson(
@@ -27,6 +29,7 @@ class GetAllMessageBetweenDoctorAndPatient {
       receiverId: json['receiverId'],
       senderType: json['senderType'],
       receiverType: json['receiverType'],
+      image: json['image'],
     );
   }
 
@@ -39,6 +42,7 @@ class GetAllMessageBetweenDoctorAndPatient {
       'receiverId': receiverId,
       'senderType': senderType,
       'receiverType': receiverType,
+      'image': image,
     };
   }
 }

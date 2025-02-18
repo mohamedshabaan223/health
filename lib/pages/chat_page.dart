@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:health_app/pages/doctor_page_information.dart';
+import 'package:health_app/tabs/chat/display_all_chat.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:health_app/app_theme.dart';
 import 'package:health_app/cubits/chat_cubit/chat_cubit.dart';
 import 'package:health_app/cubits/chat_cubit/chat_state.dart';
@@ -16,8 +19,10 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
-  final textController = TextEditingController();
+  final TextEditingController textController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
+  final ImagePicker _picker = ImagePicker();
+
   late int patientId;
   late int doctorId;
   late String doctorName;
@@ -25,42 +30,62 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    final Object? args = ModalRoute.of(context)?.settings.arguments;
-    final Map<String, dynamic> arguments =
-        (args is Map<String, dynamic>) ? args : {};
-    patientId = arguments["patientId"] ?? 0;
-    doctorId = arguments["doctorId"] ?? 0;
-    doctorName = arguments["doctorName"] ?? "";
+    final args = ModalRoute.of(context)?.settings.arguments;
 
-    context
-        .read<ChatCubit>()
-        .fetchMessages(senderId: patientId, receiverId: doctorId)
-        .then((_) => _scrollToBottom());
+    if (args is Map<String, dynamic>) {
+      patientId = args["patientId"] ?? 0;
+      doctorId = args["doctorId"] ?? 0;
+      doctorName = args["doctorName"] ?? "";
+
+      if (patientId != 0 && doctorId != 0) {
+        context
+            .read<ChatCubit>()
+            .fetchMessages(senderId: patientId, receiverId: doctorId)
+            .then((_) => _scrollToBottom());
+      }
+    }
   }
 
-  void sendMessage() {
-    final message = textController.text.trim();
-    if (message.isNotEmpty) {
-      context.read<ChatCubit>().sendMessage(
-            senderId: patientId,
-            receiverId: doctorId,
-            message: message,
-            senderType: "patient",
-            receiverType: "doctor",
-          );
-      textController.clear();
-      Future.delayed(const Duration(milliseconds: 300), _scrollToBottom);
+  void sendMessage({String? text, XFile? image}) {
+    if ((text == null || text.trim().isEmpty) && image == null) {
+      return;
+    }
+
+    context.read<ChatCubit>().sendMessage(
+          senderId: patientId,
+          receiverId: doctorId,
+          message: text ?? "",
+          senderType: "Patient",
+          receiverType: "Doctor",
+          image: image,
+        );
+
+    textController.clear();
+    Future.delayed(const Duration(milliseconds: 300), _scrollToBottom);
+  }
+
+  Future<void> pickImage() async {
+    try {
+      final XFile? pickedFile =
+          await _picker.pickImage(source: ImageSource.gallery);
+      if (pickedFile != null) {
+        sendMessage(image: pickedFile);
+      }
+    } catch (e) {
+      debugPrint("Error picking image: $e");
     }
   }
 
   void _scrollToBottom() {
-    if (_scrollController.hasClients) {
-      _scrollController.animateTo(
-        _scrollController.position.maxScrollExtent,
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeOut,
-      );
-    }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_scrollController.hasClients) {
+        _scrollController.animateTo(
+          _scrollController.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+        );
+      }
+    });
   }
 
   @override
@@ -71,7 +96,14 @@ class _ChatScreenState extends State<ChatScreen> {
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios, color: AppTheme.white),
-          onPressed: () => Navigator.of(context).pop(),
+          onPressed: () {
+            if (Navigator.canPop(context)) {
+              Navigator.pop(context);
+            } else {
+              Navigator.of(context)
+                  .pushReplacementNamed(DisplayAllChat.routeName);
+            }
+          },
         ),
         title: Text(
           doctorName,
@@ -92,9 +124,6 @@ class _ChatScreenState extends State<ChatScreen> {
                 } else if (state is ChatFailure) {
                   return Center(child: Text("Error: ${state.errorMessage}"));
                 } else if (state is ChatSuccess) {
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    _scrollToBottom();
-                  });
                   return ListView.builder(
                     controller: _scrollController,
                     padding: const EdgeInsets.symmetric(
@@ -107,10 +136,14 @@ class _ChatScreenState extends State<ChatScreen> {
                         child: message.senderId == patientId
                             ? SendMessage(
                                 message: message.message,
-                                messageTime: message.sendTime)
+                                imageUrl: message.image,
+                                messageTime: message.sendTime,
+                              )
                             : ReceiveMessage(
-                                message: message.message,
-                                messageTime: message.sendTime),
+                                message: message.message ?? "",
+                                imageUrl: message.image,
+                                messageTime: message.sendTime,
+                              ),
                       );
                     },
                   );
@@ -120,78 +153,54 @@ class _ChatScreenState extends State<ChatScreen> {
               },
             ),
           ),
-          Container(
-            height: 72,
-            width: double.infinity,
-            decoration: const BoxDecoration(
-              color: Color(0xffECF1FF),
-              borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(20), topRight: Radius.circular(20)),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: Row(
-                children: [
-                  IconButton(
-                      onPressed: () {},
-                      icon: const Icon(
-                        Icons.attach_file,
-                        size: 28,
-                      ),
-                      color: AppTheme.green),
-                  Expanded(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: AppTheme.white,
-                        borderRadius: BorderRadius.circular(31),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.3),
-                            spreadRadius: 1,
-                            blurRadius: 3,
-                            offset: const Offset(0, 2),
-                          ),
-                        ],
-                      ),
-                      child: TextField(
-                        controller: textController,
-                        cursorColor: AppTheme.green,
-                        cursorHeight: 20,
-                        decoration: InputDecoration(
-                          contentPadding:
-                              const EdgeInsets.symmetric(horizontal: 20),
-                          hintText: 'Write Here...',
-                          hintStyle: Theme.of(context)
-                              .textTheme
-                              .titleSmall
-                              ?.copyWith(
-                                  color: const Color(0xffA9BCFE),
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 15),
-                          suffixIcon: IconButton(
-                            icon: const Icon(
-                              Icons.send,
-                              size: 25,
-                              color: AppTheme.green,
-                            ),
-                            onPressed: sendMessage,
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide.none,
-                            borderRadius: BorderRadius.circular(31),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide.none,
-                            borderRadius: BorderRadius.circular(31),
-                          ),
-                        ),
-                      ),
-                    ),
+          _buildMessageInput(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMessageInput() {
+    return Container(
+      padding: const EdgeInsets.all(10),
+      child: Row(
+        children: [
+          IconButton(
+            onPressed: pickImage,
+            icon: const Icon(Icons.attach_file, size: 28),
+            color: AppTheme.green,
+          ),
+          Expanded(
+            child: Container(
+              decoration: BoxDecoration(
+                color: AppTheme.gray,
+                borderRadius: BorderRadius.circular(30),
+                border: Border.all(color: Colors.grey.shade400, width: 1),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.2),
+                    spreadRadius: 2,
+                    blurRadius: 4,
+                    offset: const Offset(0, 1),
                   ),
                 ],
               ),
+              child: TextField(
+                controller: textController,
+                cursorColor: AppTheme.green,
+                decoration: InputDecoration(
+                  hintText: 'Write Here...',
+                  hintStyle: const TextStyle(color: AppTheme.green),
+                  border: InputBorder.none,
+                  contentPadding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                  suffixIcon: IconButton(
+                    icon: const Icon(Icons.send, color: AppTheme.green),
+                    onPressed: () => sendMessage(text: textController.text),
+                  ),
+                ),
+              ),
             ),
-          )
+          ),
         ],
       ),
     );

@@ -36,9 +36,11 @@ import 'package:health_app/pages/register_page.dart';
 import 'package:health_app/pages/review_page.dart';
 import 'package:health_app/pages/start_screen.dart';
 import 'package:health_app/pages/payment_success_page.dart';
+import 'package:health_app/pages/update_booking_page.dart';
 import 'package:health_app/pages/update_profile_page.dart';
 import 'package:health_app/pages/your_appoinment.dart';
 import 'package:health_app/simple_bloc_observer.dart';
+import 'package:health_app/tabs/chat/display_all_chat.dart';
 
 class MyHttpOverrides extends HttpOverrides {
   @override
@@ -111,9 +113,9 @@ class MyApp extends StatelessWidget {
               ),
             ],
             routes: {
-              Login.routeName: (_) => Login(),
+              Login.routeName: (_) => const Login(),
               StartScreen.id: (_) => const StartScreen(),
-              RegisterPage.id: (_) => RegisterPage(),
+              RegisterPage.id: (_) => const RegisterPage(),
               CreateNewPasswordPage.id: (_) => CreateNewPasswordPage(),
               HomePage.id: (_) => const HomePage(),
               DoctorPage.routeName: (_) => const DoctorPage(),
@@ -135,6 +137,8 @@ class MyApp extends StatelessWidget {
               Profile.id: (_) => const Profile(),
               UpdateProfile.id: (_) => const UpdateProfile(),
               ChangePassword.id: (_) => const ChangePassword(),
+              UpdateBookingPage.id: (_) => const UpdateBookingPage(),
+              DisplayAllChat.routeName: (_) => const DisplayAllChat(),
             },
             initialRoute: token != null ? HomeScreen.id : StartScreen.id,
             theme: AppTheme.lightTheme,
