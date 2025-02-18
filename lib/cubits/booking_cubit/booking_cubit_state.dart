@@ -30,3 +30,17 @@ class BookingCubitDataError extends BookingCubitState {
   final String message;
   BookingCubitDataError(this.message);
 }
+
+final class BookingCubitGetAllLoading extends BookingCubitState {}
+
+final class BookingCubitGetAllSuccess extends BookingCubitState {
+  final List<GetAllBooking> bookings;
+
+  BookingCubitGetAllSuccess(this.bookings);
+}
+
+final class BookingCubitGetAllError extends BookingCubitState {
+  final String errormessage;
+
+  BookingCubitGetAllError(this.errormessage);
+}

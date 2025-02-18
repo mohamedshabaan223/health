@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:health_app/app_theme.dart';
+import 'package:health_app/cache/cache_helper.dart';
+import 'package:health_app/cubits/booking_cubit/booking_cubit_cubit.dart';
 import 'package:health_app/widgets/container_cancelled.dart';
 import 'package:health_app/widgets/container_complete_doctor.dart';
 import 'package:health_app/widgets/container_upcomming.dart';
@@ -29,6 +32,9 @@ class _CalendarState extends State<Calendar>
         });
       }
     });
+
+    final patientId = CacheHelper().getData(key: 'id');
+    context.read<BookingCubit>().getAllBookings(patientId: patientId);
   }
 
   @override
@@ -39,14 +45,11 @@ class _CalendarState extends State<Calendar>
 
   @override
   Widget build(BuildContext context) {
-    //final pationToken = BlocProvider.of<AuthCubit>(context).user!.token!;
     return Scaffold(
       appBar: AppBar(
-        title: Column(
+        title: const Column(
           children: [
-            SizedBox(
-              height: 10,
-            ),
+            SizedBox(height: 10),
             Text('All Appointment'),
           ],
         ),
@@ -116,13 +119,30 @@ class _CalendarState extends State<Calendar>
           controller: _tabController,
           children: [
             ListView.builder(
-              itemBuilder: (_, index) => ContainerCompleteDoctor(),
+              itemBuilder: (_, index) => const ContainerCompleteDoctor(),
+            ),
+            BlocBuilder<BookingCubit, BookingCubitState>(
+              builder: (context, state) {
+                if (state is BookingCubitLoading) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (state is BookingCubitGetAllError) {
+                  return Center(child: Text(state.errormessage));
+                } else if (state is BookingCubitGetAllSuccess) {
+                  final bookings = state.bookings;
+                  return ListView.builder(
+                    itemCount: bookings.length,
+                    itemBuilder: (_, index) {
+                      return ContainerUpcoming(
+                        booking: bookings[index], // تمرير البيانات الحقيقية
+                      );
+                    },
+                  );
+                }
+                return const Center(child: Text('No data available'));
+              },
             ),
             ListView.builder(
-              itemBuilder: (_, index) => ContainerUpcoming(),
-            ),
-            ListView.builder(
-              itemBuilder: (_, index) => ContainerCancelled(),
+              itemBuilder: (_, index) => const ContainerCancelled(),
             ),
           ],
         ),

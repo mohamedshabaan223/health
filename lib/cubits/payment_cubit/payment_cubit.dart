@@ -43,15 +43,31 @@ class PaymentCubit extends Cubit<PaymentState> {
       emit(PaymentConfirmLoading());
 
       final response = await api.get(
-          "http://10.0.2.2:5282/api/Payment/payment-success?bookingId=$bookingId");
-      if (response != null &&
-          response is Map<String, dynamic> &&
-          response.containsKey('status') &&
-          response['status'] == 'success') {
-        emit(PaymentConfirmSuccess());
+        "http://10.0.2.2:5282/api/Payment/payment-success?bookingId=$bookingId",
+      );
+
+      if (response is String) {
+        if (response.contains("Payment successful")) {
+          emit(PaymentConfirmSuccess());
+        } else {
+          emit(PaymentConfirmFailure(
+              errorMessage: "Payment not successful: $response"));
+        }
+      } else if (response is Map<String, dynamic>) {
+        if (response.containsKey('status')) {
+          if (response['status'] == 'success') {
+            emit(PaymentConfirmSuccess());
+          } else {
+            emit(PaymentConfirmFailure(
+                errorMessage:
+                    "Payment failed with status: ${response['status']}"));
+          }
+        } else {
+          emit(PaymentConfirmFailure(
+              errorMessage: "Invalid response structure."));
+        }
       } else {
-        emit(PaymentConfirmFailure(
-            errorMessage: "Payment confirmation failed."));
+        emit(PaymentConfirmFailure(errorMessage: "Invalid response format."));
       }
     } on ServerException catch (e) {
       emit(PaymentConfirmFailure(errorMessage: e.errorModel.errorMessage));

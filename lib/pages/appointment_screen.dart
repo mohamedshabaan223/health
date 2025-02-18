@@ -106,7 +106,6 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
   }
 
   @override
-  @override
   Widget build(BuildContext context) {
     return BlocListener<BookingCubit, BookingCubitState>(
       listener: (context, state) {

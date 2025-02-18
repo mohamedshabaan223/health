@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:health_app/app_theme.dart';
-import 'package:health_app/pages/cancelled_reason_page.dart';
+import 'package:health_app/models/get_all_booking_model.dart';
 
 class ContainerUpcoming extends StatelessWidget {
-  const ContainerUpcoming({super.key});
+  final GetAllBooking booking;
+
+  const ContainerUpcoming({super.key, required this.booking});
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +16,9 @@ class ContainerUpcoming extends StatelessWidget {
       width: width * 0.15,
       height: height * 0.23,
       decoration: BoxDecoration(
-          color: AppTheme.gray, borderRadius: BorderRadius.circular(17)),
+        color: AppTheme.gray,
+        borderRadius: BorderRadius.circular(17),
+      ),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
         child: Column(
@@ -22,106 +26,120 @@ class ContainerUpcoming extends StatelessWidget {
             Row(
               children: [
                 const Padding(
-                  padding: EdgeInsets.only(left: 14.0),
+                  padding: EdgeInsets.only(left: 5),
                   child: CircleAvatar(
-                    radius: 40,
+                    radius: 45,
                     backgroundImage:
                         AssetImage('assets/images/doctor_image.png'),
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(top: 30, left: 10, bottom: 15),
+                  padding: const EdgeInsets.only(top: 25, left: 10, bottom: 10),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Dr. Olivia Turner, M.D.',
+                        booking.doctorName,
                         style: Theme.of(context)
                             .textTheme
                             .titleSmall
                             ?.copyWith(fontSize: 16, color: AppTheme.green),
                       ),
                       Text(
-                        'Dermato-Endocrinology',
-                        style: Theme.of(context)
-                            .textTheme
-                            .titleSmall
-                            ?.copyWith(fontSize: 14),
+                        booking.specializationName,
+                        style: const TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
-                      const SizedBox(
-                        height: 15,
+                      Row(
+                        children: [
+                          const Icon(
+                            Icons.location_on_outlined,
+                            size: 18,
+                            color: AppTheme.green,
+                          ),
+                          const SizedBox(
+                            width: 4,
+                          ),
+                          Text(
+                            booking.address,
+                            style: const TextStyle(
+                              fontSize: 13,
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
                 ),
               ],
             ),
+            const SizedBox(
+              height: 7,
+            ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                InkWell(
-                  onTap: () {},
-                  child: Container(
-                    width: 130,
-                    height: 24,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(13),
-                      color: AppTheme.white,
-                    ),
-                    child: const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.calendar_month_outlined,
-                            size: 20,
+                Container(
+                  width: width * 0.3,
+                  height: height * 0.03,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(13),
+                    color: AppTheme.white,
+                  ),
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                    child: Row(
+                      children: [
+                        const Icon(
+                          Icons.calendar_month_outlined,
+                          size: 20,
+                          color: AppTheme.green,
+                        ),
+                        const SizedBox(
+                          width: 4,
+                        ),
+                        Text(
+                          booking.day,
+                          style: const TextStyle(
+                            fontSize: 16,
                             color: AppTheme.green,
                           ),
-                          SizedBox(
-                            width: 4,
-                          ),
-                          Text(
-                            'Friday,12June',
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: AppTheme.green,
-                            ),
-                          )
-                        ],
-                      ),
+                        )
+                      ],
                     ),
                   ),
                 ),
-                InkWell(
-                  onTap: () {},
-                  child: Container(
-                    width: 155,
-                    height: 24,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(13),
-                      color: AppTheme.white,
-                    ),
-                    child: const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.alarm_add_outlined,
-                            size: 20,
-                            color: AppTheme.green,
-                          ),
-                          SizedBox(
-                            width: 4,
-                          ),
-                          Text(
-                            '9:00 Am - 100 Am ',
-                            style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w300,
-                                color: AppTheme.green),
-                          )
-                        ],
-                      ),
+                Container(
+                  width: width * 0.25,
+                  height: height * 0.03,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(13),
+                    color: AppTheme.white,
+                  ),
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                    child: Row(
+                      children: [
+                        const Icon(
+                          Icons.alarm_add_outlined,
+                          size: 20,
+                          color: AppTheme.green,
+                        ),
+                        const SizedBox(
+                          width: 4,
+                        ),
+                        Text(
+                          booking.time,
+                          style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                              color: AppTheme.green),
+                        )
+                      ],
                     ),
                   ),
                 )
@@ -137,8 +155,8 @@ class ContainerUpcoming extends StatelessWidget {
                   onTap: () {},
                   child: Container(
                     alignment: Alignment.center,
-                    height: 30,
-                    width: 300,
+                    height: height * 0.04,
+                    width: width * 0.7,
                     decoration: BoxDecoration(
                         color: AppTheme.green,
                         borderRadius: BorderRadius.circular(18)),

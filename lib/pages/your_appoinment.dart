@@ -9,7 +9,7 @@ import 'package:health_app/pages/appointment_screen.dart';
 import 'package:health_app/pages/payment_page.dart';
 import 'package:health_app/widgets/card_of_doctor.dart';
 import 'package:health_app/widgets/start_screen_button.dart';
-import 'package:health_app/cubits/payment_cubit/payment_cubit.dart'; // استيراد الـCubit
+import 'package:health_app/cubits/payment_cubit/payment_cubit.dart';
 import 'package:health_app/cubits/payment_cubit/payment_state.dart';
 
 class YourAppoinment extends StatelessWidget {
@@ -38,10 +38,9 @@ class YourAppoinment extends StatelessWidget {
     final int age = arguments["age"] ?? 0;
     final int patientId = arguments["patientId"] ?? 0;
     final String problemDescription = arguments["problemDescription"] ?? "";
-    final int bookingId =
-        arguments["bookingId"] ?? 0; // استقبال bookingId بالشكل الصحيح
 
-    // تأكد من وجود الـ doctorId
+    final int bookingId = arguments["bookingId"] ?? 0;
+
     if (doctorId == null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _showErrorDialog(context, "Doctor ID is missing or invalid");
@@ -55,8 +54,7 @@ class YourAppoinment extends StatelessWidget {
     double width = MediaQuery.of(context).size.width;
 
     return BlocProvider(
-      create: (_) => PaymentCubit(DioConsumer(dio: Dio())), // توفير الـCubit
-
+      create: (_) => PaymentCubit(DioConsumer(dio: Dio())),
       child: Scaffold(
         body: SafeArea(
           child: Padding(
@@ -229,32 +227,14 @@ class YourAppoinment extends StatelessWidget {
                         SizedBox(
                           height: height * 0.08,
                         ),
-                        StartScreenButton(
-                          label: 'Pay Cash',
-                          onPressed: () {
-                            if (doctorId != null) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text("Payment successfully!",
-                                      style: TextStyle(
-                                          fontSize: 16,
-                                          color: AppTheme.white,
-                                          fontWeight: FontWeight.bold)),
-                                ),
-                              );
-                            }
-                          },
-                          buttonBackgroundColor:
-                              doctorId != null ? AppTheme.green : Colors.grey,
-                          buttonForegroundColor: AppTheme.white,
-                        ),
                         SizedBox(
-                          height: height * 0.01,
+                          height: height * 0.02,
                         ),
                         BlocConsumer<PaymentCubit, PaymentState>(
                           listener: (context, state) {
                             if (state is PaymentSuccess) {
-                              _launchPaymentUrl(context, state.paymentUrl);
+                              _launchPaymentUrl(
+                                  context, state.paymentUrl, bookingId);
                             }
                             if (state is PaymentFailure) {
                               _showErrorDialog(context,
@@ -297,7 +277,8 @@ class YourAppoinment extends StatelessWidget {
     );
   }
 
-  Future<void> _launchPaymentUrl(BuildContext context, String? url) async {
+  Future<void> _launchPaymentUrl(
+      BuildContext context, String? url, int bookingId) async {
     if (url == null || url.isEmpty) {
       debugPrint("Invalid payment URL");
       _showErrorDialog(context, "Invalid payment URL");
@@ -307,7 +288,10 @@ class YourAppoinment extends StatelessWidget {
     // Navigate to botumSheet with the payment URL
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (_) => PaymentPage(paymentUrl: url),
+        builder: (_) => PaymentPage(
+          paymentUrl: url,
+          bookingId: bookingId,
+        ),
       ),
     );
   }
