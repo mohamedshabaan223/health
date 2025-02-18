@@ -21,9 +21,12 @@ class ShowLogout extends StatelessWidget {
       width: double.infinity,
       height: 242,
       decoration: const BoxDecoration(
-          color: AppTheme.white,
-          borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(27), topRight: Radius.circular(27))),
+        color: AppTheme.white,
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(27),
+          topRight: Radius.circular(27),
+        ),
+      ),
       child: Padding(
         padding: const EdgeInsets.only(bottom: 40),
         child: Column(

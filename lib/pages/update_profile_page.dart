@@ -4,6 +4,7 @@ import 'package:health_app/cache/cache_helper.dart';
 import 'package:health_app/cubits/profile_cubit/profile_state.dart';
 import 'package:health_app/app_theme.dart';
 import 'package:health_app/cubits/profile_cubit/profile_cubit.dart';
+import 'package:health_app/pages/profile_page.dart';
 import 'package:health_app/widgets/container_icon.dart';
 import 'package:health_app/widgets/update_text_field.dart';
 
@@ -141,6 +142,10 @@ class UpdateProfile extends StatelessWidget {
             const SnackBar(
                 content: Text("Profile updated successfully!"),
                 backgroundColor: AppTheme.green2),
+          );
+          Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (context) => const Profile()),
+            (route) => false,
           );
         } else if (state is UpdateProfileFailure) {
           ScaffoldMessenger.of(context).showSnackBar(

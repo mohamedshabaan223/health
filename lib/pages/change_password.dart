@@ -19,82 +19,44 @@ class ChangePassword extends StatelessWidget {
 
     return Scaffold(
       body: SafeArea(
-        child: Padding(
+        child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Row(
-                  children: [
-                    IconButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      icon: const Icon(Icons.arrow_back_ios,
-                          size: 25, color: AppTheme.green),
+              Row(
+                children: [
+                  IconButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    icon: const Icon(Icons.arrow_back_ios,
+                        size: 25, color: AppTheme.green),
+                  ),
+                  const Spacer(),
+                  const Text(
+                    'Password Manager',
+                    style: TextStyle(
+                      color: AppTheme.green,
+                      fontSize: 24,
+                      fontWeight: FontWeight.w700,
                     ),
-                    const Spacer(flex: 2),
-                    const Text(
-                      'Password Manager',
-                      style: TextStyle(
-                        color: AppTheme.green,
-                        fontSize: 24,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    const Spacer(flex: 3),
-                  ],
-                ),
+                  ),
+                  const Spacer(),
+                ],
               ),
               const SizedBox(height: 30),
-              Text(
-                'Current Password',
-                style: Theme.of(context)
-                    .textTheme
-                    .titleLarge
-                    ?.copyWith(fontWeight: FontWeight.w500),
-              ),
-              const SizedBox(height: 6),
-              UpdateTextField(
-                isPassword: true,
-                controller: cubit.currentPasswordController,
-              ),
-              const SizedBox(height: 5),
-              const SizedBox(height: 20),
-              Text(
-                'New Password',
-                style: Theme.of(context)
-                    .textTheme
-                    .titleLarge
-                    ?.copyWith(fontWeight: FontWeight.w500),
-              ),
-              const SizedBox(height: 6),
-              UpdateTextField(
-                isPassword: true,
-                controller: cubit.newPasswordController,
-              ),
-              const SizedBox(height: 20),
-              Text(
-                'Confirm New Password',
-                style: Theme.of(context)
-                    .textTheme
-                    .titleLarge
-                    ?.copyWith(fontWeight: FontWeight.w500),
-              ),
-              const SizedBox(height: 6),
-              UpdateTextField(
-                isPassword: true,
-                controller: cubit.confirmNewPasswordController,
-              ),
-              const Spacer(flex: 3),
+              _buildPasswordField(
+                  context, 'Current Password', cubit.currentPasswordController),
+              _buildPasswordField(
+                  context, 'New Password', cubit.newPasswordController),
+              _buildPasswordField(context, 'Confirm New Password',
+                  cubit.confirmNewPasswordController),
+              const SizedBox(height: 30),
               BlocConsumer<UserProfileCubit, UserProfileState>(
                 listener: (context, state) {
                   if (state is ChangePasswordSuccess) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
-                          content: Text("تم تغيير كلمة المرور بنجاح ")),
+                          content: Text("تم تغيير كلمة المرور بنجاح")),
                     );
                     Navigator.pushReplacementNamed(context, HomeScreen.id);
                   } else if (state is ChangePasswordFailure) {
@@ -104,40 +66,59 @@ class ChangePassword extends StatelessWidget {
                   }
                 },
                 builder: (context, state) {
-                  return Center(
-                    child: InkWell(
-                      onTap: state is ChangePasswordLoading
-                          ? null
-                          : () => cubit.changePassword(userId),
-                      child: Container(
-                        alignment: Alignment.center,
-                        height: 48,
-                        width: 300,
-                        decoration: BoxDecoration(
-                          color: AppTheme.green,
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                        child: state is ChangePasswordLoading
-                            ? const CircularProgressIndicator(
-                                color: AppTheme.white)
-                            : const Text(
-                                'Change Password',
-                                style: TextStyle(
-                                  color: AppTheme.white,
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
+                  return ElevatedButton(
+                    onPressed: state is ChangePasswordLoading
+                        ? null
+                        : () => cubit.changePassword(userId),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppTheme.green,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
                       ),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 14, horizontal: 50),
                     ),
+                    child: state is ChangePasswordLoading
+                        ? const CircularProgressIndicator(color: Colors.white)
+                        : const Text(
+                            'Change Password',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
                   );
                 },
               ),
-              const Spacer(flex: 1),
+              const SizedBox(height: 20),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildPasswordField(
+      BuildContext context, String label, TextEditingController controller) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: Theme.of(context)
+              .textTheme
+              .titleLarge
+              ?.copyWith(fontWeight: FontWeight.w500),
+        ),
+        const SizedBox(height: 6),
+        UpdateTextField(
+          hintText: '************',
+          isPassword: true,
+          controller: controller,
+        ),
+        const SizedBox(height: 20),
+      ],
     );
   }
 }

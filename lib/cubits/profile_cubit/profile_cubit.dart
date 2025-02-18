@@ -115,7 +115,7 @@ class UserProfileCubit extends Cubit<UserProfileState> {
           errorMessage: e.response?.data ?? "حدث خطأ أثناء تغيير كلمة المرور"));
     } catch (e) {
       print("Unexpected error in changePassword: $e");
-      emit(ChangePasswordFailure(errorMessage: "حدث خطأ غير متوقع: $e"));
+      emit(ChangePasswordFailure(errorMessage: "ادخل كلمة المرور جديدة"));
     }
   }
 
