@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:bloc/bloc.dart';
+import 'package:dio/dio.dart';
 import 'package:health_app/core/api/api_consumer.dart';
 import 'package:health_app/core/errors/exceptions.dart';
 import 'package:health_app/models/Appointment_display_doctor_data.dart';
@@ -131,38 +132,35 @@ class BookingCubit extends Cubit<BookingCubitState> {
     }
   }
 
-  Future<void> updateBooking(
-      {required int bookingId,
-      required String day,
-      required String time}) async {
+  Future<void> updateBooking({
+    required int bookingId,
+    required String day,
+    required String time,
+  }) async {
     try {
       emit(BookingCubitLoading());
 
-      final Map<String, dynamic> updateRequest = {
-        "day": day,
-        "time": time,
-      };
-
       final response = await api.put(
         'http://10.0.2.2:5282/api/Booking/Api/V1/Booking/UpdateBooking?bookingId=$bookingId',
-        data: jsonEncode(updateRequest),
+        data: jsonEncode({
+          "dto": {"day": day, "time": time}
+        }),
       );
 
-      final dynamic decodedResponse =
-          response is String ? jsonDecode(response) : response;
+      final String responseData = response.toString().trim();
 
-      if (decodedResponse is Map<String, dynamic> &&
-          decodedResponse.containsKey("message")) {
-        emit(BookingCubitSuccessUpdate(decodedResponse["message"]));
+      if (responseData == 'Booking updated successfully') {
+        emit(BookingCubitSuccessUpdate(responseData));
+      } else if (responseData == 'Booking not found') {
+        emit(BookingCubitError(responseData));
       } else {
-        emit(BookingCubitError("Unexpected response format"));
+        emit(BookingCubitError("Unexpected response content: $responseData"));
       }
-    } on FormatException catch (e) {
-      emit(BookingCubitError("Invalid response format"));
-    } on ServerException catch (e) {
-      emit(BookingCubitError(e.errorModel.errorMessage));
+    } on DioException catch (e) {
+      emit(BookingCubitError(
+          "Request failed: ${e.response?.data ?? e.message}"));
     } catch (e) {
-      emit(BookingCubitError("Unexpected error occurred: $e"));
+      emit(BookingCubitError("Unexpected error: $e"));
     }
   }
 

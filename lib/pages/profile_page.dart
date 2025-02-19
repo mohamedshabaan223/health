@@ -95,7 +95,7 @@ class _ProfileState extends State<Profile> {
                                   ? FileImage(
                                       File(profileCubit.profilePhotoPath!))
                                   : const AssetImage(
-                                          'assets/images/placeholder.png')
+                                          'assets/images/Mask group.png')
                                       as ImageProvider,
                             );
                           },

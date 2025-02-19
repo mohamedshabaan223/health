@@ -69,7 +69,7 @@ class UpdateProfile extends StatelessWidget {
                                 ? FileImage(
                                     File(profileCubit.profilePhotoPath!))
                                 : const AssetImage(
-                                        'assets/images/placeholder.png')
+                                        'assets/images/Mask group.png')
                                     as ImageProvider,
                           );
                         },

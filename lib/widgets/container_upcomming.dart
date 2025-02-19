@@ -103,7 +103,7 @@ class ContainerUpcoming extends StatelessWidget {
                           width: 4,
                         ),
                         Text(
-                          booking.day,
+                          booking.day as String,
                           style: const TextStyle(
                             fontSize: 16,
                             color: AppTheme.green,
@@ -154,13 +154,23 @@ class ContainerUpcoming extends StatelessWidget {
               children: [
                 InkWell(
                   onTap: () {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text(
+                          "يمكنك تعديل الحجز مرتين فقط، وبعد ذلك سيتم إلغاؤه تلقائيًا.",
+                          style: TextStyle(fontSize: 16, color: Colors.white),
+                        ),
+                        duration: Duration(seconds: 4),
+                        backgroundColor: Color.fromARGB(255, 169, 49, 41),
+                      ),
+                    );
                     Navigator.pushNamed(
                       context,
                       UpdateBookingPage.id,
                       arguments: {
-                        //'bookingId': booking.bookingId,
-                        // 'doctorId': booking.doctorId
-                      }, //هبعت هنا ال booking id و ال doctor id
+                        'bookingId': booking.bookingId,
+                        'doctorId': booking.doctorId
+                      },
                     );
                   },
                   child: Container(
