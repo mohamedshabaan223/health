@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:health_app/cache/cache_helper.dart';
@@ -58,14 +59,17 @@ class UpdateProfile extends StatelessWidget {
                     children: [
                       BlocBuilder<UserProfileCubit, UserProfileState>(
                         builder: (context, state) {
+                          print(
+                              "Building UI with Image: ${profileCubit.profilePhotoPath}");
                           return CircleAvatar(
                             radius: 52,
-                            backgroundImage: profileCubit
-                                    .profilePhotoPath.isNotEmpty
+                            backgroundImage: profileCubit.profilePhotoPath !=
+                                        null &&
+                                    profileCubit.profilePhotoPath!.isNotEmpty
                                 ? FileImage(
-                                    profileCubit.profilePhotoPath as dynamic)
+                                    File(profileCubit.profilePhotoPath!))
                                 : const AssetImage(
-                                        'assets/images/doctor_image.png')
+                                        'assets/images/placeholder.png')
                                     as ImageProvider,
                           );
                         },

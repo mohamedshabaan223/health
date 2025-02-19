@@ -1,12 +1,15 @@
+import 'dart:convert';
+import 'dart:io';
+import 'dart:typed_data';
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:health_app/core/api/api_consumer.dart';
 import 'package:health_app/core/api/end_points.dart';
-import 'package:health_app/core/errors/exceptions.dart';
 import 'package:health_app/cubits/profile_cubit/profile_state.dart';
 import 'package:health_app/models/user_profile.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 
 class UserProfileCubit extends Cubit<UserProfileState> {
   final ApiConsumer api;
@@ -20,6 +23,8 @@ class UserProfileCubit extends Cubit<UserProfileState> {
 
   UserProfileCubit(this.api) : super(UserProfileInitial());
 
+  String profilePhotoPath = "";
+
   Future<void> fetchUserProfile(int patientId) async {
     try {
       emit(UserProfileLoading());
@@ -30,27 +35,50 @@ class UserProfileCubit extends Cubit<UserProfileState> {
 
       final UserProfile userProfile = UserProfile.fromJson(response);
 
-      emit(UserProfileSuccess(userProfile));
-    } on ServerException catch (e) {
-      print("Error in getUserProfile: ${e.errorModel.errorMessage}");
-      emit(UserProfileFailure(e.errorModel.errorMessage));
+      if (userProfile.photoData != null && userProfile.photoData!.isNotEmpty) {
+        try {
+          File savedFile = await saveBase64Image(userProfile.photoData!);
+          profilePhotoPath = savedFile.path;
+          emit(UserProfileSuccess(userProfile));
+        } catch (e) {
+          print("Failed to process image: $e");
+        }
+      } else {
+        emit(UserProfileSuccess(userProfile));
+      }
     } catch (e) {
       print("Unexpected error in getUserProfile: $e");
       emit(UserProfileFailure("Unexpected error occurred: $e"));
     }
   }
 
-  String profilePhotoPath = "";
+  Future<File> saveBase64Image(String base64String) async {
+    try {
+      final String base64Data = base64String.split(',').last;
+      Uint8List bytes = base64Decode(base64Data);
+
+      final directory = await getApplicationDocumentsDirectory();
+      final String filePath = '${directory.path}/profile_image.png';
+
+      final File file = File(filePath);
+      await file.writeAsBytes(bytes);
+
+      print("Image saved at: $filePath");
+      return file;
+    } catch (e) {
+      print("Failed to save image: $e");
+      rethrow;
+    }
+  }
 
   Future<void> pickImage() async {
-    final ImagePicker picker = ImagePicker();
-    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
 
-    if (image != null) {
-      profilePhotoPath = image.path;
-      print("Selected Image Path: $profilePhotoPath");
-    } else {
-      print("No image selected");
+    if (pickedFile != null) {
+      profilePhotoPath = pickedFile.path;
+      print("New Image Path: $profilePhotoPath");
+      emit(ProfilePhotoUpdated(profilePhotoPath: profilePhotoPath));
     }
   }
 
@@ -66,8 +94,6 @@ class UserProfileCubit extends Cubit<UserProfileState> {
           "photo": await MultipartFile.fromFile(profilePhotoPath,
               filename: "profile.jpg"),
       });
-      print(
-          "Updating profile with URL: ${EndPoints.updateUserProfile}?id=$userId");
 
       final response = await api.put(
         '${EndPoints.updateUserProfile}?id=$userId',
@@ -86,6 +112,12 @@ class UserProfileCubit extends Cubit<UserProfileState> {
   }
 
   Future<void> changePassword(int userId) async {
+    if (currentPasswordController.text.isEmpty) {
+      emit(ChangePasswordFailure(
+          errorMessage: "يرجى إدخال كلمة المرور الحالية"));
+      return;
+    }
+
     if (newPasswordController.text != confirmNewPasswordController.text) {
       emit(ChangePasswordFailure(
           errorMessage: "كلمة المرور الجديدة غير متطابقة"));
@@ -100,8 +132,6 @@ class UserProfileCubit extends Cubit<UserProfileState> {
         "NewPassword": newPasswordController.text,
         "ConfirmNewPassword": confirmNewPasswordController.text,
       });
-
-      print("Sending password change request for user ID: $userId");
 
       await api.put(
         'http://10.0.2.2:5282/change?id=$userId',

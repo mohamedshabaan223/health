@@ -50,59 +50,96 @@ class DisplayAllChat extends StatelessWidget {
                     itemCount: state.chatList.length,
                     itemBuilder: (context, index) {
                       final ChatSummary chat = state.chatList[index];
-                      return Column(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.all(12),
-                            decoration: BoxDecoration(
-                              color: AppTheme.gray,
-                              borderRadius: BorderRadius.circular(15),
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 5,
+                          vertical: 2,
+                        ),
+                        child: Column(
+                          children: [
+                            Container(
+                              height: 130,
+                              width: double.infinity,
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                                vertical: 11,
+                              ),
+                              decoration: BoxDecoration(
+                                color: AppTheme.gray,
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: GestureDetector(
+                                onTap: () {
+                                  Navigator.pushNamed(
+                                    context,
+                                    ChatScreen.id,
+                                    arguments: {
+                                      'doctorId': chat.otherUserId,
+                                      'patientId': userId,
+                                      'doctorName': chat.otherUserName,
+                                    },
+                                  ).then((_) {
+                                    context.read<ChatCubit>().fetchChatList(
+                                        userId: userId, userType: userType);
+                                  });
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 12, horizontal: 16),
+                                  decoration: BoxDecoration(
+                                    color: AppTheme.gray,
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      CircleAvatar(
+                                        radius: 45,
+                                        backgroundImage: chat.image != null &&
+                                                chat.image!.isNotEmpty
+                                            ? NetworkImage(chat.image!)
+                                            : const AssetImage(
+                                                    'assets/images/doctor_image.png')
+                                                as ImageProvider,
+                                      ),
+                                      const SizedBox(width: 12),
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              chat.otherUserName,
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 16),
+                                            ),
+                                            const SizedBox(height: 4),
+                                            Text(
+                                              chat.message ?? "No message",
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: const TextStyle(
+                                                  fontSize: 14,
+                                                  color: Colors.black87),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      const SizedBox(width: 10),
+                                      Text(
+                                        "${chat.sendTime.hour}:${chat.sendTime.minute}",
+                                        style: const TextStyle(
+                                            fontSize: 13,
+                                            color: Colors.black54),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
                             ),
-                            child: ListTile(
-                              leading: CircleAvatar(
-                                radius: 30,
-                                backgroundImage: chat.image != null &&
-                                        chat.image!.isNotEmpty
-                                    ? NetworkImage(chat.image!)
-                                    : const AssetImage(
-                                            'assets/images/doctor_image.png')
-                                        as ImageProvider,
-                              ),
-                              title: Text(
-                                chat.otherUserName,
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 16),
-                              ),
-                              subtitle: Text(
-                                chat.message ?? "No message",
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(
-                                    fontSize: 14, color: Colors.black87),
-                              ),
-                              trailing: Text(
-                                "${chat.sendTime.hour}:${chat.sendTime.minute}",
-                                style: const TextStyle(
-                                    fontSize: 12, color: Colors.black54),
-                              ),
-                              onTap: () {
-                                Navigator.pushNamed(
-                                  context,
-                                  ChatScreen.id,
-                                  arguments: {
-                                    'doctorId': chat.otherUserId,
-                                    'patientId': userId,
-                                    'doctorName': chat.otherUserName,
-                                  },
-                                ).then((_) {
-                                  context.read<ChatCubit>().fetchChatList(
-                                      userId: userId, userType: userType);
-                                });
-                              },
-                            ),
-                          ),
-                          const SizedBox(height: 15),
-                        ],
+                            const SizedBox(height: 15),
+                          ],
+                        ),
                       );
                     },
                   );

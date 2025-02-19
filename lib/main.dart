@@ -127,7 +127,7 @@ class MyApp extends StatelessWidget {
               AppointmentScreen.id: (_) => const AppointmentScreen(),
               YourAppoinment.id: (_) => const YourAppoinment(),
               Review.id: (_) => Review(),
-              HomeScreen.id: (_) => HomeScreen(),
+              HomeScreen.id: (_) => const HomeScreen(),
               CancelledReasonPage.id: (_) => CancelledReasonPage(),
               payment_success.id: (_) => payment_success(),
               SpecializationsPage.id: (_) => const SpecializationsPage(),

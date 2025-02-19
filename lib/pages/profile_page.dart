@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:health_app/app_theme.dart';
@@ -41,6 +42,7 @@ class _ProfileState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.sizeOf(context).height;
+    final profileCubit = BlocProvider.of<UserProfileCubit>(context);
 
     return Scaffold(
       body: SafeArea(
@@ -81,17 +83,22 @@ class _ProfileState extends State<Profile> {
                   Center(
                     child: Stack(
                       children: [
-                        SizedBox(
-                          height: 110,
-                          width: 110,
-                          child: CircleAvatar(
-                            radius: 52,
-                            backgroundImage: state.userProfile.photoData != null
-                                ? NetworkImage(state.userProfile.photoData!)
-                                : const AssetImage(
-                                        'assets/images/doctor_image.png')
-                                    as ImageProvider,
-                          ),
+                        BlocBuilder<UserProfileCubit, UserProfileState>(
+                          builder: (context, state) {
+                            print(
+                                "Building UI with Image: ${profileCubit.profilePhotoPath}");
+                            return CircleAvatar(
+                              radius: 52,
+                              backgroundImage: profileCubit.profilePhotoPath !=
+                                          null &&
+                                      profileCubit.profilePhotoPath!.isNotEmpty
+                                  ? FileImage(
+                                      File(profileCubit.profilePhotoPath!))
+                                  : const AssetImage(
+                                          'assets/images/placeholder.png')
+                                      as ImageProvider,
+                            );
+                          },
                         ),
                         Positioned(
                           bottom: 0,

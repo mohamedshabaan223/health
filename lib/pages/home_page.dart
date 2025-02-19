@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:health_app/app_theme.dart';
+import 'package:health_app/cache/cache_helper.dart';
+import 'package:health_app/cubits/profile_cubit/profile_cubit.dart';
 import 'package:health_app/cubits/specializations_cubit/specializations_cubit.dart';
 import 'package:health_app/cubits/specializations_cubit/specializations_state.dart';
 import 'package:health_app/pages/Specializations_page.dart';
@@ -17,9 +19,26 @@ import 'package:health_app/widgets/doctors_and_favourite.dart';
 import 'package:health_app/widgets/search_field.dart';
 import 'package:health_app/widgets/top_icon_in_home_page.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
   static const String id = '/home_page';
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  @override
+  void initState() {
+    super.initState();
+    int? userId = CacheHelper().getData(key: 'id');
+    print("User ID from cache: $userId");
+    if (userId != null) {
+      context.read<UserProfileCubit>().fetchUserProfile(userId);
+    } else {
+      print("User ID is null!");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

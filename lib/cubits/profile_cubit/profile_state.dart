@@ -28,6 +28,12 @@ class UpdateProfileFailure extends UserProfileState {
   UpdateProfileFailure({required this.errorMessage});
 }
 
+class ProfilePhotoUpdated extends UserProfileState {
+  final String profilePhotoPath;
+
+  ProfilePhotoUpdated({required this.profilePhotoPath});
+}
+
 class ChangePasswordLoading extends UserProfileState {}
 
 class ChangePasswordSuccess extends UserProfileState {}
