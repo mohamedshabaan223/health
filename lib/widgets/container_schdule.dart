@@ -3,13 +3,17 @@ import 'package:health_app/app_theme.dart';
 import 'package:health_app/pages/appointment_screen.dart';
 
 class ContainerSchdule extends StatelessWidget {
-  const ContainerSchdule({super.key, this.doctorId});
+  const ContainerSchdule({super.key, this.doctorId, this.doctorName});
   final int? doctorId;
+  final String? doctorName;
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.pushNamed(context, AppointmentScreen.id, arguments: doctorId);
+        Navigator.pushNamed(context, AppointmentScreen.id, arguments: {
+          "doctorId": doctorId,
+          "doctorName": doctorName,
+        });
       },
       child: Container(
         padding: const EdgeInsets.only(left: 5),

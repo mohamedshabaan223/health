@@ -25,22 +25,28 @@ class _ChatScreenState extends State<ChatScreen> {
   late int patientId;
   late int doctorId;
   late String doctorName;
+  bool _messagesLoaded = false;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    final args = ModalRoute.of(context)?.settings.arguments;
+    if (!_messagesLoaded) {
+      final args = ModalRoute.of(context)?.settings.arguments;
+      if (args is Map<String, dynamic>) {
+        patientId = args["patientId"] ?? 0;
+        doctorId = args["doctorId"] ?? 0;
+        doctorName = args["doctorName"] ?? "";
 
-    if (args is Map<String, dynamic>) {
-      patientId = args["patientId"] ?? 0;
-      doctorId = args["doctorId"] ?? 0;
-      doctorName = args["doctorName"] ?? "";
-
-      if (patientId != 0 && doctorId != 0) {
-        context
-            .read<ChatCubit>()
-            .fetchMessages(senderId: patientId, receiverId: doctorId)
-            .then((_) => _scrollToBottom());
+        if (patientId != 0 && doctorId != 0) {
+          context
+              .read<ChatCubit>()
+              .fetchMessages(
+                senderId: patientId,
+                receiverId: doctorId,
+              )
+              .then((_) => _scrollToBottom());
+          _messagesLoaded = true;
+        }
       }
     }
   }
@@ -116,40 +122,47 @@ class _ChatScreenState extends State<ChatScreen> {
       body: Column(
         children: [
           Expanded(
-            child: BlocBuilder<ChatCubit, ChatState>(
-              builder: (context, state) {
-                if (state is ChatLoading) {
-                  return const Center(child: CircularProgressIndicator());
-                } else if (state is ChatFailure) {
-                  return Center(child: Text("Error: ${state.errorMessage}"));
-                } else if (state is ChatSuccess) {
-                  return ListView.builder(
-                    controller: _scrollController,
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 10),
-                    itemCount: state.messages.length,
-                    itemBuilder: (context, index) {
-                      final message = state.messages[index];
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 5),
-                        child: message.senderId == patientId
-                            ? SendMessage(
-                                message: message.message,
-                                imageUrl: message.image,
-                                messageTime: message.sendTime,
-                              )
-                            : ReceiveMessage(
-                                message: message.message ?? "",
-                                imageUrl: message.image,
-                                messageTime: message.sendTime,
-                              ),
-                      );
-                    },
-                  );
-                } else {
-                  return const Center(child: Text("No messages yet."));
+            child: BlocListener<ChatCubit, ChatState>(
+              listener: (context, state) {
+                if (state is ChatSuccess) {
+                  _scrollToBottom();
                 }
               },
+              child: BlocBuilder<ChatCubit, ChatState>(
+                builder: (context, state) {
+                  if (state is ChatLoading) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (state is ChatFailure) {
+                    return Center(child: Text("Error: ${state.errorMessage}"));
+                  } else if (state is ChatSuccess) {
+                    return ListView.builder(
+                      controller: _scrollController,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 10),
+                      itemCount: state.messages.length,
+                      itemBuilder: (context, index) {
+                        final message = state.messages[index];
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 5),
+                          child: message.senderId == patientId
+                              ? SendMessage(
+                                  message: message.message,
+                                  imageUrl: message.image,
+                                  messageTime: message.sendTime,
+                                )
+                              : ReceiveMessage(
+                                  message: message.message ?? "",
+                                  imageUrl: message.image,
+                                  messageTime: message.sendTime,
+                                ),
+                        );
+                      },
+                    );
+                  } else {
+                    return const Center(child: Text("No messages yet."));
+                  }
+                },
+              ),
             ),
           ),
           _buildMessageInput(),

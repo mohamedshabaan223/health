@@ -1,3 +1,5 @@
+import 'dart:convert'; // لاستعمال base64Decode
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:health_app/app_theme.dart';
@@ -13,6 +15,10 @@ class SendMessage extends StatelessWidget {
     required this.messageTime,
     this.imageUrl,
   });
+
+  bool isBase64(String str) {
+    return str.length > 100 && (str.startsWith('/9j') || str.contains(','));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +45,7 @@ class SendMessage extends StatelessWidget {
                   ),
                   decoration: const BoxDecoration(
                     color: AppTheme.gray,
-                    borderRadius: const BorderRadius.only(
+                    borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(18),
                       topRight: Radius.circular(18),
                       bottomLeft: Radius.circular(18),
@@ -58,12 +64,28 @@ class SendMessage extends StatelessWidget {
                   padding: const EdgeInsets.only(top: 8),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(18),
-                    child: Image.network(
-                      imageUrl!,
-                      width: 200,
-                      height: 200,
-                      fit: BoxFit.cover,
-                    ),
+                    child: isBase64(imageUrl!)
+                        ? Image.memory(
+                            base64Decode(imageUrl!),
+                            width: 200,
+                            height: 200,
+                            fit: BoxFit.cover,
+                          )
+                        : imageUrl!.startsWith("http")
+                            ? Image.network(
+                                imageUrl!,
+                                width: 200,
+                                height: 200,
+                                fit: BoxFit.cover,
+                              )
+                            : File(imageUrl!).existsSync()
+                                ? Image.file(
+                                    File(imageUrl!),
+                                    width: 200,
+                                    height: 200,
+                                    fit: BoxFit.cover,
+                                  )
+                                : const SizedBox(),
                   ),
                 ),
               const SizedBox(height: 4),

@@ -7,7 +7,6 @@ import 'package:health_app/cubits/auth_cubit/auth_cubit.dart';
 import 'package:health_app/cubits/booking_cubit/booking_cubit_cubit.dart';
 import 'package:health_app/pages/appointment_screen.dart';
 import 'package:health_app/pages/payment_page.dart';
-import 'package:health_app/widgets/card_of_doctor.dart';
 import 'package:health_app/widgets/start_screen_button.dart';
 import 'package:health_app/cubits/payment_cubit/payment_cubit.dart';
 import 'package:health_app/cubits/payment_cubit/payment_state.dart';
@@ -40,6 +39,8 @@ class YourAppoinment extends StatelessWidget {
     final String problemDescription = arguments["problemDescription"] ?? "";
 
     final int bookingId = arguments["bookingId"] ?? 0;
+
+    final String doctorName = arguments["doctorName"] ?? "Unknown";
 
     if (doctorId == null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -92,50 +93,67 @@ class YourAppoinment extends StatelessWidget {
                               SizedBox(
                                 width: width * 0.15,
                               ),
-                              Text(
-                                'Your Appointment',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .titleMedium!
-                                    .copyWith(
-                                        fontSize: 20,
-                                        color: AppTheme.green,
-                                        fontWeight: FontWeight.bold),
-                              ),
+                              Text(doctorName,
+                                  style: const TextStyle(
+                                    fontSize: 22,
+                                    color: AppTheme.green2,
+                                    fontWeight: FontWeight.bold,
+                                  )),
                             ],
                           ),
-                        ),
-                        const CardOfDoctor(),
-                        SizedBox(
-                          height: height * 0.03,
-                        ),
-                        const Divider(
-                          color: AppTheme.green,
-                          thickness: 1.2,
                         ),
                         SizedBox(
                           height: height * 0.02,
                         ),
+                        const Row(
+                          children: [],
+                        ),
+                        SizedBox(
+                          height: height * 0.04,
+                        ),
                         Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const Text('Day:   ',
-                                style: TextStyle(
-                                    fontSize: 17,
-                                    color: AppTheme.green,
-                                    fontWeight: FontWeight.bold)),
+                            const Row(
+                              children: [
+                                Icon(
+                                  Icons.calendar_month,
+                                  color: AppTheme.green,
+                                  size: 20,
+                                ),
+                                Text(' Day',
+                                    style: TextStyle(
+                                        fontSize: 17,
+                                        color: AppTheme.green,
+                                        fontWeight: FontWeight.bold)),
+                              ],
+                            ),
                             Text(
                               day,
                               style: const TextStyle(fontSize: 16),
                             ),
                           ],
                         ),
+                        SizedBox(
+                          height: height * 0.01,
+                        ),
                         Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const Text('Time: ',
-                                style: TextStyle(
-                                    fontSize: 17,
-                                    color: AppTheme.green,
-                                    fontWeight: FontWeight.bold)),
+                            const Row(
+                              children: [
+                                Icon(
+                                  Icons.access_time,
+                                  color: AppTheme.green,
+                                  size: 20,
+                                ),
+                                Text(' Time',
+                                    style: TextStyle(
+                                        fontSize: 17,
+                                        color: AppTheme.green,
+                                        fontWeight: FontWeight.bold)),
+                              ],
+                            ),
                             Text(
                               time,
                               style: const TextStyle(fontSize: 16),
@@ -155,9 +173,21 @@ class YourAppoinment extends StatelessWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const Text(
-                              'Booking For',
-                              style: TextStyle(fontSize: 15),
+                            const Row(
+                              children: [
+                                Icon(
+                                  Icons.person,
+                                  color: AppTheme.green,
+                                  size: 20,
+                                ),
+                                Text(
+                                  ' Booking For',
+                                  style: TextStyle(
+                                      fontSize: 15,
+                                      color: AppTheme.green,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ],
                             ),
                             Text(
                               forHimSelf ? 'Yourself' : 'Another Person',
@@ -171,9 +201,21 @@ class YourAppoinment extends StatelessWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const Text(
-                              'Age',
-                              style: TextStyle(fontSize: 15),
+                            const Row(
+                              children: [
+                                Icon(
+                                  Icons.cake,
+                                  color: AppTheme.green,
+                                  size: 20,
+                                ),
+                                Text(
+                                  ' Age',
+                                  style: TextStyle(
+                                      fontSize: 15,
+                                      color: AppTheme.green,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ],
                             ),
                             Text(
                               age.toString(),
@@ -187,9 +229,21 @@ class YourAppoinment extends StatelessWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const Text(
-                              'Gender',
-                              style: TextStyle(fontSize: 15),
+                            const Row(
+                              children: [
+                                Icon(
+                                  Icons.man_outlined,
+                                  color: AppTheme.green,
+                                  size: 20,
+                                ),
+                                Text(
+                                  ' Gender',
+                                  style: TextStyle(
+                                      fontSize: 15,
+                                      color: AppTheme.green,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ],
                             ),
                             Text(
                               gender,
@@ -209,26 +263,41 @@ class YourAppoinment extends StatelessWidget {
                         ),
                         const Row(
                           children: [
-                            Text(
-                              'Problem',
-                              style: TextStyle(
-                                fontSize: 19,
-                              ),
+                            Row(
+                              children: [
+                                Icon(
+                                  Icons.description,
+                                  color: AppTheme.green,
+                                  size: 20,
+                                ),
+                                Text(
+                                  ' Problem',
+                                  style: TextStyle(
+                                    fontSize: 19,
+                                    color: AppTheme.green,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
                             ),
                           ],
                         ),
                         SizedBox(
-                          height: height * 0.01,
+                          height: height * 0.02,
                         ),
-                        Text(
-                          problemDescription,
-                          style: const TextStyle(fontSize: 13),
+                        Row(
+                          children: [
+                            Text(
+                              problemDescription,
+                              style: const TextStyle(fontSize: 14),
+                            ),
+                          ],
                         ),
                         SizedBox(
                           height: height * 0.08,
                         ),
                         SizedBox(
-                          height: height * 0.02,
+                          height: height * 0.04,
                         ),
                         BlocConsumer<PaymentCubit, PaymentState>(
                           listener: (context, state) {

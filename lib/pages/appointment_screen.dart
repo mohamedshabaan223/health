@@ -25,6 +25,7 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
   String? fullName;
   int? age;
   int? doctorId;
+  String? doctorName;
   int? patientId = CacheHelper().getData(key: 'id');
   String? problemDescription;
   List<AppointmentDisplayDoctorData> availableSlots = [];
@@ -56,8 +57,10 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     final args = ModalRoute.of(context)?.settings.arguments;
-    if (args is int) {
-      doctorId = args;
+    if (args is Map<String, dynamic>) {
+      doctorId = args['doctorId'];
+      doctorName = args['doctorName'];
+
       if (doctorId != null) {
         BlocProvider.of<BookingCubit>(context)
             .getAvailableSlots(doctorId: doctorId!);
@@ -125,6 +128,7 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
               "forHimSelf": selectedPatientType == 'Yourself',
               "patientId": patientId ?? 0,
               "problemDescription": problemController.text,
+              "doctorName": doctorName,
             },
           );
         } else if (state is BookingCubitDataError) {

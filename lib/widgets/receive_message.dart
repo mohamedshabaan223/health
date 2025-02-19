@@ -1,3 +1,5 @@
+import 'dart:io';
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:health_app/app_theme.dart';
@@ -13,6 +15,10 @@ class ReceiveMessage extends StatelessWidget {
     required this.messageTime,
     this.imageUrl,
   });
+
+  bool isBase64(String str) {
+    return str.startsWith('/9j') || str.length > 100;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,12 +64,26 @@ class ReceiveMessage extends StatelessWidget {
                   padding: const EdgeInsets.only(top: 8),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(18),
-                    child: Image.network(
-                      imageUrl!,
-                      width: 200,
-                      height: 200,
-                      fit: BoxFit.cover,
-                    ),
+                    child: isBase64(imageUrl!)
+                        ? Image.memory(
+                            base64Decode(imageUrl!),
+                            width: 200,
+                            height: 200,
+                            fit: BoxFit.cover,
+                          )
+                        : imageUrl!.startsWith("http")
+                            ? Image.network(
+                                imageUrl!,
+                                width: 200,
+                                height: 200,
+                                fit: BoxFit.cover,
+                              )
+                            : Image.file(
+                                File(imageUrl!),
+                                width: 200,
+                                height: 200,
+                                fit: BoxFit.cover,
+                              ),
                   ),
                 ),
               const SizedBox(height: 4),

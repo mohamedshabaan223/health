@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:health_app/app_theme.dart';
 import 'package:health_app/cache/cache_helper.dart';
-import 'package:health_app/core/api/end_points.dart';
 import 'package:health_app/cubits/doctors_cubit/doctor_cubit.dart';
 import 'package:health_app/pages/chat_page.dart';
 import 'package:health_app/widgets/DoctorAppointmentsDropdown.dart';
@@ -52,10 +51,10 @@ class _ContainerDoctorInfoState extends State<ContainerDoctorInfo> {
                   Row(
                     children: [
                       const Padding(
-                        padding: EdgeInsets.only(right: 30),
+                        padding: EdgeInsets.only(right: 30, left: 10),
                         child: CircleAvatar(
                           backgroundImage: AssetImage('assets/images/male.png'),
-                          radius: 75,
+                          radius: 70,
                         ),
                       ),
                       Column(
@@ -150,7 +149,7 @@ class _ContainerDoctorInfoState extends State<ContainerDoctorInfo> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Text(
-                            '${doctor.name}',
+                            doctor.name,
                             style: const TextStyle(
                               fontWeight: FontWeight.w500,
                               color: AppTheme.green,
@@ -205,7 +204,10 @@ class _ContainerDoctorInfoState extends State<ContainerDoctorInfo> {
                   ),
                   Row(
                     children: [
-                      ContainerSchdule(doctorId: widget.doctorId),
+                      ContainerSchdule(
+                        doctorId: widget.doctorId,
+                        doctorName: doctor.name,
+                      ),
                       SizedBox(
                         width: width * 0.2,
                       ),

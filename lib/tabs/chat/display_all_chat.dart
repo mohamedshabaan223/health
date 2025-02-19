@@ -92,14 +92,10 @@ class DisplayAllChat extends StatelessWidget {
                                   ),
                                   child: Row(
                                     children: [
-                                      CircleAvatar(
+                                      const CircleAvatar(
                                         radius: 45,
-                                        backgroundImage: chat.image != null &&
-                                                chat.image!.isNotEmpty
-                                            ? NetworkImage(chat.image!)
-                                            : const AssetImage(
-                                                    'assets/images/doctor_image.png')
-                                                as ImageProvider,
+                                        backgroundImage: AssetImage(
+                                            'assets/images/male.png'),
                                       ),
                                       const SizedBox(width: 12),
                                       Expanded(
@@ -114,14 +110,43 @@ class DisplayAllChat extends StatelessWidget {
                                                   fontSize: 16),
                                             ),
                                             const SizedBox(height: 4),
-                                            Text(
-                                              chat.message ?? "No message",
-                                              maxLines: 1,
-                                              overflow: TextOverflow.ellipsis,
-                                              style: const TextStyle(
-                                                  fontSize: 14,
-                                                  color: Colors.black87),
-                                            ),
+                                            chat.image != null &&
+                                                    chat.image!.isNotEmpty
+                                                ? Column(
+                                                    children: [
+                                                      const Icon(Icons.image,
+                                                          size: 20,
+                                                          color: Colors.grey),
+                                                      if (chat.message !=
+                                                              null &&
+                                                          chat.message!
+                                                              .isNotEmpty) ...[
+                                                        const SizedBox(
+                                                            height: 4),
+                                                        Text(
+                                                          chat.message!,
+                                                          maxLines: 1,
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                          style:
+                                                              const TextStyle(
+                                                                  fontSize: 14,
+                                                                  color: Colors
+                                                                      .black87),
+                                                        ),
+                                                      ]
+                                                    ],
+                                                  )
+                                                : Text(
+                                                    chat.message ??
+                                                        "No message",
+                                                    maxLines: 1,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    style: const TextStyle(
+                                                        fontSize: 14,
+                                                        color: Colors.black87),
+                                                  ),
                                           ],
                                         ),
                                       ),
@@ -129,7 +154,7 @@ class DisplayAllChat extends StatelessWidget {
                                       Text(
                                         "${chat.sendTime.hour}:${chat.sendTime.minute}",
                                         style: const TextStyle(
-                                            fontSize: 13,
+                                            fontSize: 14,
                                             color: Colors.black54),
                                       ),
                                     ],
