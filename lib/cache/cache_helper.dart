@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CacheHelper {
@@ -21,6 +22,20 @@ class CacheHelper {
       return await sharedPreferences.setDouble(key, value);
     }
     return false;
+  }
+
+  Future<bool> saveList({required String key, required List<int> value}) async {
+    String encodedList = jsonEncode(value);
+    return await sharedPreferences.setString(key, encodedList);
+  }
+
+  List<int> getList({required String key}) {
+    String? encodedList = sharedPreferences.getString(key);
+    if (encodedList != null) {
+      List<dynamic> decodedList = jsonDecode(encodedList);
+      return decodedList.cast<int>();
+    }
+    return [];
   }
 
   String? getDataString({required String key}) {

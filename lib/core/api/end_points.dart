@@ -11,6 +11,8 @@ class EndPoints {
   static String getUserProfile = "V1/Profile/GetUserProfile";
   static String updateUserProfile = "V1/Profile/UpdateUserProfile";
   static String getAllChats = "V1/Chat/GetAllChats";
+  static String addFavoriteDoctor = "V1/Doctors/AddFavoriteDR";
+  static String removeFavoriteDoctor = "V1/Doctors/RemoveFavoriteDR";
 }
 
 class ApiKey {

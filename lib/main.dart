@@ -11,6 +11,7 @@ import 'package:health_app/cubits/auth_cubit/auth_cubit.dart';
 import 'package:health_app/cubits/booking_cubit/booking_cubit_cubit.dart';
 import 'package:health_app/cubits/chat_cubit/chat_cubit.dart';
 import 'package:health_app/cubits/doctors_cubit/doctor_cubit.dart';
+import 'package:health_app/cubits/favorite_cubit/favorite_cubit.dart';
 import 'package:health_app/cubits/payment_cubit/payment_cubit.dart';
 import 'package:health_app/cubits/profile_cubit/profile_cubit.dart';
 import 'package:health_app/cubits/specializations_cubit/specializations_cubit.dart';
@@ -65,39 +66,44 @@ void main() async {
   }
   print("Patient ID: $patientId");
   print("Token: $token");
-  runApp(const MyApp());
+
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
+  MyApp({super.key});
+  final dioConsumer = DioConsumer(dio: Dio());
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
         BlocProvider<AuthCubit>(
-          create: (context) => AuthCubit(DioConsumer(dio: Dio())),
+          create: (context) => AuthCubit(dioConsumer),
         ),
         BlocProvider<DoctorCubit>(
-          create: (context) => DoctorCubit(DioConsumer(dio: Dio()))
+          create: (context) => DoctorCubit(dioConsumer)
             ..getAllDoctorsByOrderType(orderType: 'ASC'),
         ),
         BlocProvider(
-          create: (context) => BookingCubit(DioConsumer(dio: Dio())),
+          create: (context) => BookingCubit(dioConsumer),
         ),
         BlocProvider(
-          create: (context) => PaymentCubit(DioConsumer(dio: Dio())),
+          create: (context) => PaymentCubit(dioConsumer),
         ),
         BlocProvider(
-          create: (context) => ChatCubit(DioConsumer(dio: Dio())),
+          create: (context) => ChatCubit(dioConsumer),
         ),
         BlocProvider(
-          create: (context) => SpecializationsCubit(DioConsumer(dio: Dio()))
-            ..getAllSpecializations(),
+          create: (context) =>
+              SpecializationsCubit(dioConsumer)..getAllSpecializations(),
         ),
         BlocProvider(
-          create: (context) => UserProfileCubit(DioConsumer(dio: Dio())),
+          create: (context) => UserProfileCubit(dioConsumer),
+        ),
+        BlocProvider(
+          create: (context) =>
+              FavoriteDoctorCubit(dioConsumer)..loadFavorites(),
         ),
       ],
       child: Builder(

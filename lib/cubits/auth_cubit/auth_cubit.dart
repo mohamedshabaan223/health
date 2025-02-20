@@ -6,6 +6,7 @@ import 'package:health_app/cache/cache_helper.dart';
 import 'package:health_app/core/api/api_consumer.dart';
 import 'package:health_app/core/api/end_points.dart';
 import 'package:health_app/core/errors/exceptions.dart';
+import 'package:health_app/models/register_model.dart';
 import 'package:health_app/models/sign_in_model.dart';
 import 'package:meta/meta.dart';
 
@@ -28,6 +29,7 @@ class AuthCubit extends Cubit<AuthState> {
   TextEditingController patientName = TextEditingController();
 
   SignInModel? user;
+  RegisterModel? registerUser;
 
   Future<void> logIn() async {
     try {
@@ -70,7 +72,9 @@ class AuthCubit extends Cubit<AuthState> {
           ApiKey.phone: registerPhoneNumber.text,
         },
       );
-
+      registerUser = RegisterModel.fromJson(response);
+      await CacheHelper()
+          .saveData(key: ApiKey.token, value: user!.token.result);
       emit(RegisterSuccess());
     } on ServerException catch (e) {
       print("Error caught in register: ${e.errorModel.errorMessage}");
