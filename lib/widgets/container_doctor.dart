@@ -36,7 +36,6 @@ class _ContainerDoctorState extends State<ContainerDoctor> {
   void initState() {
     super.initState();
     patientId = CacheHelper().getData(key: "id") ?? 0;
-    context.read<FavoriteDoctorCubit>().loadFavorites();
   }
 
   @override
@@ -143,7 +142,7 @@ class _ContainerDoctorState extends State<ContainerDoctor> {
                     onTap: () {
                       Navigator.of(context).pushNamed(
                         DoctorInformation.routeName,
-                        arguments: widget.doctorid,
+                        arguments: widget.doctorid.id,
                       );
                     },
                     child: Container(

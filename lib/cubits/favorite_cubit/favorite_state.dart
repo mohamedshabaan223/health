@@ -1,3 +1,5 @@
+import 'package:health_app/models/doctor_model.dart';
+
 abstract class FavoriteDoctorState {}
 
 class FavoriteDoctorInitial extends FavoriteDoctorState {}
@@ -27,8 +29,15 @@ class FavoriteDoctorRemoved extends FavoriteDoctorState {
   FavoriteDoctorRemoved({required this.doctorid, required this.message});
 }
 
+class FavoriteDoctorEmpty extends FavoriteDoctorState {}
+
 class FavoriteDoctorLoaded extends FavoriteDoctorState {
   final Map<int, bool> favoriteDoctors;
 
   FavoriteDoctorLoaded(this.favoriteDoctors);
+}
+
+class GetAllDoctorsFavoriteSuccess extends FavoriteDoctorState {
+  final List<DoctorModel> doctors;
+  GetAllDoctorsFavoriteSuccess({required this.doctors});
 }

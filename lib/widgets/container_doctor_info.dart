@@ -9,8 +9,8 @@ import 'package:health_app/widgets/container_schdule.dart';
 import 'package:health_app/widgets/default_icon.dart';
 
 class ContainerDoctorInfo extends StatefulWidget {
-  const ContainerDoctorInfo({super.key, this.doctorId});
-  final int? doctorId;
+  const ContainerDoctorInfo({super.key, required this.doctorId});
+  final int doctorId;
 
   @override
   State<ContainerDoctorInfo> createState() => _ContainerDoctorInfoState();

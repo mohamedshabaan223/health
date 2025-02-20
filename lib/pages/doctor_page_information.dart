@@ -27,7 +27,7 @@ class _DoctorInformationState extends State<DoctorInformation> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    final doctorId = ModalRoute.of(context)?.settings.arguments as int?;
+    final doctorId = ModalRoute.of(context)?.settings.arguments;
 
     if (doctorId == null) {
       return Scaffold(
@@ -92,7 +92,7 @@ class _DoctorInformationState extends State<DoctorInformation> {
                         ],
                       ),
                       SizedBox(height: size.height * 0.02),
-                      ContainerDoctorInfo(doctorId: doctorId),
+                      ContainerDoctorInfo(doctorId: doctorId as int),
                       SizedBox(height: size.height * 0.04),
                       Text(
                         'Profile',

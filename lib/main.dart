@@ -102,8 +102,7 @@ class MyApp extends StatelessWidget {
           create: (context) => UserProfileCubit(dioConsumer),
         ),
         BlocProvider(
-          create: (context) =>
-              FavoriteDoctorCubit(dioConsumer)..loadFavorites(),
+          create: (context) => FavoriteDoctorCubit(dioConsumer),
         ),
       ],
       child: Builder(

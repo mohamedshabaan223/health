@@ -3,7 +3,7 @@ class DoctorModel {
   final String doctorName;
   final String specializationName;
   final String? photo;
-  final String address; // تمت إضافته
+  final String address;
 
   DoctorModel({
     required this.id,

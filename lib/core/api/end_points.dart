@@ -13,6 +13,7 @@ class EndPoints {
   static String getAllChats = "V1/Chat/GetAllChats";
   static String addFavoriteDoctor = "V1/Doctors/AddFavoriteDR";
   static String removeFavoriteDoctor = "V1/Doctors/RemoveFavoriteDR";
+  static String getAllFavoriteDoctors = "V1/Doctors/GetAllDoctors";
 }
 
 class ApiKey {
