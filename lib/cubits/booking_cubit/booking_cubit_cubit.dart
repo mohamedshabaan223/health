@@ -103,17 +103,17 @@ class BookingCubit extends Cubit<BookingCubitState> {
         'http://10.0.2.2:5282/api/Booking/Api/V1/Booking/GetAllBooking?patientId=$patientId',
       );
 
-      final dynamic decodedResponse;
-      if (response is String) {
-        decodedResponse = jsonDecode(response);
-      } else {
-        decodedResponse = response;
-      }
+      print("Response from getAllBookings: $response");
+
+      final dynamic decodedResponse =
+          response is String ? jsonDecode(response) : response;
 
       if (decodedResponse is List) {
         final List<GetAllBooking> bookings = decodedResponse
             .map((json) => GetAllBooking.fromJson(json as Map<String, dynamic>))
             .toList();
+
+        print("Parsed bookings: $bookings");
 
         if (bookings.isEmpty) {
           emit(BookingCubitGetAllError("No bookings found."));
@@ -125,8 +125,6 @@ class BookingCubit extends Cubit<BookingCubitState> {
       }
     } on FormatException catch (e) {
       emit(BookingCubitGetAllError("Invalid response format"));
-    } on ServerException catch (e) {
-      emit(BookingCubitGetAllError(e.errorModel.errorMessage));
     } catch (e) {
       emit(BookingCubitGetAllError("Unexpected error occurred: $e"));
     }
@@ -139,15 +137,23 @@ class BookingCubit extends Cubit<BookingCubitState> {
   }) async {
     try {
       emit(BookingCubitLoading());
+      print("📌 Updating booking with:");
+      print("   ➤ bookingId: $bookingId");
+      print("   ➤ day: $day");
+      print("   ➤ time: $time");
 
       final response = await api.put(
         'http://10.0.2.2:5282/api/Booking/Api/V1/Booking/UpdateBooking?bookingId=$bookingId',
         data: jsonEncode({
-          "dto": {"day": day, "time": time}
+          "dto": {
+            "day": day,
+            "time": time,
+          }
         }),
       );
 
       final String responseData = response.toString().trim();
+      print("✅ Response from updateBooking: $responseData");
 
       if (responseData == 'Booking updated successfully') {
         emit(BookingCubitSuccessUpdate(responseData));

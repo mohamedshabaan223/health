@@ -103,7 +103,7 @@ class ContainerUpcoming extends StatelessWidget {
                           width: 4,
                         ),
                         Text(
-                          booking.day as String,
+                          booking.day,
                           style: const TextStyle(
                             fontSize: 16,
                             color: AppTheme.green,

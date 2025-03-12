@@ -7,6 +7,7 @@ import 'package:health_app/cubits/auth_cubit/auth_cubit.dart';
 import 'package:health_app/cubits/booking_cubit/booking_cubit_cubit.dart';
 import 'package:health_app/cubits/chat_cubit/chat_cubit.dart';
 import 'package:health_app/cubits/doctors_cubit/doctor_cubit.dart';
+import 'package:health_app/cubits/favorite_cubit/favorite_cubit.dart';
 import 'package:health_app/cubits/payment_cubit/payment_cubit.dart';
 import 'package:health_app/cubits/profile_cubit/profile_cubit.dart';
 import 'package:health_app/cubits/specializations_cubit/specializations_cubit.dart';
@@ -122,6 +123,7 @@ class ShowLogout extends StatelessWidget {
     BlocProvider.of<ChatCubit>(context).resetState();
     BlocProvider.of<SpecializationsCubit>(context).resetState();
     BlocProvider.of<UserProfileCubit>(context).resetState();
+    BlocProvider.of<FavoriteDoctorCubit>(context).resetState();
 
     String? tokenAfterDelete = CacheHelper().getData(key: ApiKey.token);
     print('Token after deletion: $tokenAfterDelete');

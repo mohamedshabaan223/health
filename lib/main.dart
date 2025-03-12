@@ -126,7 +126,7 @@ class MyApp extends StatelessWidget {
               DoctorPage.routeName: (_) => const DoctorPage(),
               DoctorInformation.routeName: (_) => DoctorInformation(),
               Rating.routeName: (_) => const Rating(),
-              Favorite.routeName: (_) => Favorite(),
+              Favorite.routeName: (_) => const Favorite(),
               Female.routeName: (_) => const Female(),
               Male.routeName: (_) => const Male(),
               AppointmentScreen.id: (_) => const AppointmentScreen(),

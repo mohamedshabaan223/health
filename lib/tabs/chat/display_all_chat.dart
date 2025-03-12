@@ -45,6 +45,33 @@ class DisplayAllChat extends StatelessWidget {
                 if (state is ChatLoading) {
                   return const Center(child: CircularProgressIndicator());
                 } else if (state is ChatListSuccess) {
+                  if (state.chatList.isEmpty) {
+                    return Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            height: 250,
+                            width: double.infinity,
+                            child: ColorFiltered(
+                              colorFilter: ColorFilter.mode(
+                                Colors.white.withOpacity(0.4),
+                                BlendMode.modulate,
+                              ),
+                              child: Image.asset(
+                                  "assets/images/undraw_new-message_qvv6.png"),
+                            ),
+                          ),
+                          const SizedBox(height: 40),
+                          const Text(
+                            "No chats available.",
+                            style:
+                                TextStyle(color: Colors.black54, fontSize: 18),
+                          ),
+                        ],
+                      ),
+                    );
+                  }
                   return ListView.builder(
                     padding: const EdgeInsets.symmetric(horizontal: 10),
                     itemCount: state.chatList.length,
@@ -171,7 +198,7 @@ class DisplayAllChat extends StatelessWidget {
                 } else if (state is ChatFailure) {
                   return Center(child: Text("Error: ${state.errorMessage}"));
                 }
-                return const Center(child: Text("No chats available"));
+                return Container();
               },
             ),
           ),

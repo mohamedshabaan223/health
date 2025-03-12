@@ -3,6 +3,7 @@ class ChatSummary {
   final String? message;
   final String otherUserName;
   final int otherUserId;
+  final String? otherUserImage;
   final DateTime sendTime;
   final String? image;
 
@@ -13,6 +14,7 @@ class ChatSummary {
     required this.otherUserId,
     required this.sendTime,
     this.image,
+    this.otherUserImage,
   });
 
   factory ChatSummary.fromJson(Map<String, dynamic> json) {
@@ -23,6 +25,7 @@ class ChatSummary {
       otherUserId: json['otherUserId'],
       sendTime: DateTime.parse(json['sendTime']),
       image: json['image'],
+      otherUserImage: json['otherUserImage'],
     );
   }
 
@@ -34,6 +37,7 @@ class ChatSummary {
       'otherUserId': otherUserId,
       'sendTime': sendTime.toIso8601String(),
       'image': image,
+      'otherUserImage': otherUserImage
     };
   }
 }

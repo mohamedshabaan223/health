@@ -9,10 +9,8 @@ class FavoriteDoctorCubit extends Cubit<FavoriteDoctorState> {
   FavoriteDoctorCubit(this.api) : super(FavoriteDoctorInitial());
 
   final ApiConsumer api;
-  final Map<int, bool> favoriteDoctors =
-      {}; // حالة الأطباء المفضلين لحفظ حالة الأيقونة
+  final Map<int, bool> favoriteDoctors = {};
 
-  /// تحميل الأطباء المفضلين من API مباشرة
   Future<void> getAllDoctorsInFavorites({required int patientId}) async {
     try {
       emit(FavoriteDoctorLoading());
@@ -26,7 +24,6 @@ class FavoriteDoctorCubit extends Cubit<FavoriteDoctorState> {
       final List<DoctorModel> doctors =
           data.map((json) => DoctorModel.fromJson(json)).toList();
 
-      // تحديث حالة الأطباء المفضلين بناءً على البيانات القادمة من API
       final newFavorites = {for (var doctor in doctors) doctor.id ?? 0: true};
 
       if (favoriteDoctors != newFavorites) {
@@ -39,7 +36,6 @@ class FavoriteDoctorCubit extends Cubit<FavoriteDoctorState> {
     }
   }
 
-  /// إضافة طبيب إلى المفضلة وتحديث الحالة فورًا
   Future<void> addFavoriteDoctor({
     required int patientId,
     required int doctorId,
@@ -55,7 +51,6 @@ class FavoriteDoctorCubit extends Cubit<FavoriteDoctorState> {
       if (response == "Doctor added to favorites.") {
         favoriteDoctors[doctorId] = true;
 
-        // حفظ في الكاش
         List<int> favoriteList =
             CacheHelper().getList(key: "favoriteDoctors") ?? [];
         if (!favoriteList.contains(doctorId)) {
@@ -73,7 +68,6 @@ class FavoriteDoctorCubit extends Cubit<FavoriteDoctorState> {
     }
   }
 
-  /// إزالة طبيب من المفضلة وتحديث الحالة فورًا
   Future<void> removeFavoriteDoctor({
     required int patientId,
     required int doctorId,
@@ -89,7 +83,6 @@ class FavoriteDoctorCubit extends Cubit<FavoriteDoctorState> {
       if (response == true) {
         favoriteDoctors.remove(doctorId);
 
-        // تحديث الكاش
         List<int> favoriteList =
             CacheHelper().getList(key: "favoriteDoctors") ?? [];
         if (favoriteList.contains(doctorId)) {
@@ -108,8 +101,11 @@ class FavoriteDoctorCubit extends Cubit<FavoriteDoctorState> {
     }
   }
 
-  /// التحقق مما إذا كان الطبيب مضافًا إلى المفضلة
   bool isDoctorFavorite(int doctorId) {
     return favoriteDoctors[doctorId] ?? false;
+  }
+
+  void resetState() {
+    emit(FavoriteDoctorInitial());
   }
 }

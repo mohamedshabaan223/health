@@ -129,6 +129,9 @@ class _CalendarState extends State<Calendar>
                   return Center(child: Text(state.errormessage));
                 } else if (state is BookingCubitGetAllSuccess) {
                   final bookings = state.bookings;
+                  if (bookings.isEmpty) {
+                    return const Center(child: Text('No data available'));
+                  }
                   return ListView.builder(
                     itemCount: bookings.length,
                     itemBuilder: (_, index) {

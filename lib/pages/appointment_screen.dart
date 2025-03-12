@@ -238,7 +238,7 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
               return GestureDetector(
                 onTap: () => setState(() => selectedTimeIndex = index),
                 child: _buildTimeTile(
-                  time: times[index].formattedTime,
+                  time: times[index].time, // استخدم التوقيت كما هو
                   isSelected: selectedTimeIndex == index,
                 ),
               );

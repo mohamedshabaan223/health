@@ -63,6 +63,7 @@ class _UpdateBookingPageState extends State<UpdateBookingPage> {
 
   @override
   Widget build(BuildContext context) {
+    int patientId = CacheHelper().getData(key: "id");
     return Scaffold(
       appBar: AppBar(
         title: const Text("Update Booking"),
@@ -71,7 +72,7 @@ class _UpdateBookingPageState extends State<UpdateBookingPage> {
           onPressed: () {
             Navigator.pop(context);
             BlocProvider.of<BookingCubit>(context)
-                .getAllBookings(patientId: CacheHelper().getData(key: "id"));
+                .getAllBookings(patientId: patientId);
           },
         ),
       ),
@@ -86,8 +87,9 @@ class _UpdateBookingPageState extends State<UpdateBookingPage> {
                     SnackBar(content: Text(state.message)),
                   );
                   Navigator.pop(context);
-                  BlocProvider.of<BookingCubit>(context).getAllBookings(
-                      patientId: CacheHelper().getData(key: "id"));
+                  // إعادة تحميل جميع الحجوزات بعد التحديث
+                  BlocProvider.of<BookingCubit>(context)
+                      .getAllBookings(patientId: patientId);
                 } else if (state is BookingCubitError) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text(state.errormessage)),
@@ -99,11 +101,12 @@ class _UpdateBookingPageState extends State<UpdateBookingPage> {
 
                     for (var slot in state.timeslots) {
                       if (availableSlots.containsKey(slot.day)) {
-                        availableSlots[slot.day]!.add(slot.formattedTime);
+                        availableSlots[slot.day]!.add(slot.time);
                       } else {
-                        availableSlots[slot.day] = [slot.formattedTime];
+                        availableSlots[slot.day] = [slot.time];
                       }
-                      allTimes.add(slot.formattedTime);
+                      allTimes.add(slot.time);
+                      print("######Slot Time: ${slot.time}");
                     }
                   });
                 }
