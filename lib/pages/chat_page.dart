@@ -95,9 +95,11 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
+    double heigth = MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: AppTheme.green,
+        backgroundColor: Color.fromARGB(255, 109, 201, 169),
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios, color: AppTheme.white),
@@ -110,12 +112,17 @@ class _ChatScreenState extends State<ChatScreen> {
             }
           },
         ),
-        title: Text(
-          doctorName,
-          style: Theme.of(context)
-              .textTheme
-              .titleLarge
-              ?.copyWith(color: AppTheme.white, fontWeight: FontWeight.w600),
+        title: Column(
+          children: [
+            SizedBox(
+              height: heigth * 0.01,
+            ),
+            Text(
+              doctorName,
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                  color: AppTheme.white, fontWeight: FontWeight.w600),
+            ),
+          ],
         ),
         centerTitle: true,
       ),

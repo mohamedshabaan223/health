@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:health_app/app_theme.dart';
-import 'package:health_app/pages/home_screen.dart';
+import 'package:health_app/pages/home_screen_patient.dart';
 
 class payment_success extends StatelessWidget {
   static const String id = "success_screen";
@@ -36,7 +36,7 @@ class payment_success extends StatelessWidget {
                 backgroundColor: AppTheme.white,
               ),
               onPressed: () =>
-                  Navigator.pushReplacementNamed(context, HomeScreen.id),
+                  Navigator.pushReplacementNamed(context, HomeScreenPatient.id),
               child: const Text('Back to Home',
                   style: TextStyle(color: AppTheme.green, fontSize: 20)),
             ),

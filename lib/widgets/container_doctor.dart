@@ -100,6 +100,21 @@ class _ContainerDoctorState extends State<ContainerDoctor> {
                         ),
                       ],
                     ),
+                    const SizedBox(height: 5),
+                    Row(
+                      children: [
+                        const Icon(Icons.price_change_outlined,
+                            color: AppTheme.green3, size: 18),
+                        const SizedBox(width: 5),
+                        Text(
+                          '200 EGP',
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleSmall
+                              ?.copyWith(fontSize: 14, color: Colors.grey),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
               ),

@@ -31,11 +31,11 @@ class _DefaultTextformfieldState extends State<DefaultTextformfield> {
         if (value!.isEmpty) {
           return 'Field is required';
         }
-        if (widget.isPassword) {
-          if (value.length < 6) {
-            return 'Password must be at least 6 characters';
-          }
-        }
+        // if (widget.isPassword) {
+        //   if (value.length < 6) {
+        //     return 'Password must be at least 6 characters';
+        //   }
+        // }
       },
       style: const TextStyle(
         color: Colors.green,

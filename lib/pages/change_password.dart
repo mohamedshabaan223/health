@@ -4,7 +4,7 @@ import 'package:health_app/app_theme.dart';
 import 'package:health_app/cache/cache_helper.dart';
 import 'package:health_app/cubits/profile_cubit/profile_cubit.dart';
 import 'package:health_app/cubits/profile_cubit/profile_state.dart';
-import 'package:health_app/pages/home_screen.dart';
+import 'package:health_app/pages/home_screen_patient.dart';
 import 'package:health_app/widgets/update_text_field.dart';
 
 class ChangePassword extends StatelessWidget {
@@ -58,7 +58,8 @@ class ChangePassword extends StatelessWidget {
                       const SnackBar(
                           content: Text("تم تغيير كلمة المرور بنجاح")),
                     );
-                    Navigator.pushReplacementNamed(context, HomeScreen.id);
+                    Navigator.pushReplacementNamed(
+                        context, HomeScreenPatient.id);
                   } else if (state is ChangePasswordFailure) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(content: Text(state.errorMessage)),

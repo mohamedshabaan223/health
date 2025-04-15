@@ -8,6 +8,7 @@ import 'package:health_app/core/api/end_points.dart';
 import 'package:health_app/core/errors/exceptions.dart';
 import 'package:health_app/models/register_model.dart';
 import 'package:health_app/models/sign_in_model.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:meta/meta.dart';
 
 part 'auth_state.dart';
@@ -44,6 +45,8 @@ class AuthCubit extends Cubit<AuthState> {
       );
 
       user = SignInModel.fromJson(response);
+      final decodedToken = JwtDecoder.decode(user!.token.result);
+      await CacheHelper().saveData(key: "role", value: decodedToken["role"]);
       await CacheHelper()
           .saveData(key: ApiKey.token, value: user!.token.result);
       await CacheHelper().saveData(key: "id", value: user!.id);

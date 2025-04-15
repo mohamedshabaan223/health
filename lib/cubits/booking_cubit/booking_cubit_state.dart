@@ -39,6 +39,12 @@ final class BookingCubitGetAllSuccess extends BookingCubitState {
   BookingCubitGetAllSuccess(this.bookings);
 }
 
+final class BookingCubitGetAllAppointmentSuccess extends BookingCubitState {
+  final List<AllAppoinementModel> bookings;
+
+  BookingCubitGetAllAppointmentSuccess(this.bookings);
+}
+
 final class BookingCubitGetAllError extends BookingCubitState {
   final String errormessage;
 

@@ -53,10 +53,7 @@ class SendMessage extends StatelessWidget {
                   ),
                   child: Text(
                     formattedMessage,
-                    style: Theme.of(context)
-                        .textTheme
-                        .titleSmall
-                        ?.copyWith(fontSize: 16),
+                    style: const TextStyle(color: AppTheme.black, fontSize: 16),
                   ),
                 ),
               if (imageUrl != null && imageUrl!.isNotEmpty)
@@ -94,7 +91,7 @@ class SendMessage extends StatelessWidget {
                 style: Theme.of(context)
                     .textTheme
                     .bodySmall
-                    ?.copyWith(color: AppTheme.green3, fontSize: 12),
+                    ?.copyWith(color: AppTheme.black, fontSize: 12),
               ),
             ],
           ),

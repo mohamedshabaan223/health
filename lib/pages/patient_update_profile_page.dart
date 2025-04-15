@@ -5,14 +5,14 @@ import 'package:health_app/cache/cache_helper.dart';
 import 'package:health_app/cubits/profile_cubit/profile_state.dart';
 import 'package:health_app/app_theme.dart';
 import 'package:health_app/cubits/profile_cubit/profile_cubit.dart';
-import 'package:health_app/pages/profile_page.dart';
+import 'package:health_app/pages/patient_profile_page.dart';
 import 'package:health_app/widgets/container_icon.dart';
 import 'package:health_app/widgets/update_text_field.dart';
 
-class UpdateProfile extends StatelessWidget {
+class PatientUpdateProfile extends StatelessWidget {
   static const String id = "/update_profile";
 
-  const UpdateProfile({super.key});
+  const PatientUpdateProfile({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -45,8 +45,8 @@ class UpdateProfile extends StatelessWidget {
                           fontWeight: FontWeight.w600),
                     ),
                     ContainerIcon(
-                      onTap: () =>
-                          Navigator.of(context).pushNamed(UpdateProfile.id),
+                      onTap: () => Navigator.of(context)
+                          .pushNamed(PatientUpdateProfile.id),
                       iconName: Icons.settings,
                       containerColor: AppTheme.green,
                       iconColor: AppTheme.white,
@@ -148,7 +148,7 @@ class UpdateProfile extends StatelessWidget {
                 backgroundColor: AppTheme.green2),
           );
           Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (context) => const Profile()),
+            MaterialPageRoute(builder: (context) => const ProfilePatient()),
             (route) => false,
           );
         } else if (state is UpdateProfileFailure) {

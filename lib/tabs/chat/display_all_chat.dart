@@ -8,27 +8,79 @@ import 'package:health_app/cubits/chat_cubit/chat_cubit.dart';
 import 'package:health_app/cubits/chat_cubit/chat_state.dart';
 import 'package:health_app/models/get_all_chats.dart';
 import 'package:health_app/pages/chat_page.dart';
+import 'package:intl/intl.dart';
 
-class DisplayAllChat extends StatelessWidget {
+class DisplayAllChat extends StatefulWidget {
   static const routeName = '/display-all-chat';
+
   const DisplayAllChat({super.key});
 
   @override
+  State<DisplayAllChat> createState() => _DisplayAllChatState();
+}
+
+class _DisplayAllChatState extends State<DisplayAllChat> {
+  bool _isSearching = false;
+  final TextEditingController _searchController = TextEditingController();
+  List<ChatSummary> _filteredChats = [];
+  List<ChatSummary> _allChats = [];
+
+  @override
   Widget build(BuildContext context) {
+    double heigth = MediaQuery.of(context).size.height;
     final int userId = CacheHelper().getData(key: "id");
-    const String userType = 'Patient';
+    final String role = CacheHelper().getData(key: "role");
+    String userType = role == 'Patient' ? 'Patient' : 'Doctor';
 
     return BlocProvider(
       create: (context) => ChatCubit(DioConsumer(dio: Dio()))
         ..fetchChatList(userId: userId, userType: userType),
       child: Scaffold(
         appBar: AppBar(
-          title: const Column(
-            children: [
-              SizedBox(height: 15),
-              Text('All Chats'),
-            ],
-          ),
+          automaticallyImplyLeading: false,
+          title: _isSearching
+              ? TextField(
+                  controller: _searchController,
+                  autofocus: true,
+                  decoration: const InputDecoration(
+                    hintText: "Search...",
+                    border: InputBorder.none,
+                  ),
+                  onChanged: (value) {
+                    setState(() {
+                      _filteredChats = _allChats
+                          .where((chat) => chat.otherUserName
+                              .toLowerCase()
+                              .contains(value.toLowerCase()))
+                          .toList();
+                    });
+                  },
+                )
+              : Column(
+                  children: [
+                    SizedBox(height: heigth * 0.02),
+                    const Text(
+                      'All Chats',
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+          centerTitle: true,
+          actions: [
+            IconButton(
+              icon: Icon(_isSearching ? Icons.close : Icons.search),
+              onPressed: () {
+                setState(() {
+                  if (_isSearching) {
+                    _searchController.clear();
+                    _filteredChats = _allChats;
+                  }
+                  _isSearching = !_isSearching;
+                });
+              },
+            ),
+          ],
         ),
         body: BlocListener<ChatCubit, ChatState>(
           listener: (context, state) {
@@ -39,160 +91,26 @@ class DisplayAllChat extends StatelessWidget {
             }
           },
           child: Padding(
-            padding: const EdgeInsets.only(top: 15.0),
+            padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 10),
             child: BlocBuilder<ChatCubit, ChatState>(
               builder: (context, state) {
                 if (state is ChatLoading) {
                   return const Center(child: CircularProgressIndicator());
                 } else if (state is ChatListSuccess) {
-                  if (state.chatList.isEmpty) {
-                    return Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SizedBox(
-                            height: 250,
-                            width: double.infinity,
-                            child: ColorFiltered(
-                              colorFilter: ColorFilter.mode(
-                                Colors.white.withOpacity(0.4),
-                                BlendMode.modulate,
-                              ),
-                              child: Image.asset(
-                                  "assets/images/undraw_new-message_qvv6.png"),
-                            ),
-                          ),
-                          const SizedBox(height: 40),
-                          const Text(
-                            "No chats available.",
-                            style:
-                                TextStyle(color: Colors.black54, fontSize: 18),
-                          ),
-                        ],
-                      ),
-                    );
+                  _allChats = state.chatList;
+                  _filteredChats = _searchController.text.isEmpty
+                      ? _allChats
+                      : _filteredChats;
+
+                  if (_filteredChats.isEmpty) {
+                    return _buildNoChatsView();
                   }
+
                   return ListView.builder(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    itemCount: state.chatList.length,
+                    itemCount: _filteredChats.length,
                     itemBuilder: (context, index) {
-                      final ChatSummary chat = state.chatList[index];
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 5,
-                          vertical: 2,
-                        ),
-                        child: Column(
-                          children: [
-                            Container(
-                              height: 130,
-                              width: double.infinity,
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 8,
-                                vertical: 11,
-                              ),
-                              decoration: BoxDecoration(
-                                color: AppTheme.gray,
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              child: GestureDetector(
-                                onTap: () {
-                                  Navigator.pushNamed(
-                                    context,
-                                    ChatScreen.id,
-                                    arguments: {
-                                      'doctorId': chat.otherUserId,
-                                      'patientId': userId,
-                                      'doctorName': chat.otherUserName,
-                                    },
-                                  ).then((_) {
-                                    context.read<ChatCubit>().fetchChatList(
-                                        userId: userId, userType: userType);
-                                  });
-                                },
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 12, horizontal: 16),
-                                  decoration: BoxDecoration(
-                                    color: AppTheme.gray,
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      const CircleAvatar(
-                                        radius: 45,
-                                        backgroundImage: AssetImage(
-                                            'assets/images/male.png'),
-                                      ),
-                                      const SizedBox(width: 12),
-                                      Expanded(
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              chat.otherUserName,
-                                              style: const TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 16),
-                                            ),
-                                            const SizedBox(height: 4),
-                                            chat.image != null &&
-                                                    chat.image!.isNotEmpty
-                                                ? Column(
-                                                    children: [
-                                                      const Icon(Icons.image,
-                                                          size: 20,
-                                                          color: Colors.grey),
-                                                      if (chat.message !=
-                                                              null &&
-                                                          chat.message!
-                                                              .isNotEmpty) ...[
-                                                        const SizedBox(
-                                                            height: 4),
-                                                        Text(
-                                                          chat.message!,
-                                                          maxLines: 1,
-                                                          overflow: TextOverflow
-                                                              .ellipsis,
-                                                          style:
-                                                              const TextStyle(
-                                                                  fontSize: 14,
-                                                                  color: Colors
-                                                                      .black87),
-                                                        ),
-                                                      ]
-                                                    ],
-                                                  )
-                                                : Text(
-                                                    chat.message ??
-                                                        "No message",
-                                                    maxLines: 1,
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                    style: const TextStyle(
-                                                        fontSize: 14,
-                                                        color: Colors.black87),
-                                                  ),
-                                          ],
-                                        ),
-                                      ),
-                                      const SizedBox(width: 10),
-                                      Text(
-                                        "${chat.sendTime.hour}:${chat.sendTime.minute}",
-                                        style: const TextStyle(
-                                            fontSize: 14,
-                                            color: Colors.black54),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 15),
-                          ],
-                        ),
-                      );
+                      return _buildChatItem(
+                          context, _filteredChats[index], userId, userType);
                     },
                   );
                 } else if (state is ChatFailure) {
@@ -200,6 +118,115 @@ class DisplayAllChat extends StatelessWidget {
                 }
                 return Container();
               },
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildNoChatsView() {
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          SizedBox(
+            height: 150,
+            width: 150,
+            child: Image.asset("assets/images/undraw_new-message_qvv6.png",
+                colorBlendMode: BlendMode.modulate,
+                color: Colors.white.withOpacity(0.4)),
+          ),
+          const SizedBox(height: 20),
+          const Text("No chats available.",
+              style: TextStyle(color: Colors.black54, fontSize: 16)),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildChatItem(
+      BuildContext context, ChatSummary chat, int userId, String userType) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 5),
+      child: GestureDetector(
+        onTap: () {
+          Navigator.pushNamed(
+            context,
+            ChatScreen.id,
+            arguments: {
+              'doctorId': chat.otherUserId,
+              'patientId': userId,
+              'doctorName': chat.otherUserName,
+            },
+          ).then((_) {
+            context
+                .read<ChatCubit>()
+                .fetchChatList(userId: userId, userType: userType);
+          });
+        },
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          child: Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: AppTheme.gray,
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Row(
+              children: [
+                const CircleAvatar(
+                  radius: 35,
+                  backgroundImage: AssetImage('assets/images/male.png'),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        chat.otherUserName,
+                        style: const TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 16),
+                      ),
+                      const SizedBox(height: 5),
+                      chat.image != null && chat.image!.isNotEmpty
+                          ? Row(
+                              children: [
+                                const Icon(Icons.image,
+                                    size: 20, color: Colors.grey),
+                                const SizedBox(width: 6),
+                                Expanded(
+                                  child: Text(
+                                    chat.message ?? "Image",
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(
+                                        fontSize: 14, color: Colors.black87),
+                                  ),
+                                ),
+                              ],
+                            )
+                          : Text(
+                              chat.message ?? "No message",
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                  fontSize: 12, color: Colors.black87),
+                            ),
+                    ],
+                  ),
+                ),
+                Column(
+                  children: [
+                    Text(
+                      DateFormat('hh:mm a').format(chat.sendTime),
+                      style:
+                          const TextStyle(fontSize: 12, color: AppTheme.green2),
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
         ),

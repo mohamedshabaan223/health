@@ -3,20 +3,23 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:health_app/app_theme.dart';
 import 'package:health_app/cache/cache_helper.dart';
 import 'package:health_app/cubits/booking_cubit/booking_cubit_cubit.dart';
+import 'package:health_app/widgets/ContainerCanceledAppoinementsDoctor.dart';
+import 'package:health_app/widgets/ContainerCompleteAppoinementsDoctor.dart';
 import 'package:health_app/widgets/container_cancelled.dart';
 import 'package:health_app/widgets/container_complete_doctor.dart';
-import 'package:health_app/widgets/container_upcomming.dart';
+import 'package:health_app/widgets/container_upcoming_appoinements_doctor.dart';
 
-class Calendar extends StatefulWidget {
+class AllAppoinementForDoctor extends StatefulWidget {
   static const String id = '/calendar';
 
-  const Calendar({super.key});
+  const AllAppoinementForDoctor({super.key});
 
   @override
-  State<Calendar> createState() => _CalendarState();
+  State<AllAppoinementForDoctor> createState() =>
+      _AllAppoinementForDoctorState();
 }
 
-class _CalendarState extends State<Calendar>
+class _AllAppoinementForDoctorState extends State<AllAppoinementForDoctor>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   int _selectedIndex = 0;
@@ -34,7 +37,9 @@ class _CalendarState extends State<Calendar>
     });
 
     final doctorId = CacheHelper().getData(key: 'id');
-    context.read<BookingCubit>().getDoctorBookings(doctorId: doctorId);
+    if (doctorId != null) {
+      context.read<BookingCubit>().getDoctorBookings(doctorId: doctorId);
+    }
   }
 
   @override
@@ -52,10 +57,8 @@ class _CalendarState extends State<Calendar>
           children: [
             SizedBox(height: 10),
             Text(
-              'All Appointment',
-              style: TextStyle(
-                fontSize: 22,
-              ),
+              'All Appointments',
+              style: TextStyle(fontSize: 22),
             ),
           ],
         ),
@@ -65,57 +68,9 @@ class _CalendarState extends State<Calendar>
           labelColor: AppTheme.white,
           unselectedLabelColor: AppTheme.green,
           tabs: [
-            Tab(
-              child: Container(
-                padding: const EdgeInsets.all(10.0),
-                decoration: BoxDecoration(
-                  color: _selectedIndex == 0 ? AppTheme.green : AppTheme.gray,
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Text(
-                  'Complete',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color:
-                        _selectedIndex == 0 ? AppTheme.white : AppTheme.green,
-                  ),
-                ),
-              ),
-            ),
-            Tab(
-              child: Container(
-                padding: const EdgeInsets.all(10.0),
-                decoration: BoxDecoration(
-                  color: _selectedIndex == 1 ? AppTheme.green : AppTheme.gray,
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Text(
-                  'Upcoming',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color:
-                        _selectedIndex == 1 ? AppTheme.white : AppTheme.green,
-                  ),
-                ),
-              ),
-            ),
-            Tab(
-              child: Container(
-                padding: const EdgeInsets.all(10.0),
-                decoration: BoxDecoration(
-                  color: _selectedIndex == 2 ? AppTheme.green : AppTheme.gray,
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Text(
-                  'Cancelled',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color:
-                        _selectedIndex == 2 ? AppTheme.white : AppTheme.green,
-                  ),
-                ),
-              ),
-            ),
+            _buildTab('Complete', 0),
+            _buildTab('Upcoming', 1),
+            _buildTab('Cancelled', 2),
           ],
         ),
       ),
@@ -125,7 +80,7 @@ class _CalendarState extends State<Calendar>
           controller: _tabController,
           children: [
             ListView.builder(
-              itemBuilder: (_, index) => const ContainerCompleteDoctor(),
+              itemBuilder: (_, index) => ContainerCompleteAppoinementsDoctor(),
             ),
             BlocBuilder<BookingCubit, BookingCubitState>(
               builder: (context, state) {
@@ -133,7 +88,7 @@ class _CalendarState extends State<Calendar>
                   return const Center(child: CircularProgressIndicator());
                 } else if (state is BookingCubitGetAllError) {
                   return Center(child: Text(state.errormessage));
-                } else if (state is BookingCubitGetAllSuccess) {
+                } else if (state is BookingCubitGetAllAppointmentSuccess) {
                   final bookings = state.bookings;
                   if (bookings.isEmpty) {
                     return const Center(child: Text('No data available'));
@@ -141,8 +96,8 @@ class _CalendarState extends State<Calendar>
                   return ListView.builder(
                     itemCount: bookings.length,
                     itemBuilder: (_, index) {
-                      return ContainerUpcoming(
-                        booking: bookings[index],
+                      return ContainerUpComingAppoinementsDoctor(
+                        allAppoinementModel: bookings[index],
                       );
                     },
                   );
@@ -151,9 +106,28 @@ class _CalendarState extends State<Calendar>
               },
             ),
             ListView.builder(
-              itemBuilder: (_, index) => const ContainerCancelled(),
+              itemBuilder: (_, index) => ContainerCanceledAppoinementsDoctor(),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTab(String title, int index) {
+    return Tab(
+      child: Container(
+        padding: const EdgeInsets.all(10.0),
+        decoration: BoxDecoration(
+          color: _selectedIndex == index ? AppTheme.green : AppTheme.gray,
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Text(
+          title,
+          style: TextStyle(
+            fontSize: 16,
+            color: _selectedIndex == index ? AppTheme.white : AppTheme.green,
+          ),
         ),
       ),
     );

@@ -28,17 +28,20 @@ import 'package:health_app/pages/doctor_female.dart';
 import 'package:health_app/pages/doctor_male.dart';
 import 'package:health_app/pages/doctor_page.dart';
 import 'package:health_app/pages/doctor_page_information.dart';
+import 'package:health_app/pages/doctor_profile_page.dart';
 import 'package:health_app/pages/doctor_rating.dart';
-import 'package:health_app/pages/home_page.dart';
-import 'package:health_app/pages/home_screen.dart';
+import 'package:health_app/pages/doctor_update_profile.dart';
+import 'package:health_app/pages/home_page_patient.dart';
+import 'package:health_app/pages/home_screen_doctor.dart';
+import 'package:health_app/pages/home_screen_patient.dart';
 import 'package:health_app/pages/login_page.dart';
-import 'package:health_app/pages/profile_page.dart';
+import 'package:health_app/pages/patient_profile_page.dart';
 import 'package:health_app/pages/register_page.dart';
 import 'package:health_app/pages/review_page.dart';
 import 'package:health_app/pages/start_screen.dart';
 import 'package:health_app/pages/payment_success_page.dart';
 import 'package:health_app/pages/update_booking_page.dart';
-import 'package:health_app/pages/update_profile_page.dart';
+import 'package:health_app/pages/patient_update_profile_page.dart';
 import 'package:health_app/pages/your_appoinment.dart';
 import 'package:health_app/simple_bloc_observer.dart';
 import 'package:health_app/tabs/chat/display_all_chat.dart';
@@ -60,12 +63,14 @@ void main() async {
 
   token = CacheHelper().getData(key: ApiKey.token);
   patientId = CacheHelper().getData(key: "id");
+  role = CacheHelper().getData(key: "role");
   if (token == null || patientId == null) {
     token = await CacheHelper().getData(key: ApiKey.token);
     patientId = await CacheHelper().getData(key: "id");
   }
-  print("Patient ID: $patientId");
+  print("User ID: $patientId");
   print("Token: $token");
+  print("Role: $role");
 
   runApp(MyApp());
 }
@@ -122,7 +127,7 @@ class MyApp extends StatelessWidget {
               StartScreen.id: (_) => const StartScreen(),
               RegisterPage.id: (_) => const RegisterPage(),
               CreateNewPasswordPage.id: (_) => CreateNewPasswordPage(),
-              HomePage.id: (_) => const HomePage(),
+              HomePagePatient.id: (_) => const HomePagePatient(),
               DoctorPage.routeName: (_) => const DoctorPage(),
               DoctorInformation.routeName: (_) => DoctorInformation(),
               Rating.routeName: (_) => const Rating(),
@@ -132,20 +137,23 @@ class MyApp extends StatelessWidget {
               AppointmentScreen.id: (_) => const AppointmentScreen(),
               YourAppoinment.id: (_) => const YourAppoinment(),
               Review.id: (_) => Review(),
-              HomeScreen.id: (_) => const HomeScreen(),
+              HomeScreenPatient.id: (_) => const HomeScreenPatient(),
+              HomeScreenDoctor.id: (_) => const HomeScreenDoctor(),
               CancelledReasonPage.id: (_) => CancelledReasonPage(),
               payment_success.id: (_) => payment_success(),
               SpecializationsPage.id: (_) => const SpecializationsPage(),
               ChatScreen.id: (_) => const ChatScreen(),
               AllDoctorsBasedOnSpecialization.id: (_) =>
                   const AllDoctorsBasedOnSpecialization(),
-              Profile.id: (_) => const Profile(),
-              UpdateProfile.id: (_) => const UpdateProfile(),
+              ProfilePatient.id: (_) => const ProfilePatient(),
+              ProfileDoctor.id: (_) => const ProfileDoctor(),
+              PatientUpdateProfile.id: (_) => const PatientUpdateProfile(),
               ChangePassword.id: (_) => const ChangePassword(),
               UpdateBookingPage.id: (_) => const UpdateBookingPage(),
               DisplayAllChat.routeName: (_) => const DisplayAllChat(),
+              DoctorUpdateProfile.id: (_) => const DoctorUpdateProfile(),
             },
-            initialRoute: token != null ? HomeScreen.id : StartScreen.id,
+            initialRoute: HomeScreenDoctor.id,
             theme: AppTheme.lightTheme,
             themeMode: ThemeMode.light,
           );
@@ -154,3 +162,8 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+// (token == null)
+//                 ? StartScreen.id
+//                 : (role == "Doctor"
+//                     ? HomeScreenDoctor.id
+//                     : HomeScreenPatient.id),

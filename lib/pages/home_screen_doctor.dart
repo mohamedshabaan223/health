@@ -1,25 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:health_app/app_theme.dart';
-import 'package:health_app/pages/home_page.dart';
-import 'package:health_app/tabs/calendar/calendar.dart';
+import 'package:health_app/pages/all_appoinements_for_doctor.dart';
+import 'package:health_app/pages/doctor_review.dart';
+import 'package:health_app/pages/home_page_doctor.dart';
 import 'package:health_app/tabs/chat/display_all_chat.dart';
 
-class HomeScreen extends StatefulWidget {
-  static const String id = '/home-screen';
+class HomeScreenDoctor extends StatefulWidget {
+  static const String id = '/home-screen-doctor';
 
-  const HomeScreen({super.key});
+  const HomeScreenDoctor({super.key});
 
   @override
-  State<HomeScreen> createState() => _MyWidgetState();
+  State<HomeScreenDoctor> createState() => _MyWidgetState();
 }
 
-class _MyWidgetState extends State<HomeScreen> {
+class _MyWidgetState extends State<HomeScreenDoctor> {
   int selectedIndex = 0;
 
   List<Widget> tabs = [
-    const HomePage(),
+    HomePageDoctor(),
     const DisplayAllChat(),
-    const Calendar(),
+    const AllAppoinementForDoctor(),
+    const DoctorReview(),
   ];
 
   @override
@@ -57,6 +59,10 @@ class _MyWidgetState extends State<HomeScreen> {
               BottomNavigationBarItem(
                 icon: Icon(Icons.calendar_month_outlined, size: 22),
                 label: 'Calendar',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.reviews_outlined, size: 22),
+                label: 'Reviews',
               ),
             ],
           ),

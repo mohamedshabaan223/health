@@ -7,20 +7,20 @@ import 'package:health_app/cubits/profile_cubit/profile_cubit.dart';
 import 'package:health_app/cubits/profile_cubit/profile_state.dart';
 import 'package:health_app/pages/change_password.dart';
 import 'package:health_app/pages/start_screen.dart';
-import 'package:health_app/pages/update_profile_page.dart';
+import 'package:health_app/pages/patient_update_profile_page.dart';
 import 'package:health_app/widgets/row_profile.dart';
 import 'package:health_app/widgets/show_logout.dart';
 
-class Profile extends StatefulWidget {
-  static const String id = "/profile";
+class ProfilePatient extends StatefulWidget {
+  static const String id = "/profile_patient";
 
-  const Profile({super.key});
+  const ProfilePatient({super.key});
 
   @override
-  State<Profile> createState() => _ProfileState();
+  State<ProfilePatient> createState() => _ProfilePatientState();
 }
 
-class _ProfileState extends State<Profile> {
+class _ProfilePatientState extends State<ProfilePatient> {
   int? userId;
   @override
   void initState() {
@@ -105,7 +105,8 @@ class _ProfileState extends State<Profile> {
                           right: 0,
                           child: InkWell(
                             onTap: () {
-                              Navigator.of(context).pushNamed(UpdateProfile.id);
+                              Navigator.of(context)
+                                  .pushNamed(PatientUpdateProfile.id);
                             },
                             child: Container(
                               width: 35,
@@ -139,7 +140,7 @@ class _ProfileState extends State<Profile> {
                   SizedBox(height: height * 0.06),
                   RowProfile(
                     onTap: () {
-                      Navigator.of(context).pushNamed(UpdateProfile.id);
+                      Navigator.of(context).pushNamed(PatientUpdateProfile.id);
                     },
                     label: 'Update Profile',
                     containerColor: AppTheme.gray,

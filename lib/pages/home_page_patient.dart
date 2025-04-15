@@ -11,7 +11,7 @@ import 'package:health_app/pages/all_doctors_basedOn_specialization.dart';
 import 'package:health_app/pages/doctor_favorite.dart';
 import 'package:health_app/pages/doctor_page.dart';
 import 'package:health_app/pages/doctor_page_information.dart';
-import 'package:health_app/pages/profile_page.dart';
+import 'package:health_app/pages/patient_profile_page.dart';
 import 'package:health_app/widgets/CustomSpecializationsContainer.dart';
 import 'package:health_app/widgets/card_of_doctor.dart';
 import 'package:health_app/widgets/custom_user_information.dart';
@@ -19,15 +19,15 @@ import 'package:health_app/widgets/doctors_and_favourite.dart';
 import 'package:health_app/widgets/search_field.dart';
 import 'package:health_app/widgets/top_icon_in_home_page.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
-  static const String id = '/home_page';
+class HomePagePatient extends StatefulWidget {
+  const HomePagePatient({super.key});
+  static const String id = '/home_page_patient';
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<HomePagePatient> createState() => _HomePagePatientState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePagePatientState extends State<HomePagePatient> {
   @override
   void initState() {
     super.initState();
@@ -58,7 +58,7 @@ class _HomePageState extends State<HomePage> {
                 SizedBox(width: width * 0.02),
                 TopIconInHomePage(
                   onPressed: () {
-                    Navigator.of(context).pushNamed(Profile.id);
+                    Navigator.of(context).pushNamed(ProfilePatient.id);
                   },
                   containerBackgroundColor: AppTheme.gray,
                   icons: const Icon(

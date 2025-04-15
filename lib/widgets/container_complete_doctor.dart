@@ -86,8 +86,8 @@ class _ContainerCompleteDoctorState extends State<ContainerCompleteDoctor> {
                             ],
                           ),
                         ),
-                        const SizedBox(
-                          width: 15,
+                        SizedBox(
+                          width: width * 0.28,
                         ),
                         Defaulticon(
                           onTap: () {
@@ -111,6 +111,9 @@ class _ContainerCompleteDoctorState extends State<ContainerCompleteDoctor> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
+              SizedBox(
+                width: width * 0.01,
+              ),
               InkWell(
                 onTap: () {
                   Navigator.of(context).pushNamed(AppointmentScreen.id);

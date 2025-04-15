@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:health_app/app_theme.dart';
 import 'package:health_app/cubits/auth_cubit/auth_cubit.dart';
-import 'package:health_app/pages/home_screen.dart';
+import 'package:health_app/pages/home_screen_patient.dart';
 import 'package:health_app/widgets/default_textbutton.dart';
 import 'package:health_app/widgets/default_textformfield.dart';
 import 'package:health_app/widgets/radio_buttom_for_users.dart';
@@ -61,8 +61,8 @@ class _RegisterPageState extends State<RegisterPage> {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Register Success')),
           );
-          Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (context) => HomeScreen()));
+          Navigator.pushReplacement(context,
+              MaterialPageRoute(builder: (context) => HomeScreenPatient()));
         } else if (state is RegisterFailure) {
           setState(() {
             isLoading = false;
