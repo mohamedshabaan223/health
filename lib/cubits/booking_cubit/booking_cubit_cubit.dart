@@ -4,7 +4,8 @@ import 'package:dio/dio.dart';
 import 'package:health_app/core/api/api_consumer.dart';
 import 'package:health_app/core/errors/exceptions.dart';
 import 'package:health_app/models/Appointment_display_doctor_data.dart';
-import 'package:health_app/models/all_appoinement_model.dart';
+import 'package:health_app/models/all_appointment_paient_for_doctor.dart';
+import 'package:health_app/models/booking_details_model.dart';
 import 'package:health_app/models/booking_model.dart';
 import 'package:health_app/models/get_all_booking_model.dart';
 import 'package:meta/meta.dart';
@@ -171,35 +172,64 @@ class BookingCubit extends Cubit<BookingCubitState> {
     }
   }
 
-  Future<void> getDoctorBookings({required int doctorId}) async {
+  Future<void> getDoctorCompletedBookings({required int doctorId}) async {
     try {
-      emit(BookingCubitLoading());
+      emit(BookingDoctorCompletedLoading());
 
       final response = await api.get(
-        'http://10.0.2.2:5282/Api/V1/Notification/GetNotification?receiverId=$doctorId',
+        'http://10.0.2.2:5282/api/Booking/doctor/$doctorId/completed-bookings',
       );
 
       final dynamic decodedResponse =
           response is String ? jsonDecode(response) : response;
 
       if (decodedResponse is List) {
-        final List<AllAppoinementModel> bookings = decodedResponse
-            .map((json) =>
-                AllAppoinementModel.fromJson(json as Map<String, dynamic>))
+        final List<AllAppointmentsPatientForDoctor> bookings = decodedResponse
+            .map((json) => AllAppointmentsPatientForDoctor.fromJson(
+                json as Map<String, dynamic>))
             .toList();
 
         if (bookings.isEmpty) {
-          emit(BookingCubitGetAllError("No bookings found for this doctor."));
+          emit(BookingDoctorCompletedError("No completed bookings found."));
         } else {
-          emit(BookingCubitGetAllAppointmentSuccess(bookings));
+          emit(BookingDoctorCompletedSuccess(bookings));
         }
       } else {
-        emit(BookingCubitGetAllError("Unexpected response format."));
+        emit(BookingDoctorCompletedError("Unexpected response format."));
       }
     } on FormatException {
-      emit(BookingCubitGetAllError("Invalid response format"));
+      emit(BookingDoctorCompletedError("Invalid response format."));
+    } on ServerException catch (e) {
+      emit(BookingDoctorCompletedError(e.errorModel.errorMessage));
     } catch (e) {
-      emit(BookingCubitGetAllError("Unexpected error occurred: $e"));
+      emit(BookingDoctorCompletedError("Unexpected error occurred: $e"));
+    }
+  }
+
+  Future<void> getBookingDetails({required int bookingId}) async {
+    try {
+      emit(BookingCubitLoading());
+
+      final response = await api.get(
+        'http://10.0.2.2:5282/api/Booking/Api/V1/Booking/GetBookingDetails?bookingId=$bookingId',
+      );
+
+      final dynamic decodedResponse =
+          response is String ? jsonDecode(response) : response;
+
+      if (decodedResponse is Map<String, dynamic>) {
+        final bookingDetails = BookingDetailsModel.fromJson(decodedResponse);
+
+        emit(BookingCubitBookingDetailsSuccess(bookingDetails));
+      } else {
+        emit(BookingCubitError("Unexpected response format"));
+      }
+    } on FormatException catch (e) {
+      emit(BookingCubitError("Invalid response format"));
+    } on ServerException catch (e) {
+      emit(BookingCubitError(e.errorModel.errorMessage));
+    } catch (e) {
+      emit(BookingCubitError("Unexpected error occurred: $e"));
     }
   }
 

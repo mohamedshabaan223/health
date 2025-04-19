@@ -66,7 +66,7 @@ class _DoctorUpdateProfileState extends State<DoctorUpdateProfile> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 5),
+              const SizedBox(height: 15),
               const Center(child: DoctorImageProfile()),
               const SizedBox(height: 25),
               _buildLabel('Years of experience'),
@@ -181,7 +181,24 @@ class _DoctorUpdateProfileState extends State<DoctorUpdateProfile> {
                   );
                 }),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 15),
+              Row(
+                children: [
+                  Icon(Icons.info_outline,
+                      color: Colors.red.shade600, size: 20),
+                  const SizedBox(width: 6),
+                  Expanded(
+                    child: Text(
+                      'To delete a slot, long-press on it.',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.red.shade600,
+                        fontStyle: FontStyle.italic,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ],
           ),
         ),

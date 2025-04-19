@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:health_app/another_navigator_observer.dart';
 import 'package:health_app/app_theme.dart';
 import 'package:health_app/cache/cache_helper.dart';
 import 'package:health_app/constants.dart';
@@ -18,6 +19,7 @@ import 'package:health_app/cubits/specializations_cubit/specializations_cubit.da
 import 'package:health_app/navigator_observar.dart';
 import 'package:health_app/pages/Specializations_page.dart';
 import 'package:health_app/pages/all_doctors_basedOn_specialization.dart';
+import 'package:health_app/pages/appointment_details_doctor.dart';
 import 'package:health_app/pages/appointment_screen.dart';
 import 'package:health_app/pages/cancelled_reason_page.dart';
 import 'package:health_app/pages/change_password.dart';
@@ -90,6 +92,10 @@ class MyApp extends StatelessWidget {
           create: (context) => DoctorCubit(dioConsumer)
             ..getAllDoctorsByOrderType(orderType: 'ASC'),
         ),
+        BlocProvider<BookingCubit>(
+            create: (context) => BookingCubit(dioConsumer)
+              ..getDoctorCompletedBookings(
+                  doctorId: CacheHelper().getData(key: "id"))),
         BlocProvider(
           create: (context) => BookingCubit(dioConsumer),
         ),
@@ -119,6 +125,16 @@ class MyApp extends StatelessWidget {
               MyNavigatorObserver(
                 onPopNext: () {
                   doctorCubit.getAllDoctorsByOrderType(orderType: 'ASC');
+                },
+              ),
+              AnotherNavigatorObserver(
+                onPopNext: () {
+                  final doctorId = CacheHelper().getData(key: 'id');
+                  if (doctorId != null) {
+                    context
+                        .read<BookingCubit>()
+                        .getDoctorCompletedBookings(doctorId: doctorId);
+                  }
                 },
               ),
             ],
@@ -152,6 +168,8 @@ class MyApp extends StatelessWidget {
               UpdateBookingPage.id: (_) => const UpdateBookingPage(),
               DisplayAllChat.routeName: (_) => const DisplayAllChat(),
               DoctorUpdateProfile.id: (_) => const DoctorUpdateProfile(),
+              AppointementPatientDetails.routeName: (_) =>
+                  const AppointementPatientDetails(),
             },
             initialRoute: HomeScreenDoctor.id,
             theme: AppTheme.lightTheme,

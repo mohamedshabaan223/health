@@ -34,7 +34,7 @@ class _CalendarState extends State<Calendar>
     });
 
     final doctorId = CacheHelper().getData(key: 'id');
-    context.read<BookingCubit>().getDoctorBookings(doctorId: doctorId);
+    // context.read<BookingCubit>().getDoctorBookings(doctorId: doctorId);
   }
 
   @override

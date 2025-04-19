@@ -19,7 +19,7 @@ final class BookingCubitError extends BookingCubitState {
   BookingCubitError(this.errormessage);
 }
 
-class BookingCubitDataLoading extends BookingCubitState {}
+final class BookingCubitDataLoading extends BookingCubitState {}
 
 class BookingCubitDataSuccess extends BookingCubitState {
   final BookingResponse bookingResponse;
@@ -31,18 +31,10 @@ class BookingCubitDataError extends BookingCubitState {
   BookingCubitDataError(this.message);
 }
 
-final class BookingCubitGetAllLoading extends BookingCubitState {}
-
 final class BookingCubitGetAllSuccess extends BookingCubitState {
   final List<GetAllBooking> bookings;
 
   BookingCubitGetAllSuccess(this.bookings);
-}
-
-final class BookingCubitGetAllAppointmentSuccess extends BookingCubitState {
-  final List<AllAppoinementModel> bookings;
-
-  BookingCubitGetAllAppointmentSuccess(this.bookings);
 }
 
 final class BookingCubitGetAllError extends BookingCubitState {
@@ -55,4 +47,23 @@ class BookingCubitSuccessUpdate extends BookingCubitState {
   final String message;
 
   BookingCubitSuccessUpdate(this.message);
+}
+
+class BookingDoctorCompletedLoading extends BookingCubitState {}
+
+class BookingDoctorCompletedSuccess extends BookingCubitState {
+  final List<AllAppointmentsPatientForDoctor> bookings;
+
+  BookingDoctorCompletedSuccess(this.bookings);
+}
+
+class BookingDoctorCompletedError extends BookingCubitState {
+  final String message;
+
+  BookingDoctorCompletedError(this.message);
+}
+
+class BookingCubitBookingDetailsSuccess extends BookingCubitState {
+  final BookingDetailsModel bookingDetails;
+  BookingCubitBookingDetailsSuccess(this.bookingDetails);
 }

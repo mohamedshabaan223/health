@@ -20,21 +20,18 @@ class AppointmentDisplayDoctorData {
     );
   }
 
-  /// دالة لضمان أن `time` يكون بصيغة HH:mm:ss دائمًا
   static String _normalizeTime(String time) {
-    // لا تقم بتعديل الوقت إذا كان "00:00"
     if (time == "00:00") {
-      return time; // احتفظ بالقيمة الأصلية
+      return time;
     }
 
     List<String> parts = time.split(':');
     if (parts.length == 2) {
-      return "$time:00"; // إضافة الثواني إذا لم تكن موجودة
+      return "$time:00";
     }
     return time;
   }
 
-  /// Convert `day` and `time` to `DateTime`
   DateTime? get dateTime {
     try {
       if (day.isEmpty || time.isEmpty) return null;
@@ -55,7 +52,6 @@ class AppointmentDisplayDoctorData {
     }
   }
 
-  /// Format `day` as `yyyy-MM-dd`
   String get formattedDay {
     try {
       if (day.isEmpty) return "Invalid Date";
@@ -66,7 +62,6 @@ class AppointmentDisplayDoctorData {
     }
   }
 
-  /// Get the weekday name (e.g., Monday, Tuesday)
   String get weekday {
     try {
       if (day.isEmpty) return "Invalid Date";
@@ -77,7 +72,6 @@ class AppointmentDisplayDoctorData {
     }
   }
 
-  /// Format `time` as `HH:mm`
   String get formattedTime {
     try {
       List<String> parts = time.split(':');
@@ -90,7 +84,6 @@ class AppointmentDisplayDoctorData {
     }
   }
 
-  /// Format `time` as `HH:mm:ss`
   String get formattedTimeWithSeconds {
     try {
       return _normalizeTime(time);
