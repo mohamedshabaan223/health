@@ -233,6 +233,27 @@ class BookingCubit extends Cubit<BookingCubitState> {
     }
   }
 
+  Future<void> cancelAppointment({required int id}) async {
+    try {
+      emit(BookingCubitLoading());
+      final response = await api.delete(
+        'http://10.0.2.2:5282/api/Booking/Api/V1/Booking/CancelAppointment?id=$id',
+      );
+      final dynamic decoded =
+          response is String ? jsonDecode(response) : response;
+      if (decoded is Map<String, dynamic> && decoded.containsKey('message')) {
+        final message = decoded['message'] as String;
+        emit(BookingCubitCancelSuccess(message));
+      } else {
+        emit(BookingCubitError('Unexpected response format'));
+      }
+    } on ServerException catch (e) {
+      emit(BookingCubitError(e.errorModel.errorMessage));
+    } catch (e) {
+      emit(BookingCubitError('Unexpected error occurred: $e'));
+    }
+  }
+
   void resetState() {
     emit(BookingCubitInitial());
   }

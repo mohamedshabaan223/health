@@ -20,11 +20,6 @@ class _AppointementPatientDetailsState
   String? patientName;
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     final args = ModalRoute.of(context)?.settings.arguments as Map?;
@@ -32,7 +27,6 @@ class _AppointementPatientDetailsState
     if (args != null) {
       bookingId = args['bookingId'] as int?;
       patientName = args['patientName'] as String?;
-      // patientPhoto = args['patientPhoto'] as String?;
 
       if (bookingId != null) {
         context.read<BookingCubit>().getBookingDetails(bookingId: bookingId!);
@@ -51,19 +45,15 @@ class _AppointementPatientDetailsState
           children: [
             IconButton(
               onPressed: () {
-                BlocProvider.of<BookingCubit>(context)
-                    .getDoctorCompletedBookings(
-                        doctorId: CacheHelper().getData(key: 'id'));
+                context.read<BookingCubit>().getDoctorCompletedBookings(
+                      doctorId: CacheHelper().getData(key: 'id'),
+                    );
                 Navigator.pop(context);
               },
               icon: const Icon(Icons.arrow_back_ios,
                   color: Colors.white, size: 25),
             ),
             const Spacer(),
-            const CircleAvatar(
-              radius: 23,
-              backgroundImage: AssetImage('assets/images/doctor_image.png'),
-            ),
           ],
         ),
         title: Column(
@@ -83,127 +73,153 @@ class _AppointementPatientDetailsState
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: BlocBuilder<BookingCubit, BookingCubitState>(
-          builder: (context, state) {
-            if (state is BookingCubitLoading) {
-              return const Center(child: CircularProgressIndicator());
+        child: BlocListener<BookingCubit, BookingCubitState>(
+          listener: (context, state) {
+            if (state is BookingCubitCancelSuccess) {
+              // Pop after frame to avoid deactivated widget error
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                if (mounted) Navigator.pop(context, true);
+              });
             } else if (state is BookingCubitError) {
-              return Center(child: Text(state.errormessage));
-            } else if (state is BookingCubitBookingDetailsSuccess) {
-              final bookingDetails = state.bookingDetails;
-
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: 10),
-                  Container(
-                    alignment: Alignment.center,
-                    width: double.infinity,
-                    height: 35,
-                    decoration: BoxDecoration(
-                      color: AppTheme.gray,
-                      borderRadius: BorderRadius.circular(25),
-                    ),
-                    child: const Text(
-                      'Appointment Details',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
-                        color: AppTheme.black,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  RowDetails(label: 'Date: ', details: bookingDetails.day),
-                  const SizedBox(height: 5),
-                  RowDetails(label: 'Time: ', details: bookingDetails.time),
-                  const SizedBox(height: 15),
-                  Container(
-                    alignment: Alignment.center,
-                    width: double.infinity,
-                    height: 35,
-                    decoration: BoxDecoration(
-                      color: AppTheme.gray,
-                      borderRadius: BorderRadius.circular(25),
-                    ),
-                    child: const Text(
-                      'Patient Details',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
-                        color: AppTheme.black,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  RowDetails(
-                      label: 'Full Name: ',
-                      details: bookingDetails.patientName),
-                  const SizedBox(height: 8),
-                  RowDetails(
-                      label: 'Age: ', details: '${bookingDetails.age} Years'),
-                  const SizedBox(height: 8),
-                  RowDetails(label: 'Gender: ', details: bookingDetails.gender),
-                  const SizedBox(height: 8),
-                  RowDetails(
-                      label: 'Phone no: ', details: bookingDetails.phone),
-                  const SizedBox(height: 8),
-                  Padding(
-                    padding:
-                        const EdgeInsets.symmetric(vertical: 6, horizontal: 14),
-                    child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Problem Description:',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                              color: AppTheme.black,
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          Text(bookingDetails.problemDescription,
-                              style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w400,
-                                color: AppTheme.green2,
-                              ))
-                        ]),
-                  ),
-                  const SizedBox(height: 30),
-                  Center(
-                    child: GestureDetector(
-                      onTap: () {
-                        // Implement cancel appointment logic here
-                        _cancelAppointment(context);
-                      },
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: AppTheme.gray,
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                        width: 250,
-                        padding: const EdgeInsets.symmetric(vertical: 14),
-                        child: const Center(
-                          child: Text(
-                            'Cancel Appointment',
-                            style: TextStyle(
-                              color: AppTheme.green2,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(state.errormessage)),
               );
-            } else {
-              return const Center(child: Text("No data to show."));
             }
           },
+          child: BlocBuilder<BookingCubit, BookingCubitState>(
+            builder: (context, state) {
+              if (state is BookingCubitLoading) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (state is BookingCubitError) {
+                return Center(child: Text(state.errormessage));
+              } else if (state is BookingCubitBookingDetailsSuccess) {
+                final bookingDetails = state.bookingDetails;
+
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 10),
+                    Container(
+                      alignment: Alignment.center,
+                      width: double.infinity,
+                      height: 35,
+                      decoration: BoxDecoration(
+                        color: AppTheme.gray,
+                        borderRadius: BorderRadius.circular(25),
+                      ),
+                      child: const Text(
+                        'Appointment Details',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                          color: AppTheme.black,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    RowDetails(label: 'Date: ', details: bookingDetails.day),
+                    const SizedBox(height: 5),
+                    RowDetails(label: 'Time: ', details: bookingDetails.time),
+                    const SizedBox(height: 15),
+                    Container(
+                      alignment: Alignment.center,
+                      width: double.infinity,
+                      height: 35,
+                      decoration: BoxDecoration(
+                        color: AppTheme.gray,
+                        borderRadius: BorderRadius.circular(25),
+                      ),
+                      child: const Text(
+                        'Patient Details',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                          color: AppTheme.black,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    RowDetails(
+                        label: 'Full Name: ',
+                        details: bookingDetails.patientName),
+                    const SizedBox(height: 8),
+                    RowDetails(
+                        label: 'Age: ', details: '${bookingDetails.age} Years'),
+                    const SizedBox(height: 8),
+                    RowDetails(
+                        label: 'Gender: ', details: bookingDetails.gender),
+                    const SizedBox(height: 8),
+                    RowDetails(
+                        label: 'Phone no: ', details: bookingDetails.phone),
+                    const SizedBox(height: 8),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 6, horizontal: 14),
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              'Problem Description:',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                color: AppTheme.black,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            Text(bookingDetails.problemDescription,
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w400,
+                                  color: AppTheme.green2,
+                                ))
+                          ]),
+                    ),
+                    const SizedBox(height: 30),
+                    Center(
+                      child: GestureDetector(
+                        onTap: () => _cancelAppointment(context),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: AppTheme.gray,
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          width: 250,
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          child: const Center(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  '!',
+                                  style: TextStyle(
+                                    color: Colors.red,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                SizedBox(width: 10),
+                                Text(
+                                  'Cancel Appointment',
+                                  style: TextStyle(
+                                    color: AppTheme.green2,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+              } else {
+                return const Center(child: Text("No data to show."));
+              }
+            },
+          ),
         ),
       ),
     );
@@ -220,18 +236,17 @@ class _AppointementPatientDetailsState
           actions: <Widget>[
             TextButton(
               child: const Text('No'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
+              onPressed: () => Navigator.of(context).pop(),
             ),
             TextButton(
               child: const Text('Yes'),
               onPressed: () {
-                Navigator.of(context).pop(true);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                      content: Text('Appointment has been cancelled')),
-                );
+                Navigator.of(context).pop();
+                if (bookingId != null) {
+                  context
+                      .read<BookingCubit>()
+                      .cancelAppointment(id: bookingId!);
+                }
               },
             ),
           ],

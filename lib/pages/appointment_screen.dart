@@ -311,7 +311,8 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
   Widget _buildProblemDescriptionField() {
     return TextField(
       controller: problemController,
-      maxLines: 4,
+      maxLines: null,
+      keyboardType: TextInputType.multiline,
       decoration: InputDecoration(
         hintText: 'Describe your problem...',
         border: OutlineInputBorder(

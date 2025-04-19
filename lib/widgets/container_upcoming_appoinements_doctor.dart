@@ -31,7 +31,6 @@ class _ContainerUpComingAppoinementsDoctorState
           arguments: {
             'bookingId': widget.appointment.bookingId,
             'patientName': widget.appointment.patientName,
-            'patientPhoto': widget.appointment.patientPhoto,
           },
         ).then((result) {
           if (result == true) {
@@ -52,10 +51,10 @@ class _ContainerUpComingAppoinementsDoctorState
           borderRadius: BorderRadius.circular(17),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              blurRadius: 8,
+              color: Colors.black.withOpacity(0.13),
+              blurRadius: 6,
               spreadRadius: 2,
-              offset: const Offset(0, 4),
+              offset: const Offset(0, 2),
             ),
           ],
         ),

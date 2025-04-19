@@ -67,3 +67,8 @@ class BookingCubitBookingDetailsSuccess extends BookingCubitState {
   final BookingDetailsModel bookingDetails;
   BookingCubitBookingDetailsSuccess(this.bookingDetails);
 }
+
+class BookingCubitCancelSuccess extends BookingCubitState {
+  final String message;
+  BookingCubitCancelSuccess(this.message);
+}

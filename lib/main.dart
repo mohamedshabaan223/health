@@ -171,7 +171,11 @@ class MyApp extends StatelessWidget {
               AppointementPatientDetails.routeName: (_) =>
                   const AppointementPatientDetails(),
             },
-            initialRoute: HomeScreenDoctor.id,
+            initialRoute: (token == null)
+                ? StartScreen.id
+                : (role == "Doctor"
+                    ? HomeScreenDoctor.id
+                    : HomeScreenPatient.id),
             theme: AppTheme.lightTheme,
             themeMode: ThemeMode.light,
           );
@@ -180,8 +184,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-// (token == null)
-//                 ? StartScreen.id
-//                 : (role == "Doctor"
-//                     ? HomeScreenDoctor.id
-//                     : HomeScreenPatient.id),

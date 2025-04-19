@@ -148,7 +148,9 @@ class _DisplayAllChatState extends State<DisplayAllChat> {
   Widget _buildChatItem(
       BuildContext context, ChatSummary chat, int userId, String userType) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 5),
+      padding: const EdgeInsets.symmetric(
+        vertical: 7,
+      ),
       child: GestureDetector(
         onTap: () {
           Navigator.pushNamed(
@@ -172,6 +174,13 @@ class _DisplayAllChatState extends State<DisplayAllChat> {
             decoration: BoxDecoration(
               color: AppTheme.gray,
               borderRadius: BorderRadius.circular(20),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.13),
+                  blurRadius: 6,
+                  offset: const Offset(0, 2),
+                ),
+              ],
             ),
             child: Row(
               children: [

@@ -105,12 +105,6 @@ class YourAppoinment extends StatelessWidget {
                         SizedBox(
                           height: height * 0.02,
                         ),
-                        const Row(
-                          children: [],
-                        ),
-                        SizedBox(
-                          height: height * 0.04,
-                        ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -285,13 +279,21 @@ class YourAppoinment extends StatelessWidget {
                         SizedBox(
                           height: height * 0.02,
                         ),
-                        Row(
-                          children: [
-                            Text(
-                              problemDescription,
-                              style: const TextStyle(fontSize: 14),
-                            ),
-                          ],
+                        Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            color: AppTheme.green3.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(
+                                color: AppTheme.green.withOpacity(0.3)),
+                          ),
+                          child: Text(
+                            problemDescription,
+                            style: const TextStyle(fontSize: 14),
+                            softWrap: true,
+                            textAlign: TextAlign.start,
+                          ),
                         ),
                         SizedBox(
                           height: height * 0.08,

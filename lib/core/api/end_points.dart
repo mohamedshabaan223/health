@@ -7,7 +7,7 @@ class EndPoints {
   static String paymentConfirm = "Payment/payment-success";
   static String allSpecialities = "V1/Specialization/GetAllSpecializations";
   static String getAllMessages = "V1/Chat/GetMessage";
-  static String sendMessage = "V1/Chat/SaveMessage";
+  static String sendMessage = "V1/Chat/SendMessage";
   static String getUserProfile = "V1/Profile/GetUserProfile";
   static String updateUserProfile = "V1/Profile/UpdateUserProfile";
   static String getAllChats = "V1/Chat/GetAllChats";
