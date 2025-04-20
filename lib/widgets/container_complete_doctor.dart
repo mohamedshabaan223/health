@@ -136,7 +136,7 @@ class _ContainerCompleteDoctorState extends State<ContainerCompleteDoctor> {
               ),
               InkWell(
                 onTap: () {
-                  Navigator.of(context).pushNamed(Review.id);
+                  Navigator.of(context).pushNamed(ReviewPage.id);
                 },
                 child: Container(
                   alignment: Alignment.center,

@@ -4,7 +4,6 @@ import 'package:health_app/app_theme.dart';
 import 'package:health_app/cache/cache_helper.dart';
 import 'package:health_app/cubits/booking_cubit/booking_cubit_cubit.dart';
 import 'package:health_app/widgets/container_cancelled.dart';
-import 'package:health_app/widgets/container_complete_doctor.dart';
 import 'package:health_app/widgets/container_upcomming.dart';
 
 class Calendar extends StatefulWidget {
@@ -24,7 +23,7 @@ class _CalendarState extends State<Calendar>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 2, vsync: this);
     _tabController.addListener(() {
       if (_tabController.indexIsChanging) {
         setState(() {
@@ -33,8 +32,12 @@ class _CalendarState extends State<Calendar>
       }
     });
 
-    final doctorId = CacheHelper().getData(key: 'id');
-    // context.read<BookingCubit>().getDoctorBookings(doctorId: doctorId);
+    final patientId = CacheHelper().getData(key: 'id');
+    if (patientId != null) {
+      final cubit = context.read<BookingCubit>();
+      cubit.getAllBookings(patientId: patientId);
+      cubit.getAllCanceledBookings(patientId: patientId);
+    }
   }
 
   @override
@@ -53,9 +56,7 @@ class _CalendarState extends State<Calendar>
             SizedBox(height: 10),
             Text(
               'All Appointment',
-              style: TextStyle(
-                fontSize: 22,
-              ),
+              style: TextStyle(fontSize: 22),
             ),
           ],
         ),
@@ -73,7 +74,7 @@ class _CalendarState extends State<Calendar>
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Text(
-                  'Complete',
+                  'All Appointments',
                   style: TextStyle(
                     fontSize: 16,
                     color:
@@ -90,28 +91,11 @@ class _CalendarState extends State<Calendar>
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Text(
-                  'Upcoming',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color:
-                        _selectedIndex == 1 ? AppTheme.white : AppTheme.green,
-                  ),
-                ),
-              ),
-            ),
-            Tab(
-              child: Container(
-                padding: const EdgeInsets.all(10.0),
-                decoration: BoxDecoration(
-                  color: _selectedIndex == 2 ? AppTheme.green : AppTheme.gray,
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Text(
                   'Cancelled',
                   style: TextStyle(
                     fontSize: 16,
                     color:
-                        _selectedIndex == 2 ? AppTheme.white : AppTheme.green,
+                        _selectedIndex == 1 ? AppTheme.white : AppTheme.green,
                   ),
                 ),
               ),
@@ -124,34 +108,81 @@ class _CalendarState extends State<Calendar>
         child: TabBarView(
           controller: _tabController,
           children: [
-            ListView.builder(
-              itemBuilder: (_, index) => const ContainerCompleteDoctor(),
-            ),
             BlocBuilder<BookingCubit, BookingCubitState>(
+              buildWhen: (previous, current) =>
+                  current is BookingCubitGetAllSuccess ||
+                  current is BookingCubitLoading ||
+                  current is BookingCubitGetAllError,
               builder: (context, state) {
                 if (state is BookingCubitLoading) {
                   return const Center(child: CircularProgressIndicator());
-                } else if (state is BookingCubitGetAllError) {
+                } else if (state is BookingCubitError) {
                   return Center(child: Text(state.errormessage));
                 } else if (state is BookingCubitGetAllSuccess) {
-                  final bookings = state.bookings;
-                  if (bookings.isEmpty) {
-                    return const Center(child: Text('No data available'));
+                  final upcomingBookings = state.bookings;
+                  if (upcomingBookings.isEmpty) {
+                    return const Center(child: Text('لا توجد حجوزات قادمة.'));
                   }
                   return ListView.builder(
-                    itemCount: bookings.length,
+                    itemCount: upcomingBookings.length,
                     itemBuilder: (_, index) {
-                      return ContainerUpcoming(
-                        booking: bookings[index],
-                      );
+                      final booking = upcomingBookings[index];
+                      return ContainerUpcoming(booking: booking);
+                    },
+                  );
+                } else {
+                  final upcomingBookings =
+                      context.read<BookingCubit>().bookings;
+                  if (upcomingBookings.isEmpty) {
+                    return const Center(child: Text('لا توجد حجوزات قادمة.'));
+                  }
+                  return ListView.builder(
+                    itemCount: upcomingBookings.length,
+                    itemBuilder: (_, index) {
+                      final booking = upcomingBookings[index];
+                      return ContainerUpcoming(booking: booking);
                     },
                   );
                 }
-                return const Center(child: Text('No data available'));
               },
             ),
-            ListView.builder(
-              itemBuilder: (_, index) => const ContainerCancelled(),
+            BlocBuilder<BookingCubit, BookingCubitState>(
+              buildWhen: (previous, current) =>
+                  current is BookingCubitAllCanceledSuccess ||
+                  current is BookingCubitAllCanceledEmpty ||
+                  current is BookingCubitLoading ||
+                  current is BookingCubitError,
+              builder: (context, state) {
+                if (state is BookingCubitLoading) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (state is BookingCubitAllCanceledSuccess) {
+                  final canceledBookings = state.canceledBookings;
+                  return ListView.builder(
+                    itemCount: canceledBookings.length,
+                    itemBuilder: (_, index) {
+                      final booking = canceledBookings[index];
+                      return ContainerCancelled(bookings: booking);
+                    },
+                  );
+                } else if (state is BookingCubitAllCanceledEmpty) {
+                  return const Center(child: Text('لا توجد حجوزات ملغية.'));
+                } else if (state is BookingCubitError) {
+                  return Center(child: Text(state.errormessage));
+                } else {
+                  final canceledBookings =
+                      context.read<BookingCubit>().canceledBookings;
+                  if (canceledBookings.isEmpty) {
+                    return const Center(child: Text('لا توجد حجوزات ملغية.'));
+                  }
+                  return ListView.builder(
+                    itemCount: canceledBookings.length,
+                    itemBuilder: (_, index) {
+                      final booking = canceledBookings[index];
+                      return ContainerCancelled(bookings: booking);
+                    },
+                  );
+                }
+              },
             ),
           ],
         ),

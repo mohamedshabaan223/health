@@ -58,11 +58,11 @@ class _DisplayAllChatState extends State<DisplayAllChat> {
                 )
               : Column(
                   children: [
-                    SizedBox(height: heigth * 0.02),
+                    SizedBox(height: heigth * 0.03),
                     const Text(
                       'All Chats',
                       style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                          TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                     ),
                   ],
                 ),

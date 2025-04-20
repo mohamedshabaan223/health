@@ -1,12 +1,14 @@
 import 'dart:convert';
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
+import 'package:health_app/cache/cache_helper.dart';
 import 'package:health_app/core/api/api_consumer.dart';
 import 'package:health_app/core/errors/exceptions.dart';
 import 'package:health_app/models/Appointment_display_doctor_data.dart';
 import 'package:health_app/models/all_appointment_paient_for_doctor.dart';
 import 'package:health_app/models/booking_details_model.dart';
 import 'package:health_app/models/booking_model.dart';
+import 'package:health_app/models/canceled_booking_model.dart';
 import 'package:health_app/models/get_all_booking_model.dart';
 import 'package:meta/meta.dart';
 
@@ -15,6 +17,8 @@ part 'booking_cubit_state.dart';
 class BookingCubit extends Cubit<BookingCubitState> {
   final ApiConsumer api;
   BookingCubit(this.api) : super(BookingCubitInitial());
+  List<GetAllBooking> bookings = [];
+  List<CanceledBookingModel> canceledBookings = [];
 
   Future<void> getAvailableSlots({required int doctorId}) async {
     try {
@@ -41,7 +45,7 @@ class BookingCubit extends Cubit<BookingCubitState> {
       } else {
         emit(BookingCubitError("Unexpected response format"));
       }
-    } on FormatException catch (e) {
+    } on FormatException {
       emit(BookingCubitError("Invalid response format"));
     } on ServerException catch (e) {
       if (e.errorModel.status == 404) {
@@ -88,7 +92,7 @@ class BookingCubit extends Cubit<BookingCubitState> {
       } else {
         emit(BookingCubitError("Unexpected response format"));
       }
-    } on FormatException catch (e) {
+    } on FormatException {
       emit(BookingCubitDataError("Invalid response format"));
     } on ServerException catch (e) {
       emit(BookingCubitDataError(e.errorModel.errorMessage));
@@ -105,30 +109,23 @@ class BookingCubit extends Cubit<BookingCubitState> {
         'http://10.0.2.2:5282/api/Booking/Api/V1/Booking/AllBookingByPatientId?patientId=$patientId',
       );
 
-      print("Response from getAllBookings: $response");
-
-      final dynamic decodedResponse =
+      final List<dynamic> decodedResponse =
           response is String ? jsonDecode(response) : response;
 
-      if (decodedResponse is List) {
-        final List<GetAllBooking> bookings = decodedResponse
-            .map((json) => GetAllBooking.fromJson(json as Map<String, dynamic>))
-            .toList();
+      final List<GetAllBooking> bookings = decodedResponse
+          .map((item) => GetAllBooking.fromJson(item as Map<String, dynamic>))
+          .toList();
 
-        print("Parsed bookings: $bookings");
-
-        if (bookings.isEmpty) {
-          emit(BookingCubitGetAllError("No bookings found."));
-        } else {
-          emit(BookingCubitGetAllSuccess(bookings));
-        }
+      if (bookings.isEmpty) {
+        emit(BookingCubitGetAllError("لا توجد حجوزات متاحة."));
       } else {
-        emit(BookingCubitGetAllError("Unexpected response format."));
+        this.bookings = bookings;
+        emit(BookingCubitGetAllSuccess(bookings));
       }
-    } on FormatException catch (e) {
-      emit(BookingCubitGetAllError("Invalid response format"));
+    } on FormatException {
+      emit(BookingCubitGetAllError("خطأ في تنسيق البيانات المستلمة."));
     } catch (e) {
-      emit(BookingCubitGetAllError("Unexpected error occurred: $e"));
+      emit(BookingCubitGetAllError("حدث خطأ غير متوقع: $e"));
     }
   }
 
@@ -139,10 +136,6 @@ class BookingCubit extends Cubit<BookingCubitState> {
   }) async {
     try {
       emit(BookingCubitLoading());
-      print("📌 Updating booking with:");
-      print("   ➤ bookingId: $bookingId");
-      print("   ➤ day: $day");
-      print("   ➤ time: $time");
 
       final response = await api.put(
         'http://10.0.2.2:5282/api/Booking/Api/V1/Booking/UpdateBooking?bookingId=$bookingId',
@@ -154,11 +147,15 @@ class BookingCubit extends Cubit<BookingCubitState> {
         }),
       );
 
-      final String responseData = response.toString().trim();
-      print("✅ Response from updateBooking: $responseData");
+      final String responseData = response;
 
       if (responseData == 'Booking updated successfully') {
         emit(BookingCubitSuccessUpdate(responseData));
+        // إضافة هذا السطر لإعادة تحميل البيانات
+        final patientId = CacheHelper().getData(key: 'id');
+        if (patientId != null) {
+          await getAllBookings(patientId: patientId);
+        }
       } else if (responseData == 'Booking not found') {
         emit(BookingCubitError(responseData));
       } else {
@@ -224,7 +221,7 @@ class BookingCubit extends Cubit<BookingCubitState> {
       } else {
         emit(BookingCubitError("Unexpected response format"));
       }
-    } on FormatException catch (e) {
+    } on FormatException {
       emit(BookingCubitError("Invalid response format"));
     } on ServerException catch (e) {
       emit(BookingCubitError(e.errorModel.errorMessage));
@@ -251,6 +248,35 @@ class BookingCubit extends Cubit<BookingCubitState> {
       emit(BookingCubitError(e.errorModel.errorMessage));
     } catch (e) {
       emit(BookingCubitError('Unexpected error occurred: $e'));
+    }
+  }
+
+  Future<void> getAllCanceledBookings({required int patientId}) async {
+    try {
+      emit(BookingCubitLoading());
+
+      final response = await api.get(
+        'http://10.0.2.2:5282/api/Booking/Api/V1/Booking/GetCanceledBookings?patientId=$patientId',
+      );
+
+      final List<dynamic> decodedResponse =
+          response is String ? jsonDecode(response) : response;
+
+      final List<CanceledBookingModel> bookings = decodedResponse
+          .map((item) =>
+              CanceledBookingModel.fromJson(item as Map<String, dynamic>))
+          .toList();
+
+      if (bookings.isEmpty) {
+        emit(BookingCubitAllCanceledEmpty("لا توجد حجوزات ملغية."));
+      } else {
+        this.canceledBookings = bookings;
+        emit(BookingCubitAllCanceledSuccess(bookings));
+      }
+    } on FormatException {
+      emit(BookingCubitError("خطأ في تنسيق البيانات المستلمة."));
+    } catch (e) {
+      emit(BookingCubitError("حدث خطأ غير متوقع: $e"));
     }
   }
 

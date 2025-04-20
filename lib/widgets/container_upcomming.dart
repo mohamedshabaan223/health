@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:health_app/app_theme.dart';
 import 'package:health_app/models/get_all_booking_model.dart';
+import 'package:health_app/pages/review_page.dart';
 import 'package:health_app/pages/update_booking_page.dart';
 
 class ContainerUpcoming extends StatelessWidget {
   final GetAllBooking booking;
 
-  const ContainerUpcoming({super.key, required this.booking});
+  const ContainerUpcoming({
+    super.key,
+    required this.booking,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +33,7 @@ class ContainerUpcoming extends StatelessWidget {
                 const Padding(
                   padding: EdgeInsets.only(left: 5),
                   child: CircleAvatar(
-                    radius: 45,
+                    radius: 40,
                     backgroundImage:
                         AssetImage('assets/images/doctor_image.png'),
                   ),
@@ -83,7 +87,7 @@ class ContainerUpcoming extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 Container(
-                  width: width * 0.3,
+                  width: width * 0.32,
                   height: height * 0.03,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(13),
@@ -154,14 +158,45 @@ class ContainerUpcoming extends StatelessWidget {
               children: [
                 InkWell(
                   onTap: () {
+                    Navigator.pushNamed(context, ReviewPage.id, arguments: {
+                      'photo': booking.photo,
+                      'doctorName': booking.doctorName,
+                      'doctorId': booking.doctorId,
+                      'specializationName': booking.specializationName,
+                    });
+                  },
+                  child: Container(
+                    alignment: Alignment.center,
+                    height: height * 0.04,
+                    width: width * 0.35,
+                    decoration: BoxDecoration(
+                        color: AppTheme.green,
+                        borderRadius: BorderRadius.circular(18)),
+                    child: Text(
+                      'Add Review',
+                      style: Theme.of(context)
+                          .textTheme
+                          .titleLarge
+                          ?.copyWith(color: AppTheme.white),
+                    ),
+                  ),
+                ),
+                InkWell(
+                  onTap: () {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text(
-                          "يمكنك تعديل الحجز مرتين فقط، وبعد ذلك سيتم إلغاؤه تلقائيًا.",
-                          style: TextStyle(fontSize: 16, color: Colors.white),
+                      SnackBar(
+                        content: const Text(
+                          'يمكنك تعديل الحجز مرتين فقط والا سيتم حذف الحجز تلقائي',
+                          style: TextStyle(color: Colors.white),
                         ),
-                        duration: Duration(seconds: 4),
-                        backgroundColor: Color.fromARGB(255, 169, 49, 41),
+                        backgroundColor: AppTheme.green2,
+                        behavior: SnackBarBehavior.floating,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        margin: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 10),
+                        duration: const Duration(seconds: 4),
                       ),
                     );
                     Navigator.pushNamed(
@@ -176,7 +211,7 @@ class ContainerUpcoming extends StatelessWidget {
                   child: Container(
                     alignment: Alignment.center,
                     height: height * 0.04,
-                    width: width * 0.7,
+                    width: width * 0.45,
                     decoration: BoxDecoration(
                         color: AppTheme.green,
                         borderRadius: BorderRadius.circular(18)),

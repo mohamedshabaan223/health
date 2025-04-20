@@ -106,7 +106,7 @@ class _DoctorInformationState extends State<DoctorInformation> {
                       Text(
                         doctor.focus ?? 'There is no profile.',
                         style: TextStyle(
-                          fontSize: size.width * 0.045,
+                          fontSize: size.width * 0.04,
                         ),
                       ),
                       SizedBox(height: size.height * 0.05),

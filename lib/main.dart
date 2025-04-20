@@ -15,9 +15,11 @@ import 'package:health_app/cubits/doctors_cubit/doctor_cubit.dart';
 import 'package:health_app/cubits/favorite_cubit/favorite_cubit.dart';
 import 'package:health_app/cubits/payment_cubit/payment_cubit.dart';
 import 'package:health_app/cubits/profile_cubit/profile_cubit.dart';
+import 'package:health_app/cubits/review_cubit/review_cubit.dart';
 import 'package:health_app/cubits/specializations_cubit/specializations_cubit.dart';
 import 'package:health_app/navigator_observar.dart';
 import 'package:health_app/pages/Specializations_page.dart';
+import 'package:health_app/pages/all_appoinements_for_doctor.dart';
 import 'package:health_app/pages/all_doctors_basedOn_specialization.dart';
 import 'package:health_app/pages/appointment_details_doctor.dart';
 import 'package:health_app/pages/appointment_screen.dart';
@@ -115,6 +117,9 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (context) => FavoriteDoctorCubit(dioConsumer),
         ),
+        BlocProvider(
+          create: (context) => ReviewCubit(dioConsumer),
+        ),
       ],
       child: Builder(
         builder: (context) {
@@ -152,7 +157,7 @@ class MyApp extends StatelessWidget {
               Male.routeName: (_) => const Male(),
               AppointmentScreen.id: (_) => const AppointmentScreen(),
               YourAppoinment.id: (_) => const YourAppoinment(),
-              Review.id: (_) => Review(),
+              ReviewPage.id: (_) => ReviewPage(),
               HomeScreenPatient.id: (_) => const HomeScreenPatient(),
               HomeScreenDoctor.id: (_) => const HomeScreenDoctor(),
               CancelledReasonPage.id: (_) => CancelledReasonPage(),
@@ -170,6 +175,8 @@ class MyApp extends StatelessWidget {
               DoctorUpdateProfile.id: (_) => const DoctorUpdateProfile(),
               AppointementPatientDetails.routeName: (_) =>
                   const AppointementPatientDetails(),
+              AllAppoinementForDoctor.id: (_) =>
+                  const AllAppoinementForDoctor(),
             },
             initialRoute: (token == null)
                 ? StartScreen.id

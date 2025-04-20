@@ -37,7 +37,7 @@ class _FemaleState extends State<Female> {
       setState(() {
         filteredDoctors = allDoctors
             .where((doctor) =>
-                doctor.doctorName!.toLowerCase().contains(query.toLowerCase()))
+                doctor.doctorName.toLowerCase().contains(query.toLowerCase()))
             .toList();
       });
     }
@@ -164,69 +164,72 @@ class _FemaleState extends State<Female> {
                   ],
                 ),
               ),
-              if (isSearching && _searchController.text.isNotEmpty)
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: filteredDoctors.length,
-                    itemBuilder: (context, index) {
-                      final doctor = filteredDoctors[index];
-                      return ListTile(
-                        title: Text(
-                          doctor.doctorName ?? 'Unknown',
-                          style: TextStyle(
-                              color: Colors.black, fontSize: width * 0.045),
-                        ),
-                        subtitle: Text(
-                          doctor.specializationName ?? 'No Specialty',
-                          style: TextStyle(
-                              color: Colors.grey, fontSize: width * 0.04),
-                        ),
-                        onTap: () {
-                          Navigator.of(context).pushNamed(
-                              DoctorInformation.routeName,
-                              arguments: doctor.id);
-                        },
-                      );
-                    },
-                  ),
-                ),
               Expanded(
-                child: BlocBuilder<DoctorCubit, DoctorState>(
-                  builder: (context, state) {
-                    if (state is DoctorLoading) {
-                      return Center(
-                          child: CircularProgressIndicator(
-                        strokeWidth: width * 0.01,
-                      ));
-                    } else if (state is DoctorFailure) {
-                      return Center(
-                        child: Text(
-                          'Error: ${state.errorMessage}',
-                          style: TextStyle(
-                              color: Colors.red, fontSize: width * 0.045),
-                        ),
-                      );
-                    } else if (state is DoctorSuccess) {
-                      final doctors = state.doctorsList;
-                      return ListView.builder(
-                        itemCount: doctors.length,
-                        itemBuilder: (_, index) => ContainerDoctor(
-                          doctorAddress: doctors[index].address ?? 'No Address',
-                          doctorNmae:
-                              doctors[index].doctorName ?? 'Dr. Unknown',
-                          descrabtion: doctors[index].specializationName ??
-                              'No Specialty',
-                          doctorImage: 'assets/images/doctor_image.png',
-                          doctorid: doctors[index],
-                        ),
-                      );
-                    }
-                    return Center(
-                      child: Text('No doctors available.',
-                          style: TextStyle(fontSize: width * 0.045)),
-                    );
-                  },
-                ),
+                child: isSearching && _searchController.text.isNotEmpty
+                    ? ListView.builder(
+                        itemCount: filteredDoctors.length,
+                        itemBuilder: (context, index) {
+                          final doctor = filteredDoctors[index];
+                          return ListTile(
+                            title: Text(
+                              doctor.doctorName,
+                              style: TextStyle(
+                                  color: Colors.black, fontSize: width * 0.045),
+                            ),
+                            subtitle: Text(
+                              doctor.specializationName,
+                              style: TextStyle(
+                                  color: Colors.grey, fontSize: width * 0.04),
+                            ),
+                            onTap: () {
+                              Navigator.of(context).pushNamed(
+                                  DoctorInformation.routeName,
+                                  arguments: doctor.id);
+                            },
+                          );
+                        },
+                      )
+                    : BlocBuilder<DoctorCubit, DoctorState>(
+                        builder: (context, state) {
+                          if (state is DoctorLoading) {
+                            return Center(
+                                child: CircularProgressIndicator(
+                              strokeWidth: width * 0.01,
+                            ));
+                          } else if (state is DoctorFailure) {
+                            return Center(
+                              child: Text(
+                                'Error: ${state.errorMessage}',
+                                style: TextStyle(
+                                    color: Colors.red, fontSize: width * 0.045),
+                              ),
+                            );
+                          } else if (state is DoctorSuccess) {
+                            final doctors = state.doctorsList;
+                            return ListView.builder(
+                              itemCount: doctors.length,
+                              itemBuilder: (_, index) => ContainerDoctor(
+                                doctorAddress:
+                                    doctors[index].address ?? 'No Address',
+                                doctorNmae:
+                                    doctors[index].doctorName ?? 'Dr. Unknown',
+                                descrabtion:
+                                    doctors[index].specializationName ??
+                                        'No Specialty',
+                                doctorImage: 'assets/images/doctor_image.png',
+                                doctorid: doctors[index],
+                                price: doctors[index].prices.isNotEmpty
+                                    ? doctors[index].prices.first.price.toInt()
+                                    : 0,
+                              ),
+                            );
+                          }
+                          return Center(
+                            child: Text('No doctors available.',
+                                style: TextStyle(fontSize: width * 0.045)),
+                          );
+                        },
+                      ),
               ),
             ],
           ),

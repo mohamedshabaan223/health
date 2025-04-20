@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:health_app/cache/cache_helper.dart';
 import 'package:health_app/cubits/booking_cubit/booking_cubit_cubit.dart';
+import 'package:health_app/pages/appointment_details_doctor.dart';
 import 'package:health_app/widgets/container_upcoming_appoinements_doctor.dart';
 
 class AllAppoinementForDoctor extends StatefulWidget {
@@ -30,24 +31,23 @@ class _AllAppoinementForDoctorState extends State<AllAppoinementForDoctor> {
 
   @override
   Widget build(BuildContext context) {
+    double heigth = MediaQuery.of(context).size.height;
+
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: const Padding(
-          padding: EdgeInsets.only(top: 10.0),
-          child: Column(
-            children: [
-              SizedBox(height: 12),
-              Text('All Appointments', style: TextStyle(fontSize: 22)),
-            ],
-          ),
+        title: Column(
+          children: [
+            SizedBox(height: heigth * 0.023),
+            const Text('All Appointments',
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+          ],
         ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
           children: [
-            const SizedBox(height: 5),
+            SizedBox(height: heigth * 0.02),
             Expanded(
               child: BlocBuilder<BookingCubit, BookingCubitState>(
                 builder: (context, state) {
@@ -56,23 +56,47 @@ class _AllAppoinementForDoctorState extends State<AllAppoinementForDoctor> {
                   } else if (state is BookingDoctorCompletedError) {
                     return Center(child: Text(state.message));
                   } else if (state is BookingDoctorCompletedSuccess) {
-                    final appointments = state.bookings;
-                    if (appointments.isEmpty) {
+                    final appts = state.bookings;
+                    if (appts.isEmpty) {
                       return const Center(
-                          child: Text("No appointments available."));
+                        child: Text("No appointments available."),
+                      );
                     }
                     return ListView.builder(
-                      itemCount: appointments.length,
-                      itemBuilder: (_, index) {
-                        final appointment = appointments[index];
-                        return ContainerUpComingAppoinementsDoctor(
-                          appointment: appointment,
+                      itemCount: appts.length,
+                      itemBuilder: (_, i) {
+                        final apt = appts[i];
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).pushNamed(
+                              AppointementPatientDetails.routeName,
+                              arguments: {
+                                'bookingId': apt.bookingId,
+                                'patientName': apt.patientName,
+                              },
+                            ).then((cancelled) {
+                              if (cancelled == true && doctorId != null) {
+                                context
+                                    .read<BookingCubit>()
+                                    .getDoctorCompletedBookings(
+                                      doctorId: doctorId!,
+                                    );
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text('تم حذف الحجز بنجاح'),
+                                  ),
+                                );
+                              }
+                            });
+                          },
+                          child: ContainerUpComingAppoinementsDoctor(
+                            appointment: apt,
+                          ),
                         );
                       },
                     );
-                  } else {
-                    return const Center(child: Text("No data to show."));
                   }
+                  return const Center(child: Text("No data to show."));
                 },
               ),
             ),

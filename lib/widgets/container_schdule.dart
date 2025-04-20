@@ -18,15 +18,19 @@ class ContainerSchdule extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.only(left: 5),
         height: 30,
-        width: 110,
+        width: 150,
         decoration: BoxDecoration(
             color: AppTheme.green, borderRadius: BorderRadius.circular(13)),
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Icon(
               Icons.calendar_month,
               color: AppTheme.white,
               size: 22,
+            ),
+            const SizedBox(
+              width: 5,
             ),
             Text(
               ' booking',

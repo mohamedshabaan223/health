@@ -24,14 +24,14 @@ class GetAllBooking {
   factory GetAllBooking.fromJson(Map<String, dynamic> json) {
     return GetAllBooking(
       id: json['id'] ?? 0,
-      doctorName: json['doctorName'] ?? "",
-      doctorId: json['doctorId'] ?? 0,
-      bookingId: json['bookingId'] ?? 0,
-      specializationName: json['specializationName'] ?? "",
+      doctorName: json['doctorName'],
+      doctorId: json['doctorId'],
+      bookingId: json['bookingId'],
+      specializationName: json['specializationName'],
       photo: json['photo'],
-      day: json['day'] ?? "0001-01-01",
+      day: json['day'],
       time: json['time'],
-      address: json['address'] ?? "",
+      address: json['address'],
     );
   }
 }

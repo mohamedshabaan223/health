@@ -72,3 +72,13 @@ class BookingCubitCancelSuccess extends BookingCubitState {
   final String message;
   BookingCubitCancelSuccess(this.message);
 }
+
+class BookingCubitAllCanceledSuccess extends BookingCubitState {
+  final List<CanceledBookingModel> canceledBookings;
+  BookingCubitAllCanceledSuccess(this.canceledBookings);
+}
+
+class BookingCubitAllCanceledEmpty extends BookingCubitState {
+  final String message;
+  BookingCubitAllCanceledEmpty(this.message);
+}
