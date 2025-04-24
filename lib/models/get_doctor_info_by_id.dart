@@ -7,8 +7,8 @@ class GetDoctorInfoById {
   final String? profileImage;
   final String? focus;
   final String address;
-  final List<Price> prices;
-  final List<AvailableAppointment> availableAppointments;
+  final double rating;
+  final List<AvailableSlot> availableSlots;
 
   GetDoctorInfoById({
     required this.id,
@@ -19,8 +19,8 @@ class GetDoctorInfoById {
     this.profileImage,
     this.focus,
     required this.address,
-    required this.prices,
-    required this.availableAppointments,
+    required this.rating,
+    required this.availableSlots,
   });
 
   factory GetDoctorInfoById.fromJson(Map<String, dynamic> json) {
@@ -33,11 +33,9 @@ class GetDoctorInfoById {
       profileImage: json['profileImage'],
       focus: json['focus'],
       address: json['address'],
-      prices: (json['prices'] as List)
-          .map((price) => Price.fromJson(price))
-          .toList(),
-      availableAppointments: (json['availableAppointments'] as List)
-          .map((appointment) => AvailableAppointment.fromJson(appointment))
+      rating: (json['rating'] as num).toDouble(),
+      availableSlots: (json['availableSlots'] as List)
+          .map((slot) => AvailableSlot.fromJson(slot))
           .toList(),
     );
   }
@@ -52,61 +50,48 @@ class GetDoctorInfoById {
       'profileImage': profileImage,
       'focus': focus,
       'address': address,
-      'prices': prices.map((p) => p.toJson()).toList(),
-      'availableAppointments':
-          availableAppointments.map((a) => a.toJson()).toList(),
+      'rating': rating,
+      'availableSlots': availableSlots.map((slot) => slot.toJson()).toList(),
     };
   }
 }
 
-class Price {
+class AvailableSlot {
+  final String day;
   final String name;
+  final String timeStart;
+  final String timeEnd;
+  final int appointmentId;
   final double price;
 
-  Price({
+  AvailableSlot({
+    required this.day,
     required this.name,
+    required this.timeStart,
+    required this.timeEnd,
+    required this.appointmentId,
     required this.price,
   });
 
-  factory Price.fromJson(Map<String, dynamic> json) {
-    return Price(
+  factory AvailableSlot.fromJson(Map<String, dynamic> json) {
+    return AvailableSlot(
+      day: json['day'],
       name: json['name'],
+      timeStart: json['timeStart'],
+      timeEnd: json['timeEnd'],
+      appointmentId: json['appointmentId'],
       price: (json['price'] as num).toDouble(),
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'name': name,
-      'price': price,
-    };
-  }
-}
-
-class AvailableAppointment {
-  final int appointmentId;
-  final String day;
-  final String time;
-
-  AvailableAppointment({
-    required this.appointmentId,
-    required this.day,
-    required this.time,
-  });
-
-  factory AvailableAppointment.fromJson(Map<String, dynamic> json) {
-    return AvailableAppointment(
-      appointmentId: json['appointmentId'],
-      day: json['day'],
-      time: json['time'],
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'appointmentId': appointmentId,
       'day': day,
-      'time': time,
+      'name': name,
+      'timeStart': timeStart,
+      'timeEnd': timeEnd,
+      'appointmentId': appointmentId,
+      'price': price,
     };
   }
 }

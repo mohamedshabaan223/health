@@ -1,15 +1,27 @@
-class PriceModel {
+class AvailableSlotModel {
+  final String day;
   final String name;
-  final int price;
+  final String timeStart;
+  final String timeEnd;
+  final int appointmentId;
+  final int? price;
 
-  PriceModel({
+  AvailableSlotModel({
+    required this.day,
     required this.name,
+    required this.timeStart,
+    required this.timeEnd,
+    required this.appointmentId,
     required this.price,
   });
 
-  factory PriceModel.fromJson(Map<String, dynamic> json) {
-    return PriceModel(
+  factory AvailableSlotModel.fromJson(Map<String, dynamic> json) {
+    return AvailableSlotModel(
+      day: json['day'] as String,
       name: json['name'] as String,
+      timeStart: json['timeStart'] as String,
+      timeEnd: json['timeEnd'] as String,
+      appointmentId: json['appointmentId'] as int,
       price: json['price'] as int,
     );
   }
@@ -25,7 +37,7 @@ class DoctorModel {
   final String email;
   final String? phone;
   final double rating;
-  final List<PriceModel> prices;
+  final List<AvailableSlotModel> availableSlots;
 
   DoctorModel({
     required this.id,
@@ -37,7 +49,7 @@ class DoctorModel {
     required this.email,
     this.phone,
     required this.rating,
-    required this.prices,
+    required this.availableSlots,
   });
 
   factory DoctorModel.fromJson(Map<String, dynamic> json) {
@@ -51,9 +63,11 @@ class DoctorModel {
       email: json['email'] as String,
       phone: json['phone'] as String?,
       rating: (json['rating'] as num).toDouble(),
-      prices: (json['prices'] as List<dynamic>)
-          .map((price) => PriceModel.fromJson(price as Map<String, dynamic>))
-          .toList(),
+      availableSlots: (json['availableSlots'] as List<dynamic>?)
+              ?.map((slot) =>
+                  AvailableSlotModel.fromJson(slot as Map<String, dynamic>))
+              .toList() ??
+          [],
     );
   }
 }

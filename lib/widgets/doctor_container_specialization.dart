@@ -8,17 +8,20 @@ import 'package:health_app/cubits/favorite_cubit/favorite_state.dart';
 import 'package:health_app/cache/cache_helper.dart';
 
 class DoctorContainerSpecialization extends StatefulWidget {
-  DoctorContainerSpecialization({
+  const DoctorContainerSpecialization({
+    super.key,
     required this.doctorNmae,
     required this.address,
     required this.doctorImage,
     required this.doctorid,
+    required this.rating,
   });
 
   final String doctorNmae;
   final String address;
   final String doctorImage;
   final int doctorid;
+  final int rating;
 
   @override
   State<DoctorContainerSpecialization> createState() =>
@@ -32,9 +35,7 @@ class _DoctorContainerSpecializationState
   @override
   void initState() {
     super.initState();
-    // التأكد من أن الـ patientId سيتم تهيئته بشكل صحيح
-    patientId = CacheHelper().getData(key: "id") ??
-        0; // استخدام 0 كقيمة افتراضية إذا كانت القيمة null
+    patientId = CacheHelper().getData(key: "id") ?? 0;
   }
 
   @override
@@ -77,15 +78,6 @@ class _DoctorContainerSpecializationState
                           .titleSmall
                           ?.copyWith(fontSize: 17, color: AppTheme.green),
                     ),
-                    const Row(
-                      children: [
-                        Icon(Icons.attach_money,
-                            color: AppTheme.green, size: 18),
-                        Text('price',
-                            style: TextStyle(color: Colors.grey, fontSize: 15)),
-                      ],
-                    ),
-                    SizedBox(height: height * 0.01),
                     Row(
                       children: [
                         const Icon(Icons.location_on,
@@ -94,6 +86,37 @@ class _DoctorContainerSpecializationState
                           widget.address,
                           style:
                               const TextStyle(color: Colors.grey, fontSize: 15),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: height * 0.01),
+                    Row(
+                      children: [
+                        Container(
+                          height: 25,
+                          width: 50,
+                          decoration: BoxDecoration(
+                            color: AppTheme.white,
+                            borderRadius: BorderRadius.circular(18),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Icon(
+                                Icons.star,
+                                color: AppTheme.green,
+                                size: 18,
+                              ),
+                              Text(
+                                widget.rating.toString(),
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .labelMedium
+                                    ?.copyWith(
+                                        color: AppTheme.green, fontSize: 16),
+                              ),
+                            ],
+                          ),
                         ),
                       ],
                     ),
@@ -130,41 +153,6 @@ class _DoctorContainerSpecializationState
                             color: AppTheme.green,
                           ),
                           containerClolor: AppTheme.white,
-                        ),
-                        SizedBox(width: width * 0.01),
-                        InkWell(
-                          onTap: () {
-                            Navigator.of(context).pushNamed(
-                              DoctorInformation.routeName,
-                              arguments: widget.doctorid,
-                            );
-                          },
-                          child: Container(
-                            height: 25,
-                            width: 50,
-                            decoration: BoxDecoration(
-                              color: AppTheme.white,
-                              borderRadius: BorderRadius.circular(18),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const Icon(
-                                  Icons.star,
-                                  color: AppTheme.green,
-                                  size: 18,
-                                ),
-                                Text(
-                                  '5',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .labelMedium
-                                      ?.copyWith(
-                                          color: AppTheme.green, fontSize: 16),
-                                ),
-                              ],
-                            ),
-                          ),
                         ),
                         SizedBox(width: width * 0.03),
                         InkWell(

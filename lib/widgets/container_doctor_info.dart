@@ -6,6 +6,7 @@ import 'package:health_app/cubits/doctors_cubit/doctor_cubit.dart';
 import 'package:health_app/pages/chat_page.dart';
 import 'package:health_app/widgets/DoctorAppointmentsDropdown.dart';
 import 'package:health_app/widgets/container_schdule.dart';
+import 'package:health_app/models/get_doctor_info_by_id.dart';
 
 class ContainerDoctorInfo extends StatefulWidget {
   const ContainerDoctorInfo({super.key, required this.doctorId});
@@ -19,6 +20,7 @@ class _ContainerDoctorInfoState extends State<ContainerDoctorInfo> {
   bool isFavorite = false;
   bool isRating = false;
   int? patientId = CacheHelper().getData(key: 'id');
+  AvailableSlot? selectedSlot;
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +43,7 @@ class _ContainerDoctorInfoState extends State<ContainerDoctorInfo> {
         if (state is GetDoctorInfoSuccess) {
           final doctor = state.doctorInfo;
           return Container(
-            height: height * 0.45,
+            height: height * 0.35,
             padding: const EdgeInsets.all(12),
             margin: const EdgeInsets.symmetric(horizontal: 5),
             decoration: BoxDecoration(
@@ -61,19 +63,22 @@ class _ContainerDoctorInfoState extends State<ContainerDoctorInfo> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            doctor.name,
-                            style: const TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: AppTheme.green,
+                          Padding(
+                            padding: const EdgeInsets.only(top: 7.0),
+                            child: Text(
+                              doctor.name,
+                              style: const TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: AppTheme.green,
+                              ),
                             ),
                           ),
                           const SizedBox(height: 4),
                           Text(
                             doctor.specialization,
                             style: const TextStyle(
-                              fontSize: 16,
+                              fontSize: 15,
                               color: AppTheme.black,
                             ),
                           ),
@@ -107,77 +112,77 @@ class _ContainerDoctorInfoState extends State<ContainerDoctorInfo> {
                   ],
                 ),
                 const SizedBox(height: 25),
-
-                // عرض كل الأسعار
-                Wrap(
-                  spacing: 10,
-                  runSpacing: 10,
-                  children: [
-                    ...doctor.prices.map((p) {
-                      return Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 12, vertical: 6),
-                        decoration: BoxDecoration(
-                          color: AppTheme.white,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const Icon(Icons.price_change_outlined,
-                                color: AppTheme.green, size: 18),
-                            const SizedBox(width: 6),
-                            Text(
-                              '${p.name}: ${p.price} EGP',
-                              style: const TextStyle(
-                                  color: AppTheme.green, fontSize: 15),
-                            ),
-                          ],
-                        ),
-                      );
-                    }).toList(),
-                  ],
-                ),
-
-                // إضافة التقييم (Rating) تحت الأسعار
-                const SizedBox(height: 15),
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: AppTheme.white,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Icon(Icons.star, color: Colors.amber, size: 18),
-                      const SizedBox(width: 6),
-                      Text(
-                        '5 / 5', // هذا هو التقييم الافتراضي ويمكنك تغييره حسب الحاجة
-                        style: const TextStyle(
-                          color: AppTheme.green,
-                          fontSize: 15,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 15),
-
-                // قائمة المواعيد
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Expanded(
-                      child: DoctorAppointmentsDropdown(
-                        availableAppointments: doctor.availableAppointments,
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: AppTheme.white,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(Icons.price_change,
+                              color: AppTheme.green, size: 18),
+                          const SizedBox(width: 6),
+                          Text(
+                            selectedSlot != null
+                                ? '${selectedSlot!.price} EGP'
+                                : 'Select Time',
+                            style: const TextStyle(
+                              color: AppTheme.green,
+                              fontSize: 15,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: 15),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: AppTheme.white,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(Icons.star,
+                              color: AppTheme.green, size: 18),
+                          const SizedBox(width: 6),
+                          Text(
+                            '${doctor.rating}',
+                            style: const TextStyle(
+                              color: AppTheme.green,
+                              fontSize: 15,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],
                 ),
                 const SizedBox(height: 15),
-
-                // أزرار الحجز والدردشة
+                Row(
+                  children: [
+                    Expanded(
+                      child: DoctorAppointmentsDropdown(
+                        availableAppointments: doctor.availableSlots,
+                        selectedSlot: selectedSlot,
+                        onSlotSelected: (slot) {
+                          setState(() {
+                            selectedSlot = slot;
+                          });
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 15),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [

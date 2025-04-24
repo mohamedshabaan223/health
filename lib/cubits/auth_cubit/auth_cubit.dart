@@ -76,8 +76,12 @@ class AuthCubit extends Cubit<AuthState> {
         },
       );
       registerUser = RegisterModel.fromJson(response);
+      final decodedToken = JwtDecoder.decode(registerUser!.token.result);
+      await CacheHelper().saveData(key: "role", value: decodedToken["role"]);
       await CacheHelper()
-          .saveData(key: ApiKey.token, value: user!.token.result);
+          .saveData(key: ApiKey.token, value: registerUser!.token.result);
+      await CacheHelper().saveData(key: "id", value: registerUser!.id);
+
       emit(RegisterSuccess());
     } on ServerException catch (e) {
       print("Error caught in register: ${e.errorModel.errorMessage}");

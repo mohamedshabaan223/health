@@ -218,9 +218,6 @@ class _MaleState extends State<Male> {
                               'No Specialty',
                           doctorImage: 'assets/images/male.png',
                           doctorid: doctors[index],
-                          price: doctors[index].prices.isNotEmpty
-                              ? doctors[index].prices.first.price.toInt()
-                              : 0,
                         ),
                       );
                     }

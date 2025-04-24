@@ -13,11 +13,13 @@ import 'package:health_app/cubits/booking_cubit/booking_cubit_cubit.dart';
 import 'package:health_app/cubits/chat_cubit/chat_cubit.dart';
 import 'package:health_app/cubits/doctors_cubit/doctor_cubit.dart';
 import 'package:health_app/cubits/favorite_cubit/favorite_cubit.dart';
+import 'package:health_app/cubits/location_cubit/location_cubit.dart';
 import 'package:health_app/cubits/payment_cubit/payment_cubit.dart';
 import 'package:health_app/cubits/profile_cubit/profile_cubit.dart';
 import 'package:health_app/cubits/review_cubit/review_cubit.dart';
 import 'package:health_app/cubits/specializations_cubit/specializations_cubit.dart';
 import 'package:health_app/navigator_observar.dart';
+import 'package:health_app/pages/AllNearbyDoctorsPage.dart';
 import 'package:health_app/pages/Specializations_page.dart';
 import 'package:health_app/pages/all_appoinements_for_doctor.dart';
 import 'package:health_app/pages/all_doctors_basedOn_specialization.dart';
@@ -42,6 +44,7 @@ import 'package:health_app/pages/login_page.dart';
 import 'package:health_app/pages/patient_profile_page.dart';
 import 'package:health_app/pages/register_page.dart';
 import 'package:health_app/pages/review_page.dart';
+import 'package:health_app/pages/review_screen_doctor.dart';
 import 'package:health_app/pages/start_screen.dart';
 import 'package:health_app/pages/payment_success_page.dart';
 import 'package:health_app/pages/update_booking_page.dart';
@@ -120,6 +123,13 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (context) => ReviewCubit(dioConsumer),
         ),
+        BlocProvider<LocationCubit>(
+          // ★ أضف ده
+          create: (context) => LocationCubit(
+            dioConsumer,
+            CacheHelper(),
+          ),
+        ),
       ],
       child: Builder(
         builder: (context) {
@@ -157,7 +167,7 @@ class MyApp extends StatelessWidget {
               Male.routeName: (_) => const Male(),
               AppointmentScreen.id: (_) => const AppointmentScreen(),
               YourAppoinment.id: (_) => const YourAppoinment(),
-              ReviewPage.id: (_) => ReviewPage(),
+              ReviewPage.id: (_) => const ReviewPage(),
               HomeScreenPatient.id: (_) => const HomeScreenPatient(),
               HomeScreenDoctor.id: (_) => const HomeScreenDoctor(),
               CancelledReasonPage.id: (_) => CancelledReasonPage(),
@@ -177,12 +187,11 @@ class MyApp extends StatelessWidget {
                   const AppointementPatientDetails(),
               AllAppoinementForDoctor.id: (_) =>
                   const AllAppoinementForDoctor(),
+              AllNearbyDoctorsPage.id: (_) => const AllNearbyDoctorsPage(),
+              ReviewScreenDoctorReview.id: (_) =>
+                  const ReviewScreenDoctorReview(),
             },
-            initialRoute: (token == null)
-                ? StartScreen.id
-                : (role == "Doctor"
-                    ? HomeScreenDoctor.id
-                    : HomeScreenPatient.id),
+            initialRoute: HomeScreenPatient.id,
             theme: AppTheme.lightTheme,
             themeMode: ThemeMode.light,
           );

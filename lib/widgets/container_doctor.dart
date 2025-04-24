@@ -16,7 +16,6 @@ class ContainerDoctor extends StatefulWidget {
     required this.doctorid,
     required this.doctorAddress,
     Key? key,
-    required this.price,
   }) : super(key: key);
 
   final String doctorNmae;
@@ -24,7 +23,6 @@ class ContainerDoctor extends StatefulWidget {
   final String doctorImage;
   final DoctorModel doctorid;
   final String doctorAddress;
-  final int price;
 
   @override
   State<ContainerDoctor> createState() => _ContainerDoctorState();
@@ -105,11 +103,11 @@ class _ContainerDoctorState extends State<ContainerDoctor> {
                     const SizedBox(height: 5),
                     Row(
                       children: [
-                        const Icon(Icons.price_change_outlined,
+                        const Icon(Icons.star,
                             color: AppTheme.green3, size: 18),
                         const SizedBox(width: 5),
                         Text(
-                          '${widget.price} EGP',
+                          widget.doctorid.rating.toString(),
                           style: Theme.of(context)
                               .textTheme
                               .titleSmall
@@ -122,78 +120,35 @@ class _ContainerDoctorState extends State<ContainerDoctor> {
               ),
               const Spacer(),
               Column(
-                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Row(
-                    children: [
-                      InkWell(
-                        onTap: () {
-                          Navigator.of(context).pushNamed(
-                            DoctorInformation.routeName,
-                            arguments: widget.doctorid.id,
-                          );
-                        },
-                        child: Container(
-                          height: 29,
-                          width: 50,
-                          decoration: BoxDecoration(
-                            color: AppTheme.white,
-                            borderRadius: BorderRadius.circular(18),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Icon(
-                                Icons.star,
-                                color: AppTheme.green,
-                                size: 18,
-                              ),
-                              const SizedBox(width: 2),
-                              Text(
-                                '5',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .labelMedium
-                                    ?.copyWith(
-                                        color: AppTheme.green, fontSize: 16),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                      Defaulticon(
-                        onTap: () {
-                          final favoriteCubit =
-                              context.read<FavoriteDoctorCubit>();
-
-                          if (favoriteCubit
-                              .isDoctorFavorite(widget.doctorid.id ?? 0)) {
-                            favoriteCubit.removeFavoriteDoctor(
-                              patientId: patientId,
-                              doctorId: widget.doctorid.id ?? 0,
-                            );
-                          } else {
-                            favoriteCubit.addFavoriteDoctor(
-                              patientId: patientId,
-                              doctorId: widget.doctorid.id ?? 0,
-                            );
-                          }
-
-                          setState(() {});
-                        },
-                        icon: Icon(
-                          context
-                                  .watch<FavoriteDoctorCubit>()
-                                  .isDoctorFavorite(widget.doctorid.id ?? 0)
-                              ? Icons.favorite
-                              : Icons.favorite_border,
-                          size: 19,
-                          color: AppTheme.green,
-                        ),
-                        containerClolor: AppTheme.white,
-                      ),
-                    ],
+                  SizedBox(height: height * 0.05),
+                  Defaulticon(
+                    onTap: () {
+                      final favoriteCubit = context.read<FavoriteDoctorCubit>();
+                      if (favoriteCubit
+                          .isDoctorFavorite(widget.doctorid.id ?? 0)) {
+                        favoriteCubit.removeFavoriteDoctor(
+                          patientId: patientId,
+                          doctorId: widget.doctorid.id ?? 0,
+                        );
+                      } else {
+                        favoriteCubit.addFavoriteDoctor(
+                          patientId: patientId,
+                          doctorId: widget.doctorid.id ?? 0,
+                        );
+                      }
+                      setState(() {});
+                    },
+                    icon: Icon(
+                      context
+                              .watch<FavoriteDoctorCubit>()
+                              .isDoctorFavorite(widget.doctorid.id ?? 0)
+                          ? Icons.favorite
+                          : Icons.favorite_border,
+                      size: 19,
+                      color: AppTheme.green,
+                    ),
+                    containerClolor: AppTheme.white,
                   ),
                   const SizedBox(height: 15),
                   InkWell(

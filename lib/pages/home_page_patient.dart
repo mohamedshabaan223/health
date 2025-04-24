@@ -115,7 +115,6 @@ class _HomePagePatientState extends State<HomePagePatient> {
               ],
             ),
             const Divider(color: AppTheme.gray, thickness: 2),
-            SizedBox(height: height * 0.03),
             BlocBuilder<SpecializationsCubit, SpecialityState>(
               builder: (context, state) {
                 if (state is SpecialityLoading) {
@@ -131,11 +130,6 @@ class _HomePagePatientState extends State<HomePagePatient> {
                   final specializations =
                       state.specializations.take(6).toList();
                   print("Specializations: $specializations");
-
-                  if (specializations.isEmpty) {
-                    return const Center(
-                        child: Text("No specializations available."));
-                  }
 
                   if (specializations.isEmpty) {
                     return const Center(
@@ -188,6 +182,28 @@ class _HomePagePatientState extends State<HomePagePatient> {
               },
             ),
             SizedBox(height: height * 0.03),
+            Row(
+              children: [
+                Text(
+                  'Nearby Doctors',
+                  style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                        color: AppTheme.green3,
+                      ),
+                ),
+                const Spacer(),
+                TextButton(
+                  onPressed: () {},
+                  child: Text(
+                    'See all',
+                    style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                        color: AppTheme.green,
+                        decoration: TextDecoration.underline,
+                        decorationColor: AppTheme.green),
+                  ),
+                ),
+              ],
+            ),
+            const Divider(color: AppTheme.gray, thickness: 2),
             SizedBox(
               height: height * (width > 600 ? 0.5 : 0.4),
               child: ListView.builder(

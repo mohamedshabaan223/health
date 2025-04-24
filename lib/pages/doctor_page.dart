@@ -208,20 +208,18 @@ class _DoctorPageState extends State<DoctorPage> {
                     } else if (state is DoctorSuccess) {
                       final doctors = state.doctorsList;
                       return ListView.builder(
-                        itemCount: doctors.length,
-                        itemBuilder: (_, index) => ContainerDoctor(
-                          doctorAddress: doctors[index].address ?? 'No Address',
-                          doctorNmae:
-                              doctors[index].doctorName ?? 'Dr. Unknown',
-                          descrabtion: doctors[index].specializationName ??
-                              'No Specialty',
-                          doctorImage: 'assets/images/doctor_image.png',
-                          doctorid: doctors[index],
-                          price: doctors[index].prices.isNotEmpty
-                              ? doctors[index].prices.first.price.toInt()
-                              : 0,
-                        ),
-                      );
+                          itemCount: doctors.length,
+                          itemBuilder: (_, index) => ContainerDoctor(
+                                doctorAddress:
+                                    doctors[index].address ?? 'No Address',
+                                doctorNmae:
+                                    doctors[index].doctorName ?? 'Dr. Unknown',
+                                descrabtion:
+                                    doctors[index].specializationName ??
+                                        'No Specialty',
+                                doctorImage: 'assets/images/doctor_image.png',
+                                doctorid: doctors[index],
+                              ));
                     }
                     return const Center(child: Text('No doctors available.'));
                   },

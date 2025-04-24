@@ -39,7 +39,7 @@ class _UpdateBookingPageState extends State<UpdateBookingPage> {
         if (state is BookingCubitSuccess) {
           Map<String, List<String>> slotsMap = {};
           for (var slot in state.timeslots) {
-            slotsMap.putIfAbsent(slot.day, () => []).add(slot.time);
+            slotsMap.putIfAbsent(slot.day, () => []).add(slot.timeStart);
           }
 
           setState(() {

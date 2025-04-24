@@ -13,6 +13,12 @@ class ReviewSuccess extends ReviewState {
   ReviewSuccess(this.message);
 }
 
+class ReviewListSuccess extends ReviewState {
+  final List<ReviewModel> reviews;
+
+  ReviewListSuccess(this.reviews);
+}
+
 class ReviewError extends ReviewState {
   final String error;
 

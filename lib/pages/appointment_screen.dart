@@ -91,7 +91,7 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
     final bookingRequest = BookingRequest(
       doctorId: doctorId!,
       day: availableSlots[selectedDayIndex].day,
-      time: availableSlots[selectedTimeIndex].time,
+      time: availableSlots[selectedTimeIndex].timeStart,
       patientName: selectedPatientType == 'Yourself'
           ? BlocProvider.of<AuthCubit>(context).patientName.text
           : fullNameController.text ?? "Unknown",
@@ -119,7 +119,7 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
               "bookingId": state.bookingResponse.bookingId,
               "doctorId": doctorId,
               "day": availableSlots[selectedDayIndex].day,
-              "time": availableSlots[selectedTimeIndex].time,
+              "time": availableSlots[selectedTimeIndex].timeStart,
               "patientName": selectedPatientType == 'Yourself'
                   ? BlocProvider.of<AuthCubit>(context).registerUserName.text
                   : fullNameController.text ?? "Unknown",
@@ -199,21 +199,26 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
           return Center(child: Text(state.errormessage));
         } else if (state is BookingCubitSuccess) {
           availableSlots = state.timeslots;
+
+          List<String> uniqueDays =
+              availableSlots.map((slot) => slot.day).toSet().toList();
+
           return SizedBox(
             height: 85,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
-              itemCount: availableSlots.length,
+              itemCount: uniqueDays.length,
               itemBuilder: (context, index) {
-                final slot = availableSlots[index];
+                final day = uniqueDays[index];
                 return GestureDetector(
-                  onTap: () => setState(() {
-                    selectedDayIndex = index;
-                    selectedTimeIndex = -1;
-                  }),
+                  onTap: () {
+                    setState(() {
+                      selectedDayIndex = index;
+                      selectedTimeIndex = -1;
+                    });
+                  },
                   child: _buildDateTile(
-                    day: slot.day,
-                    weekday: slot.weekday,
+                    day: day,
                     isSelected: selectedDayIndex == index,
                   ),
                 );
@@ -230,7 +235,14 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
     return BlocBuilder<BookingCubit, BookingCubitState>(
       builder: (context, state) {
         if (state is BookingCubitSuccess) {
-          final times = state.timeslots;
+          final uniqueDays =
+              availableSlots.map((slot) => slot.day).toSet().toList();
+
+          final selectedDay = uniqueDays[selectedDayIndex];
+
+          final times =
+              availableSlots.where((slot) => slot.day == selectedDay).toList();
+
           return Wrap(
             spacing: 8,
             runSpacing: 8,
@@ -238,7 +250,7 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
               return GestureDetector(
                 onTap: () => setState(() => selectedTimeIndex = index),
                 child: _buildTimeTile(
-                  time: times[index].time, // استخدم التوقيت كما هو
+                  time: times[index].timeStart,
                   isSelected: selectedTimeIndex == index,
                 ),
               );
@@ -352,7 +364,6 @@ Widget _buildSectionTitle(String title) {
 
 Widget _buildDateTile({
   required String day,
-  required String weekday,
   required bool isSelected,
 }) {
   return Container(
@@ -381,13 +392,6 @@ Widget _buildDateTile({
             color: isSelected ? Colors.white : Colors.black,
             fontWeight: FontWeight.bold,
             fontSize: 16,
-          ),
-        ),
-        Text(
-          weekday,
-          style: TextStyle(
-            color: isSelected ? Colors.white : Colors.grey,
-            fontSize: 12,
           ),
         ),
       ],

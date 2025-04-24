@@ -151,7 +151,6 @@ class BookingCubit extends Cubit<BookingCubitState> {
 
       if (responseData == 'Booking updated successfully') {
         emit(BookingCubitSuccessUpdate(responseData));
-        // إضافة هذا السطر لإعادة تحميل البيانات
         final patientId = CacheHelper().getData(key: 'id');
         if (patientId != null) {
           await getAllBookings(patientId: patientId);

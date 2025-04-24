@@ -4,10 +4,7 @@ import 'package:health_app/app_theme.dart';
 import 'package:health_app/cache/cache_helper.dart';
 import 'package:health_app/cubits/favorite_cubit/favorite_cubit.dart';
 import 'package:health_app/cubits/favorite_cubit/favorite_state.dart';
-import 'package:health_app/models/doctor_model.dart';
 import 'package:health_app/pages/doctor_page_information.dart';
-import 'package:health_app/widgets/container_doctor_fav.dart';
-import 'package:health_app/widgets/default_icon.dart';
 
 class Favorite extends StatefulWidget {
   static const String routeName = '/favorite';
@@ -134,7 +131,7 @@ class _FavoriteState extends State<Favorite> {
                           margin: const EdgeInsets.symmetric(
                               horizontal: 10, vertical: 6),
                           width: double.infinity,
-                          height: 150,
+                          height: 143,
                           decoration: BoxDecoration(
                             color: AppTheme.gray,
                             borderRadius: BorderRadius.circular(17),
@@ -198,91 +195,54 @@ class _FavoriteState extends State<Favorite> {
                                     const SizedBox(height: 5),
                                     Row(
                                       children: [
-                                        const Icon(Icons.price_change_outlined,
-                                            color: AppTheme.green3, size: 18),
-                                        const SizedBox(width: 5),
+                                        const Icon(Icons.star,
+                                            color: AppTheme.green, size: 18),
+                                        const SizedBox(width: 4),
                                         Text(
-                                          '${filteredDoctors[index].prices.isNotEmpty ? filteredDoctors[index].prices[0].price : 'N/A'} EGP',
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .titleSmall
-                                              ?.copyWith(
-                                                  fontSize: 14,
-                                                  color: Colors.grey),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 10),
-                                  ],
-                                ),
-                              ),
-                              SizedBox(width: width * 0.14),
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  InkWell(
-                                    onTap: () {
-                                      Navigator.of(context).pushNamed(
-                                        DoctorInformation.routeName,
-                                        arguments: filteredDoctors[index].id,
-                                      );
-                                    },
-                                    child: Container(
-                                      height: 29,
-                                      width: 50,
-                                      decoration: BoxDecoration(
-                                        color: AppTheme.white,
-                                        borderRadius: BorderRadius.circular(18),
-                                      ),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          const Icon(Icons.star,
-                                              color: AppTheme.green, size: 18),
-                                          const SizedBox(width: 2),
-                                          Text(
-                                            '5',
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .labelMedium
-                                                ?.copyWith(
-                                                    color: AppTheme.green,
-                                                    fontSize: 16),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(height: 12),
-                                  InkWell(
-                                    onTap: () {
-                                      Navigator.of(context).pushNamed(
-                                        DoctorInformation.routeName,
-                                        arguments: filteredDoctors[index].id,
-                                      );
-                                    },
-                                    child: Container(
-                                      height: 29,
-                                      width: 70,
-                                      decoration: BoxDecoration(
-                                        color: AppTheme.green,
-                                        borderRadius: BorderRadius.circular(18),
-                                      ),
-                                      child: Center(
-                                        child: Text(
-                                          'info',
+                                          '5',
                                           style: Theme.of(context)
                                               .textTheme
                                               .labelMedium
                                               ?.copyWith(
-                                                  color: AppTheme.white,
+                                                  color: Colors.grey,
                                                   fontSize: 16),
                                         ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const Spacer(),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(right: 40, top: 20),
+                                child: InkWell(
+                                  onTap: () {
+                                    Navigator.of(context).pushNamed(
+                                      DoctorInformation.routeName,
+                                      arguments: filteredDoctors[index].id,
+                                    );
+                                  },
+                                  child: Container(
+                                    height: 29,
+                                    width: 70,
+                                    decoration: BoxDecoration(
+                                      color: AppTheme.green,
+                                      borderRadius: BorderRadius.circular(18),
+                                    ),
+                                    child: Center(
+                                      child: Text(
+                                        'info',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .labelMedium
+                                            ?.copyWith(
+                                                color: AppTheme.white,
+                                                fontSize: 16),
                                       ),
                                     ),
                                   ),
-                                ],
+                                ),
                               ),
                             ],
                           ),

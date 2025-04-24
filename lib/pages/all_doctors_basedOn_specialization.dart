@@ -77,6 +77,7 @@ class _AllDoctorsBasedOnSpecializationState
                   address: doctor.address,
                   doctorImage: doctor.photo ?? 'assets/images/doctor_image.png',
                   doctorid: doctor.id,
+                  rating: doctor.rating,
                 );
               },
             );

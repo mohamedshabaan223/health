@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:bloc/bloc.dart';
+import 'package:health_app/models/get_all_review_model.dart';
 import 'package:meta/meta.dart';
 import 'package:health_app/core/api/api_consumer.dart';
 import 'package:health_app/core/errors/exceptions.dart';
@@ -30,6 +31,26 @@ class ReviewCubit extends Cubit<ReviewState> {
       );
       final message = response.toString();
       emit(ReviewSuccess(message));
+    } on ServerException catch (e) {
+      emit(ReviewError(e.errorModel.errorMessage));
+    } catch (e) {
+      emit(ReviewError("Unexpected error: $e"));
+    }
+  }
+
+  Future<void> getReviewsByDoctorId(int doctorId) async {
+    emit(ReviewLoading());
+
+    try {
+      final response = await api.get(
+        'http://10.0.2.2:5282/Api/V1/Review/GetAllReviewsByDrId?doctorId=$doctorId',
+      );
+      List<dynamic> jsonData = response;
+
+      List<ReviewModel> reviews =
+          jsonData.map((data) => ReviewModel.fromJson(data)).toList();
+
+      emit(ReviewListSuccess(reviews));
     } on ServerException catch (e) {
       emit(ReviewError(e.errorModel.errorMessage));
     } catch (e) {

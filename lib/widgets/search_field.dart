@@ -16,12 +16,9 @@ class SearchField extends StatelessWidget {
         ),
         child: Row(
           children: [
-            InkWell(
-              onTap: () {},
-              child: Image.asset(
-                'assets/images/filter.png',
-                height: 30,
-              ),
+            Image.asset(
+              'assets/images/filter.png',
+              height: 30,
             ),
             const SizedBox(width: 8),
             const Expanded(

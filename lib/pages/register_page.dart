@@ -5,7 +5,6 @@ import 'package:health_app/cubits/auth_cubit/auth_cubit.dart';
 import 'package:health_app/pages/home_screen_patient.dart';
 import 'package:health_app/widgets/default_textbutton.dart';
 import 'package:health_app/widgets/default_textformfield.dart';
-import 'package:health_app/widgets/radio_buttom_for_users.dart';
 import 'package:health_app/widgets/start_screen_button.dart';
 import 'package:health_app/widgets/text_form_field_label.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
@@ -67,9 +66,16 @@ class _RegisterPageState extends State<RegisterPage> {
           setState(() {
             isLoading = false;
           });
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.errorMessage)),
-          );
+          // Check for the specific error that email is already taken
+          if (state.errorMessage == "Email Is already Exist") {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('The email is already registered.')),
+            );
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(state.errorMessage)),
+            );
+          }
         }
       },
       builder: (context, state) {
@@ -139,31 +145,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       controller: BlocProvider.of<AuthCubit>(context)
                           .registerPhoneNumber,
                     ),
-                    const SizedBox(height: 60, child: RadioButtonForUsers()),
-                    Column(
-                      children: [
-                        Text('By continuing, you agree to',
-                            style: Theme.of(context).textTheme.titleSmall),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text('Terms of Use',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .titleSmall!
-                                    .copyWith(color: AppTheme.green)),
-                            Text('  and  ',
-                                style: Theme.of(context).textTheme.titleSmall),
-                            Text('Privacy Policy',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .titleSmall!
-                                    .copyWith(color: AppTheme.green)),
-                          ],
-                        )
-                      ],
-                    ),
-                    SizedBox(height: height * 0.01),
+                    SizedBox(height: height * 0.08),
                     Center(
                       child: StartScreenButton(
                         label: 'Sign Up',
@@ -172,7 +154,17 @@ class _RegisterPageState extends State<RegisterPage> {
                               .registerFormKey
                               .currentState!
                               .validate()) {
-                            BlocProvider.of<AuthCubit>(context).register();
+                            if (email != null &&
+                                password != null &&
+                                fullName != null &&
+                                phone != null) {
+                              BlocProvider.of<AuthCubit>(context).register();
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                    content: Text('Please fill in all fields')),
+                              );
+                            }
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
@@ -189,7 +181,10 @@ class _RegisterPageState extends State<RegisterPage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text('Already have an account?',
-                            style: Theme.of(context).textTheme.titleSmall),
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleSmall!
+                                .copyWith(fontSize: 14)),
                         DefaultTextbutton(
                           label: 'Log in',
                           onPressed: () {

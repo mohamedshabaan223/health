@@ -22,8 +22,11 @@ class DoctorCubit extends Cubit<DoctorState> {
       );
 
       final List<dynamic> data = response;
-      final doctors = data.map((json) => DoctorModel.fromJson(json)).toList();
-
+      print("Response Data: $data");
+      final doctors = data.map((json) {
+        print("Doctor JSON: $json");
+        return DoctorModel.fromJson(json);
+      }).toList();
       emit(DoctorSuccess(doctors));
     } on ServerException catch (e) {
       emit(DoctorFailure(errorMessage: e.errorModel.errorMessage));
