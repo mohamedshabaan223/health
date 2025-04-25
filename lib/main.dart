@@ -193,7 +193,7 @@ class MyApp extends StatelessWidget {
             },
             initialRoute: token == null
                 ? StartScreen.id
-                : (role == 'doctor'
+                : (role == 'Doctor'
                     ? HomeScreenDoctor.id
                     : HomeScreenPatient.id),
             theme: AppTheme.lightTheme,

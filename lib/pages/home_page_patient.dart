@@ -161,7 +161,9 @@ class _HomePagePatientState extends State<HomePagePatient> {
                           );
                         },
                         child: SpecializationContainer(
-                          imagePath: 'assets/images/Oncology.png',
+                          imagePath: specialization.imagePath.isNotEmpty
+                              ? specialization.imagePath
+                              : 'assets/images/heart.png',
                           title: specialization.name,
                           onTap: () {
                             Navigator.of(context).pushNamed(

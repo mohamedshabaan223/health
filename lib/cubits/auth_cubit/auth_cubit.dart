@@ -94,6 +94,30 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
+  Future<void> deleteAccount() async {
+    try {
+      emit(DeleteAccountLoading());
+
+      final userId = await CacheHelper().getData(key: "id");
+      if (userId == null) {
+        emit(DeleteAccountFailure("User ID not found in cache"));
+        return;
+      }
+
+      final response = await api.delete(
+        "${EndPoints.deleteAccount}?accountId=$userId",
+      );
+
+      if (response == "Account deleted successfully.") {
+        emit(DeleteAccountSuccess(response));
+      } else {
+        emit(DeleteAccountFailure(response));
+      }
+    } catch (e) {
+      emit(DeleteAccountFailure("Error deleting account: $e"));
+    }
+  }
+
   void resetState() {
     emit(AuthInitial());
   }

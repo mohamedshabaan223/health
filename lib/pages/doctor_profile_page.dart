@@ -8,8 +8,8 @@ import 'package:health_app/cubits/profile_cubit/profile_state.dart';
 import 'package:health_app/pages/change_password.dart';
 import 'package:health_app/pages/doctor_update_profile.dart';
 import 'package:health_app/pages/start_screen.dart';
-import 'package:health_app/pages/patient_update_profile_page.dart';
 import 'package:health_app/widgets/row_profile.dart';
+import 'package:health_app/widgets/show_delete_account.dart';
 import 'package:health_app/widgets/show_logout.dart';
 
 class ProfileDoctor extends StatefulWidget {
@@ -23,12 +23,12 @@ class ProfileDoctor extends StatefulWidget {
 
 class _ProfileDoctorState extends State<ProfileDoctor> {
   int? userId;
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       int storedUserId = CacheHelper().getData(key: 'id');
-
       if (storedUserId == null) {
         Navigator.of(context).pushReplacementNamed(StartScreen.id);
       } else {
@@ -86,8 +86,6 @@ class _ProfileDoctorState extends State<ProfileDoctor> {
                       children: [
                         BlocBuilder<UserProfileCubit, UserProfileState>(
                           builder: (context, state) {
-                            print(
-                                "Building UI with Image: ${profileCubit.profilePhotoPath}");
                             return CircleAvatar(
                               radius: 52,
                               backgroundImage: profileCubit.profilePhotoPath !=
@@ -107,7 +105,7 @@ class _ProfileDoctorState extends State<ProfileDoctor> {
                           child: InkWell(
                             onTap: () {
                               Navigator.of(context)
-                                  .pushNamed(PatientUpdateProfile.id);
+                                  .pushNamed(DoctorUpdateProfile.id);
                             },
                             child: Container(
                               width: 35,
@@ -160,7 +158,9 @@ class _ProfileDoctorState extends State<ProfileDoctor> {
                   ),
                   SizedBox(height: height * 0.02),
                   RowProfile(
-                    onTap: () {},
+                    onTap: () => showModalBottomSheet(
+                        context: context,
+                        builder: (context) => const ShowDeleteAccount()),
                     label: 'Delete Account',
                     iconName: Icons.delete_forever,
                     containerColor: AppTheme.gray,

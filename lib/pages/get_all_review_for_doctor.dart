@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:health_app/cache/cache_helper.dart';
 import 'package:health_app/cubits/review_cubit/review_cubit.dart';
-import 'package:health_app/widgets/container_review.dart';
 import 'package:health_app/models/get_all_review_model.dart';
+import 'package:health_app/widgets/container_review.dart';
 
-class ReviewScreenDoctorReview extends StatelessWidget {
-  const ReviewScreenDoctorReview({super.key});
-  static const String id = '/review_screen_doctor_review';
+class GetAllReviewForDoctor extends StatelessWidget {
+  const GetAllReviewForDoctor({super.key});
+  static const String id = '/doctor_review';
 
   @override
   Widget build(BuildContext context) {
-    final doctorId = ModalRoute.of(context)?.settings.arguments as int?;
+    final doctorId = CacheHelper().getData(key: 'id');
     Future.microtask(() {
       context.read<ReviewCubit>().getReviewsByDoctorId(doctorId!);
     });
@@ -54,7 +55,7 @@ class ReviewScreenDoctorReview extends StatelessWidget {
             if (reviews.isEmpty) {
               return Center(
                 child: Text(
-                  'Be the first to write a review!',
+                  'No reviews available.',
                   style: TextStyle(
                     color: Colors.grey[600],
                     fontSize: 18,

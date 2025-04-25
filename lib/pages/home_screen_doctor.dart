@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:health_app/app_theme.dart';
 import 'package:health_app/pages/all_appoinements_for_doctor.dart';
-import 'package:health_app/pages/doctor_review.dart';
+import 'package:health_app/pages/get_all_review_for_doctor.dart';
 import 'package:health_app/pages/home_page_doctor.dart';
 import 'package:health_app/tabs/chat/display_all_chat.dart';
 
@@ -21,7 +21,7 @@ class _MyWidgetState extends State<HomeScreenDoctor> {
     HomePageDoctor(),
     const DisplayAllChat(),
     const AllAppoinementForDoctor(),
-    const DoctorReview(),
+    const GetAllReviewForDoctor(),
   ];
 
   @override

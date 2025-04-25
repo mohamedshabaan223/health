@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'dart:io';
 
 class SpecializationContainer extends StatelessWidget {
   final String title;
   final String imagePath;
   final void Function()? onTap;
+
   const SpecializationContainer({
     super.key,
     required this.title,
@@ -29,11 +31,17 @@ class SpecializationContainer extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Image.asset(
-                imagePath,
-                height: 40,
-                width: 40,
-              ),
+              imagePath.isNotEmpty && File(imagePath).existsSync()
+                  ? Image.file(
+                      File(imagePath),
+                      height: 40,
+                      width: 40,
+                    )
+                  : Image.asset(
+                      'assets/images/heart.png',
+                      height: 40,
+                      width: 40,
+                    ),
               const SizedBox(height: 10),
               Text(
                 title,

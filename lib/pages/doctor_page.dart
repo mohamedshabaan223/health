@@ -207,6 +207,7 @@ class _DoctorPageState extends State<DoctorPage> {
                           child: Text('Error: ${state.errorMessage}'));
                     } else if (state is DoctorSuccess) {
                       final doctors = state.doctorsList;
+
                       return ListView.builder(
                           itemCount: doctors.length,
                           itemBuilder: (_, index) => ContainerDoctor(

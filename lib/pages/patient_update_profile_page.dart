@@ -103,9 +103,8 @@ class PatientUpdateProfile extends StatelessWidget {
                     context, 'Phone number', profileCubit.phoneController),
                 _buildProfileField(
                     context, 'Email', profileCubit.emailController),
-                _buildProfileField(
-                    context, 'Password', profileCubit.passwordController,
-                    isPassword: true),
+                _buildProfileField(context, 'Age',
+                    profileCubit.ageController), // Added age field
                 SizedBox(height: height * 0.06),
                 _buildUpdateButton(context, profileCubit, userId),
               ],

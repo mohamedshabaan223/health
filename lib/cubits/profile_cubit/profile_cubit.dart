@@ -20,6 +20,7 @@ class UserProfileCubit extends Cubit<UserProfileState> {
   TextEditingController currentPasswordController = TextEditingController();
   TextEditingController newPasswordController = TextEditingController();
   TextEditingController confirmNewPasswordController = TextEditingController();
+  TextEditingController ageController = TextEditingController();
 
   UserProfileCubit(this.api) : super(UserProfileInitial());
 
@@ -85,14 +86,18 @@ class UserProfileCubit extends Cubit<UserProfileState> {
   Future<void> updateProfile(int userId) async {
     try {
       emit(UpdateProfileLoading());
+
       FormData formData = FormData.fromMap({
         "name": nameController.text,
         "email": emailController.text,
         "password": passwordController.text,
         "phone": phoneController.text,
+        "age": ageController.text,
         if (profilePhotoPath.isNotEmpty)
-          "photo": await MultipartFile.fromFile(profilePhotoPath,
-              filename: "profile.jpg"),
+          "photo": await MultipartFile.fromFile(
+            profilePhotoPath,
+            filename: "profile.jpg",
+          ),
       });
 
       final response = await api.put(

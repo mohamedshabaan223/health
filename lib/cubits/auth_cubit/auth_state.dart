@@ -21,3 +21,15 @@ final class RegisterFailure extends AuthState {
   final String errorMessage;
   RegisterFailure({required this.errorMessage});
 }
+
+class DeleteAccountLoading extends AuthState {}
+
+class DeleteAccountSuccess extends AuthState {
+  final String message;
+  DeleteAccountSuccess(this.message);
+}
+
+class DeleteAccountFailure extends AuthState {
+  final String errorMessage;
+  DeleteAccountFailure(this.errorMessage);
+}

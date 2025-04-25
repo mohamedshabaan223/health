@@ -14,6 +14,7 @@ class EndPoints {
   static String addFavoriteDoctor = "V1/Doctors/AddFavoriteDR";
   static String removeFavoriteDoctor = "V1/Doctors/RemoveFavoriteDR";
   static String getAllFavoriteDoctors = "V1/Doctors/GetAllDoctors";
+  static String deleteAccount = 'V1/Account/DeleteAccount';
 }
 
 class ApiKey {
