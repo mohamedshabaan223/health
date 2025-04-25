@@ -57,4 +57,8 @@ class ReviewCubit extends Cubit<ReviewState> {
       emit(ReviewError("Unexpected error: $e"));
     }
   }
+
+  void resetState() {
+    emit(ReviewInitial());
+  }
 }

@@ -12,6 +12,7 @@ class ReviewScreenDoctorReview extends StatelessWidget {
   Widget build(BuildContext context) {
     final doctorId = ModalRoute.of(context)?.settings.arguments as int?;
 
+    // استدعاء التقييمات الخاصة بالدكتور عند بناء الشاشة
     Future.microtask(() {
       context.read<ReviewCubit>().getReviewsByDoctorId(doctorId!);
     });
@@ -51,6 +52,20 @@ class ReviewScreenDoctorReview extends StatelessWidget {
 
           if (state is ReviewListSuccess) {
             List<ReviewModel> reviews = state.reviews;
+
+            // إذا كانت القائمة فارغة، عرض الرسالة
+            if (reviews.isEmpty) {
+              return Center(
+                child: Text(
+                  'Be the first to write a review!',
+                  style: TextStyle(
+                    color: Colors.grey[600],
+                    fontSize: 18,
+                    fontStyle: FontStyle.italic,
+                  ),
+                ),
+              );
+            }
 
             return Column(
               children: [

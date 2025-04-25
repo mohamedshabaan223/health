@@ -160,7 +160,7 @@ class MyApp extends StatelessWidget {
               CreateNewPasswordPage.id: (_) => CreateNewPasswordPage(),
               HomePagePatient.id: (_) => const HomePagePatient(),
               DoctorPage.routeName: (_) => const DoctorPage(),
-              DoctorInformation.routeName: (_) => DoctorInformation(),
+              DoctorInformation.routeName: (_) => const DoctorInformation(),
               Rating.routeName: (_) => const Rating(),
               Favorite.routeName: (_) => const Favorite(),
               Female.routeName: (_) => const Female(),
@@ -191,7 +191,11 @@ class MyApp extends StatelessWidget {
               ReviewScreenDoctorReview.id: (_) =>
                   const ReviewScreenDoctorReview(),
             },
-            initialRoute: HomeScreenPatient.id,
+            initialRoute: token == null
+                ? StartScreen.id
+                : (role == 'doctor'
+                    ? HomeScreenDoctor.id
+                    : HomeScreenPatient.id),
             theme: AppTheme.lightTheme,
             themeMode: ThemeMode.light,
           );

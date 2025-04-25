@@ -111,4 +111,8 @@ class LocationCubit extends Cubit<LocationState> {
       emit(LocationError('حدث خطأ غير متوقع: ${e.toString()}'));
     }
   }
+
+  void resetState() {
+    emit(LocationInitial());
+  }
 }

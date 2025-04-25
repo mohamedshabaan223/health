@@ -33,6 +33,7 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
   final TextEditingController ageController = TextEditingController();
   final TextEditingController fullNameController = TextEditingController();
   final TextEditingController problemController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
@@ -88,10 +89,17 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
       return;
     }
 
+    final uniqueDays = availableSlots.map((slot) => slot.day).toSet().toList();
+    final selectedDay = uniqueDays[selectedDayIndex];
+    final selectedTime = availableSlots
+        .where((slot) => slot.day == selectedDay)
+        .toList()[selectedTimeIndex]
+        .timeStart;
+
     final bookingRequest = BookingRequest(
       doctorId: doctorId!,
-      day: availableSlots[selectedDayIndex].day,
-      time: availableSlots[selectedTimeIndex].timeStart,
+      day: selectedDay,
+      time: selectedTime,
       patientName: selectedPatientType == 'Yourself'
           ? BlocProvider.of<AuthCubit>(context).patientName.text
           : fullNameController.text ?? "Unknown",
@@ -113,13 +121,21 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
     return BlocListener<BookingCubit, BookingCubitState>(
       listener: (context, state) {
         if (state is BookingCubitDataSuccess) {
+          final uniqueDays =
+              availableSlots.map((slot) => slot.day).toSet().toList();
+          final selectedDay = uniqueDays[selectedDayIndex];
+          final selectedTime = availableSlots
+              .where((slot) => slot.day == selectedDay)
+              .toList()[selectedTimeIndex]
+              .timeStart;
+
           Navigator.of(context).pushNamed(
             YourAppoinment.id,
             arguments: {
               "bookingId": state.bookingResponse.bookingId,
               "doctorId": doctorId,
-              "day": availableSlots[selectedDayIndex].day,
-              "time": availableSlots[selectedTimeIndex].timeStart,
+              "day": selectedDay,
+              "time": selectedTime,
               "patientName": selectedPatientType == 'Yourself'
                   ? BlocProvider.of<AuthCubit>(context).registerUserName.text
                   : fullNameController.text ?? "Unknown",

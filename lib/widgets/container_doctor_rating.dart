@@ -1,220 +1,170 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:health_app/app_theme.dart';
+import 'package:health_app/cache/cache_helper.dart';
+import 'package:health_app/cubits/favorite_cubit/favorite_cubit.dart';
+import 'package:health_app/cubits/favorite_cubit/favorite_state.dart';
+import 'package:health_app/models/doctor_model.dart';
 import 'package:health_app/pages/doctor_page_information.dart';
 import 'package:health_app/widgets/default_icon.dart';
 
 class ContainrDoctorRating extends StatefulWidget {
-  const ContainrDoctorRating({super.key});
+  const ContainrDoctorRating({super.key, required this.doctor});
+  final DoctorModel doctor;
 
   @override
   State<ContainrDoctorRating> createState() => _ContainrDoctorRatingState();
 }
 
 class _ContainrDoctorRatingState extends State<ContainrDoctorRating> {
-  bool isFavorite = false;
+  late int patientId;
+
+  @override
+  void initState() {
+    super.initState();
+    patientId = CacheHelper().getData(key: "id") ?? 0;
+  }
+
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
-    double width = MediaQuery.of(context).size.width;
-    return Scaffold(
-      body: Container(
-        margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 6),
-        width: width * 15,
-        decoration: BoxDecoration(
-          color: AppTheme.gray,
-          borderRadius: BorderRadius.circular(18),
-        ),
-        child: Row(children: [
-          const Padding(
-            padding: EdgeInsets.only(left: 14.0),
-            child: CircleAvatar(
-              radius: 37,
-              backgroundImage: AssetImage('assets/images/doctor_image.png'),
-            ),
+
+    return BlocBuilder<FavoriteDoctorCubit, FavoriteDoctorState>(
+      builder: (context, state) {
+        final isFavorite = context
+            .watch<FavoriteDoctorCubit>()
+            .isDoctorFavorite(widget.doctor.id ?? 0);
+
+        return Container(
+          margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+          width: double.infinity,
+          height: height * 0.16,
+          decoration: BoxDecoration(
+            color: AppTheme.gray,
+            borderRadius: BorderRadius.circular(17),
           ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Image.asset(
-                      'assets/images/professional.png',
-                    ),
-                    const SizedBox(
-                      width: 4,
-                    ),
-                    Text(
-                      'Professianol Doctor',
-                      style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                            fontSize: 14,
-                          ),
-                    ),
-                    SizedBox(
-                      width: width * 0.1,
-                    ),
-                    Container(
-                      padding: const EdgeInsets.only(right: 10),
-                      height: 20,
-                      width: 50,
-                      decoration: BoxDecoration(
-                        color: AppTheme.white,
-                        borderRadius: BorderRadius.circular(13),
-                      ),
-                      child: const Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.star,
-                            color: AppTheme.green,
-                            size: 19,
-                          ),
-                          SizedBox(
-                            width: 2,
-                          ),
-                          Text(
-                            '5',
-                            style:
-                                TextStyle(fontSize: 16, color: AppTheme.green),
-                          )
-                        ],
-                      ),
-                    )
-                  ],
+          child: Row(
+            children: [
+              const Padding(
+                padding: EdgeInsets.only(left: 14.0),
+                child: CircleAvatar(
+                  radius: 40,
+                  backgroundImage: AssetImage('assets/images/doctor_image.png'),
                 ),
-                const SizedBox(
-                  height: 5,
-                ),
-                Column(
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 20, left: 10, bottom: 15),
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Container(
-                      width: width * 0.6,
-                      height: height * 0.06,
-                      decoration: BoxDecoration(
-                        color: AppTheme.white,
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      child: const Padding(
-                        padding: EdgeInsets.only(left: 20.0, top: 2, bottom: 2),
-                        child: Row(
-                          children: [
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Dr. Olivia Turner, M.D',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w500,
-                                    color: AppTheme.green,
-                                    fontSize: 16,
-                                  ),
-                                ),
-                                Text(
-                                  'Dermato-Endocrinology',
-                                  style: TextStyle(
-                                    color: AppTheme.black,
-                                    fontSize: 13,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Spacer(),
-                          ],
-                        ),
-                      ),
+                    Text(
+                      widget.doctor.doctorName,
+                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                            fontSize: 16,
+                            color: AppTheme.green,
+                          ),
                     ),
-                    const SizedBox(
-                      height: 10,
+                    const SizedBox(height: 3),
+                    Text(
+                      widget.doctor.specializationName,
+                      style: Theme.of(context)
+                          .textTheme
+                          .titleSmall
+                          ?.copyWith(fontSize: 14),
                     ),
+                    const SizedBox(height: 5),
                     Row(
                       children: [
-                        InkWell(
-                          onTap: () {
-                            Navigator.of(context)
-                                .pushNamed(DoctorInformation.routeName);
-                          },
-                          child: Container(
-                            height: 26,
-                            width: 50,
-                            decoration: BoxDecoration(
-                                color: AppTheme.green,
-                                borderRadius: BorderRadius.circular(18)),
-                            child: Center(
-                              child: Text(
-                                'info',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .labelMedium
-                                    ?.copyWith(
-                                        color: AppTheme.white, fontSize: 16),
-                              ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          width: width * 0.2,
-                        ),
-                        _buildInfoContainer(
-                          text: 'Location',
-                          width: 100,
-                          onTap: () {},
-                        ),
-                        const SizedBox(
-                          width: 4,
-                        ),
-                        Defaulticon(
-                          onTap: () {
-                            isFavorite = !isFavorite;
-                            setState(() {});
-                          },
-                          icon: Icon(
-                            isFavorite ? Icons.favorite : Icons.favorite_border,
-                            size: 17,
-                            color: AppTheme.green,
-                          ),
-                          containerClolor: AppTheme.white,
+                        const Icon(Icons.location_on,
+                            color: AppTheme.green3, size: 18),
+                        const SizedBox(width: 5),
+                        Text(
+                          widget.doctor.address,
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleSmall
+                              ?.copyWith(fontSize: 14, color: Colors.grey),
                         ),
                       ],
-                    )
+                    ),
+                    const SizedBox(height: 5),
+                    Row(
+                      children: [
+                        const Icon(Icons.star,
+                            color: AppTheme.green3, size: 18),
+                        const SizedBox(width: 5),
+                        Text(
+                          widget.doctor.rating.toString(),
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleSmall
+                              ?.copyWith(fontSize: 14, color: Colors.grey),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
-              ],
-            ),
+              ),
+              const Spacer(),
+              Column(
+                children: [
+                  SizedBox(height: height * 0.05),
+                  Defaulticon(
+                    onTap: () {
+                      final favoriteCubit = context.read<FavoriteDoctorCubit>();
+                      if (isFavorite) {
+                        favoriteCubit.removeFavoriteDoctor(
+                          patientId: patientId,
+                          doctorId: widget.doctor.id ?? 0,
+                        );
+                      } else {
+                        favoriteCubit.addFavoriteDoctor(
+                          patientId: patientId,
+                          doctorId: widget.doctor.id ?? 0,
+                        );
+                      }
+                    },
+                    icon: Icon(
+                      isFavorite ? Icons.favorite : Icons.favorite_border,
+                      size: 19,
+                      color: AppTheme.green,
+                    ),
+                    containerClolor: AppTheme.white,
+                  ),
+                  const SizedBox(height: 15),
+                  InkWell(
+                    onTap: () {
+                      Navigator.of(context).pushNamed(
+                        DoctorInformation.routeName,
+                        arguments: widget.doctor.id,
+                      );
+                    },
+                    child: Container(
+                      height: 29,
+                      width: 70,
+                      decoration: BoxDecoration(
+                        color: AppTheme.green,
+                        borderRadius: BorderRadius.circular(18),
+                      ),
+                      child: Center(
+                        child: Text(
+                          'info',
+                          style: Theme.of(context)
+                              .textTheme
+                              .labelMedium
+                              ?.copyWith(color: AppTheme.white, fontSize: 16),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(width: 15),
+            ],
           ),
-        ]),
-      ),
+        );
+      },
     );
   }
-}
-
-Widget _buildInfoContainer(
-    {required String text,
-    required double width,
-    required void Function()? onTap}) {
-  return InkWell(
-    onTap: onTap,
-    child: Container(
-      width: width,
-      height: 30,
-      decoration: BoxDecoration(
-        color: AppTheme.green3,
-        borderRadius: BorderRadius.circular(15),
-      ),
-      child: Center(
-        child: Text(
-          text,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 15,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
-    ),
-  );
 }

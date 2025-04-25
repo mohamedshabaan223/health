@@ -35,6 +35,26 @@ class DoctorCubit extends Cubit<DoctorState> {
     }
   }
 
+  Future<void> getAllDoctorsByTopRating() async {
+    try {
+      emit(DoctorLoading());
+
+      final response = await api.get(EndPoints.getAllDoctors);
+
+      final List<dynamic> data = response;
+
+      final doctors = data.map((json) => DoctorModel.fromJson(json)).toList();
+
+      final filteredDoctors = doctors.where((doc) => doc.rating >= 4).toList();
+
+      emit(DoctorSuccess(filteredDoctors));
+    } on ServerException catch (e) {
+      emit(DoctorFailure(errorMessage: e.errorModel.errorMessage));
+    } catch (e) {
+      emit(DoctorFailure(errorMessage: "Unexpected error occurred: $e"));
+    }
+  }
+
   Future<void> getDoctorsByGender({required String gender}) async {
     try {
       emit(DoctorLoading());

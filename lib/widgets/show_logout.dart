@@ -8,8 +8,10 @@ import 'package:health_app/cubits/booking_cubit/booking_cubit_cubit.dart';
 import 'package:health_app/cubits/chat_cubit/chat_cubit.dart';
 import 'package:health_app/cubits/doctors_cubit/doctor_cubit.dart';
 import 'package:health_app/cubits/favorite_cubit/favorite_cubit.dart';
+import 'package:health_app/cubits/location_cubit/location_cubit.dart';
 import 'package:health_app/cubits/payment_cubit/payment_cubit.dart';
 import 'package:health_app/cubits/profile_cubit/profile_cubit.dart';
+import 'package:health_app/cubits/review_cubit/review_cubit.dart';
 import 'package:health_app/cubits/specializations_cubit/specializations_cubit.dart';
 import 'package:health_app/pages/start_screen.dart';
 
@@ -124,6 +126,8 @@ class ShowLogout extends StatelessWidget {
     BlocProvider.of<SpecializationsCubit>(context).resetState();
     BlocProvider.of<UserProfileCubit>(context).resetState();
     BlocProvider.of<FavoriteDoctorCubit>(context).resetState();
+    BlocProvider.of<LocationCubit>(context).resetState();
+    BlocProvider.of<ReviewCubit>(context).resetState();
 
     String? tokenAfterDelete = CacheHelper().getData(key: ApiKey.token);
     print('Token after deletion: $tokenAfterDelete');
@@ -135,3 +139,5 @@ class ShowLogout extends StatelessWidget {
     );
   }
 }
+
+class ProfileCubit {}
