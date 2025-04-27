@@ -55,7 +55,6 @@ class _RatingState extends State<Rating> {
           padding: EdgeInsets.all(width * 0.03),
           child: Column(
             children: [
-              // الهيدر
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -117,8 +116,6 @@ class _RatingState extends State<Rating> {
                   ),
                 ],
               ),
-
-              // أيقونات الترتيب
               Padding(
                 padding: EdgeInsets.symmetric(
                     vertical: width * 0.02, horizontal: width * 0.03),
@@ -172,8 +169,6 @@ class _RatingState extends State<Rating> {
                   ],
                 ),
               ),
-
-              // عرض الدكاترة حسب التقييم
               Expanded(
                 child: BlocBuilder<DoctorCubit, DoctorState>(
                   builder: (context, state) {
@@ -194,8 +189,11 @@ class _RatingState extends State<Rating> {
                       );
                     } else if (state is DoctorFailure) {
                       return Center(
-                          child: Text(state.errorMessage,
-                              style: TextStyle(color: Colors.red)));
+                        child: Text(
+                          state.errorMessage,
+                          style: const TextStyle(color: Colors.red),
+                        ),
+                      );
                     } else {
                       return const SizedBox.shrink();
                     }

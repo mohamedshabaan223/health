@@ -19,9 +19,9 @@ class DoctorContainerSpecialization extends StatefulWidget {
 
   final String doctorNmae;
   final String address;
-  final String doctorImage;
+  final Object doctorImage;
   final int doctorid;
-  final int rating;
+  final double rating;
 
   @override
   State<DoctorContainerSpecialization> createState() =>
@@ -61,166 +61,147 @@ class _DoctorContainerSpecializationState
                   width: 80,
                   child: CircleAvatar(
                     radius: 50,
-                    backgroundImage: AssetImage(widget.doctorImage),
+                    backgroundImage: widget.doctorImage is FileImage
+                        ? widget.doctorImage as ImageProvider
+                        : const AssetImage("assets/images/doctor_image.png"),
                   ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(top: 12, left: 10, bottom: 10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(height: 5),
-                    Text(
-                      widget.doctorNmae,
-                      style: Theme.of(context)
-                          .textTheme
-                          .titleSmall
-                          ?.copyWith(fontSize: 17, color: AppTheme.green),
-                    ),
-                    Row(
-                      children: [
-                        const Icon(Icons.location_on,
-                            color: AppTheme.green, size: 18),
-                        Text(
-                          widget.address,
-                          style:
-                              const TextStyle(color: Colors.grey, fontSize: 15),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: height * 0.01),
-                    Row(
-                      children: [
-                        Container(
-                          height: 25,
-                          width: 50,
-                          decoration: BoxDecoration(
-                            color: AppTheme.white,
-                            borderRadius: BorderRadius.circular(18),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 15, bottom: 15),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        widget.doctorNmae,
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleSmall
+                            ?.copyWith(fontSize: 17, color: AppTheme.green),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(height: 5),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Icon(Icons.location_on,
+                              color: AppTheme.green, size: 18),
+                          const SizedBox(width: 5),
+                          Expanded(
+                            child: Text(
+                              widget.address,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleSmall
+                                  ?.copyWith(fontSize: 14, color: Colors.grey),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
                           ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Icon(
-                                Icons.star,
-                                color: AppTheme.green,
-                                size: 18,
-                              ),
-                              Text(
-                                widget.rating.toString(),
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .labelMedium
-                                    ?.copyWith(
-                                        color: AppTheme.green, fontSize: 16),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: height * 0.01),
-                    Row(
-                      children: [
-                        Defaulticon(
-                          onTap: () {
-                            final favoriteCubit =
-                                context.read<FavoriteDoctorCubit>();
-
-                            if (favoriteCubit
-                                .isDoctorFavorite(widget.doctorid)) {
-                              favoriteCubit.removeFavoriteDoctor(
-                                patientId: patientId,
-                                doctorId: widget.doctorid,
-                              );
-                            } else {
-                              favoriteCubit.addFavoriteDoctor(
-                                patientId: patientId,
-                                doctorId: widget.doctorid,
-                              );
-                            }
-
-                            setState(() {});
-                          },
-                          icon: Icon(
-                            context
-                                    .watch<FavoriteDoctorCubit>()
-                                    .isDoctorFavorite(widget.doctorid)
-                                ? Icons.favorite
-                                : Icons.favorite_border,
-                            size: 19,
-                            color: AppTheme.green,
-                          ),
-                          containerClolor: AppTheme.white,
-                        ),
-                        SizedBox(width: width * 0.03),
-                        InkWell(
-                          onTap: () {
-                            Navigator.of(context).pushNamed(
-                              DoctorInformation.routeName,
-                              arguments: widget.doctorid,
-                            );
-                          },
-                          child: Container(
-                            height: 29,
-                            width: 70,
+                        ],
+                      ),
+                      const SizedBox(height: 5),
+                      Row(
+                        children: [
+                          Container(
+                            height: 25,
+                            width: 60,
                             decoration: BoxDecoration(
-                              color: AppTheme.green,
+                              color: AppTheme.white,
                               borderRadius: BorderRadius.circular(18),
                             ),
-                            child: Center(
-                              child: Text(
-                                'Info',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .labelMedium
-                                    ?.copyWith(
-                                        color: AppTheme.white, fontSize: 16),
-                              ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Icon(
+                                  Icons.star,
+                                  color: AppTheme.green,
+                                  size: 18,
+                                ),
+                                const SizedBox(width: 2),
+                                Text(
+                                  widget.rating.toString(),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .labelMedium
+                                      ?.copyWith(
+                                          color: AppTheme.green, fontSize: 16),
+                                ),
+                              ],
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
+              Column(
+                children: [
+                  SizedBox(height: height * 0.05),
+                  Defaulticon(
+                    onTap: () {
+                      final favoriteCubit = context.read<FavoriteDoctorCubit>();
+                      if (favoriteCubit.isDoctorFavorite(widget.doctorid)) {
+                        favoriteCubit.removeFavoriteDoctor(
+                          patientId: patientId,
+                          doctorId: widget.doctorid,
+                        );
+                      } else {
+                        favoriteCubit.addFavoriteDoctor(
+                          patientId: patientId,
+                          doctorId: widget.doctorid,
+                        );
+                      }
+                      setState(() {});
+                    },
+                    icon: Icon(
+                      context
+                              .watch<FavoriteDoctorCubit>()
+                              .isDoctorFavorite(widget.doctorid)
+                          ? Icons.favorite
+                          : Icons.favorite_border,
+                      size: 19,
+                      color: AppTheme.green,
+                    ),
+                    containerClolor: AppTheme.white,
+                  ),
+                  const SizedBox(height: 15),
+                  InkWell(
+                    onTap: () {
+                      Navigator.of(context).pushNamed(
+                        DoctorInformation.routeName,
+                        arguments: widget.doctorid,
+                      );
+                    },
+                    child: Container(
+                      height: 29,
+                      width: 70,
+                      decoration: BoxDecoration(
+                        color: AppTheme.green,
+                        borderRadius: BorderRadius.circular(18),
+                      ),
+                      child: Center(
+                        child: Text(
+                          'info',
+                          style: Theme.of(context)
+                              .textTheme
+                              .labelMedium
+                              ?.copyWith(color: AppTheme.white, fontSize: 16),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(width: 10),
             ],
           ),
         );
       },
     );
   }
-}
-
-Widget _buildInfoContainer({
-  required String text,
-  required double width,
-  required void Function()? onTap,
-  required Color backgroundColor,
-  required Color textColor,
-}) {
-  return InkWell(
-    onTap: onTap,
-    child: Container(
-      margin: const EdgeInsets.symmetric(horizontal: 5),
-      width: width,
-      height: 30,
-      decoration: BoxDecoration(
-        color: backgroundColor,
-        borderRadius: BorderRadius.circular(15),
-      ),
-      child: Center(
-        child: Text(
-          text,
-          style: TextStyle(
-            color: textColor,
-            fontSize: 15,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
-    ),
-  );
 }

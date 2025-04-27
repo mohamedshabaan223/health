@@ -98,13 +98,13 @@ class PatientUpdateProfile extends StatelessWidget {
                 ),
                 const SizedBox(height: 30),
                 _buildProfileField(
-                    context, 'Full Name', profileCubit.nameController),
+                    context, 'Full Name', profileCubit.patientNameController),
+                _buildProfileField(context, 'Phone number',
+                    profileCubit.patientPhoneController),
                 _buildProfileField(
-                    context, 'Phone number', profileCubit.phoneController),
-                _buildProfileField(
-                    context, 'Email', profileCubit.emailController),
+                    context, 'Email', profileCubit.patientEmailController),
                 _buildProfileField(context, 'Age',
-                    profileCubit.ageController), // Added age field
+                    profileCubit.patientAgeController), // Added age field
                 SizedBox(height: height * 0.06),
                 _buildUpdateButton(context, profileCubit, userId),
               ],
@@ -163,7 +163,7 @@ class PatientUpdateProfile extends StatelessWidget {
         child: BlocBuilder<UserProfileCubit, UserProfileState>(
           builder: (context, state) {
             return InkWell(
-              onTap: () => profileCubit.updateProfile(userId),
+              onTap: () => profileCubit.updatePatientProfile(userId),
               child: Container(
                 alignment: Alignment.center,
                 height: 50,

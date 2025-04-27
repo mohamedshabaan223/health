@@ -37,6 +37,7 @@ class DoctorModel {
   final String email;
   final String? phone;
   final double rating;
+  String? localImagePath;
   final List<AvailableSlotModel> availableSlots;
 
   DoctorModel({
@@ -49,6 +50,7 @@ class DoctorModel {
     required this.email,
     this.phone,
     required this.rating,
+    this.localImagePath,
     required this.availableSlots,
   });
 

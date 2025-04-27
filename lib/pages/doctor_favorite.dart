@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:health_app/app_theme.dart';
@@ -5,6 +7,7 @@ import 'package:health_app/cache/cache_helper.dart';
 import 'package:health_app/cubits/favorite_cubit/favorite_cubit.dart';
 import 'package:health_app/cubits/favorite_cubit/favorite_state.dart';
 import 'package:health_app/pages/doctor_page_information.dart';
+import 'package:health_app/widgets/default_icon.dart';
 
 class Favorite extends StatefulWidget {
   static const String routeName = '/favorite';
@@ -53,6 +56,7 @@ class _FavoriteState extends State<Favorite> {
   @override
   Widget build(BuildContext context) {
     final double width = MediaQuery.of(context).size.width;
+    final double height = MediaQuery.of(context).size.height;
 
     return Scaffold(
       body: SafeArea(
@@ -131,7 +135,7 @@ class _FavoriteState extends State<Favorite> {
                           margin: const EdgeInsets.symmetric(
                               horizontal: 10, vertical: 6),
                           width: double.infinity,
-                          height: 143,
+                          height: height * 0.18,
                           decoration: BoxDecoration(
                             color: AppTheme.gray,
                             borderRadius: BorderRadius.circular(17),
@@ -145,105 +149,150 @@ class _FavoriteState extends State<Favorite> {
                                   width: 80,
                                   child: CircleAvatar(
                                     radius: 50,
-                                    backgroundImage: AssetImage(
-                                        filteredDoctors[index].photo ??
-                                            'assets/images/doctor_image.png'),
+                                    backgroundImage: filteredDoctors[index]
+                                                .localImagePath !=
+                                            null
+                                        ? FileImage(File(filteredDoctors[index]
+                                            .localImagePath!))
+                                        : AssetImage(
+                                                'assets/images/doctor_image.png')
+                                            as ImageProvider,
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.only(
+                                      top: 20, left: 10, bottom: 15),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        filteredDoctors[index].doctorName,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .titleSmall
+                                            ?.copyWith(
+                                              fontSize: 16,
+                                              color: AppTheme.green,
+                                            ),
+                                      ),
+                                      const SizedBox(height: 5),
+                                      Text(
+                                        filteredDoctors[index]
+                                            .specializationName,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .titleSmall
+                                            ?.copyWith(fontSize: 14),
+                                      ),
+                                      const SizedBox(height: 5),
+                                      Row(
+                                        children: [
+                                          const Icon(Icons.location_on,
+                                              color: AppTheme.green3, size: 18),
+                                          const SizedBox(width: 5),
+                                          Expanded(
+                                            child: Text(
+                                              filteredDoctors[index].address,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .titleSmall
+                                                  ?.copyWith(
+                                                    fontSize: 14,
+                                                    color: Colors.grey,
+                                                  ),
+                                              maxLines: 2,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(height: 5),
+                                      Row(
+                                        children: [
+                                          const Icon(Icons.star,
+                                              color: AppTheme.green, size: 18),
+                                          const SizedBox(width: 4),
+                                          Text(
+                                            filteredDoctors[index]
+                                                .rating
+                                                .toString(),
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .labelMedium
+                                                ?.copyWith(
+                                                    color: Colors.grey,
+                                                    fontSize: 16),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ),
                               Padding(
-                                padding: const EdgeInsets.only(
-                                    top: 20, left: 10, bottom: 15),
+                                padding:
+                                    const EdgeInsets.only(right: 20, top: 20),
                                 child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Text(
-                                      filteredDoctors[index].doctorName,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .titleSmall
-                                          ?.copyWith(
-                                            fontSize: 16,
-                                            color: AppTheme.green,
+                                    Defaulticon(
+                                      icon: const Icon(Icons.favorite,
+                                          color: AppTheme.green, size: 20),
+                                      containerClolor: AppTheme.white,
+                                      onTap: () {
+                                        final favoriteCubit =
+                                            context.read<FavoriteDoctorCubit>();
+                                        favoriteCubit.removeFavoriteDoctor(
+                                          patientId:
+                                              CacheHelper().getData(key: "id")!,
+                                          doctorId: filteredDoctors[index].id,
+                                        );
+                                        setState(() {
+                                          filteredDoctors.removeAt(index);
+                                        });
+                                        BlocProvider.of<FavoriteDoctorCubit>(
+                                                context)
+                                            .getAllDoctorsInFavorites(
+                                                patientId: CacheHelper()
+                                                    .getData(key: "id")!);
+                                      },
+                                    ),
+                                    SizedBox(height: height * 0.02),
+                                    InkWell(
+                                      onTap: () {
+                                        Navigator.of(context).pushNamed(
+                                          DoctorInformation.routeName,
+                                          arguments: filteredDoctors[index].id,
+                                        );
+                                      },
+                                      child: Container(
+                                        height: 29,
+                                        width: 70,
+                                        decoration: BoxDecoration(
+                                          color: AppTheme.green,
+                                          borderRadius:
+                                              BorderRadius.circular(18),
+                                        ),
+                                        child: Center(
+                                          child: Text(
+                                            'info',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .labelMedium
+                                                ?.copyWith(
+                                                    color: AppTheme.white,
+                                                    fontSize: 16),
                                           ),
-                                    ),
-                                    const SizedBox(height: 5),
-                                    Text(
-                                      filteredDoctors[index].specializationName,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .titleSmall
-                                          ?.copyWith(fontSize: 14),
-                                    ),
-                                    const SizedBox(height: 5),
-                                    Row(
-                                      children: [
-                                        const Icon(Icons.location_on,
-                                            color: AppTheme.green3, size: 18),
-                                        const SizedBox(width: 5),
-                                        Text(
-                                          filteredDoctors[index].address,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .titleSmall
-                                              ?.copyWith(
-                                                  fontSize: 14,
-                                                  color: Colors.grey),
                                         ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 5),
-                                    Row(
-                                      children: [
-                                        const Icon(Icons.star,
-                                            color: AppTheme.green, size: 18),
-                                        const SizedBox(width: 4),
-                                        Text(
-                                          '5',
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .labelMedium
-                                              ?.copyWith(
-                                                  color: Colors.grey,
-                                                  fontSize: 16),
-                                        ),
-                                      ],
+                                      ),
                                     ),
                                   ],
                                 ),
                               ),
-                              const Spacer(),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(right: 40, top: 20),
-                                child: InkWell(
-                                  onTap: () {
-                                    Navigator.of(context).pushNamed(
-                                      DoctorInformation.routeName,
-                                      arguments: filteredDoctors[index].id,
-                                    );
-                                  },
-                                  child: Container(
-                                    height: 29,
-                                    width: 70,
-                                    decoration: BoxDecoration(
-                                      color: AppTheme.green,
-                                      borderRadius: BorderRadius.circular(18),
-                                    ),
-                                    child: Center(
-                                      child: Text(
-                                        'info',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .labelMedium
-                                            ?.copyWith(
-                                                color: AppTheme.white,
-                                                fontSize: 16),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
+                              // Favorite Icon to remove doctor from favorites
                             ],
                           ),
                         ),

@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:health_app/cache/cache_helper.dart';
 import 'package:health_app/core/api/api_consumer.dart';
 import 'package:health_app/core/api/end_points.dart';
 import 'package:health_app/cubits/profile_cubit/profile_state.dart';
@@ -13,18 +14,25 @@ import 'package:path_provider/path_provider.dart';
 
 class UserProfileCubit extends Cubit<UserProfileState> {
   final ApiConsumer api;
-  TextEditingController nameController = TextEditingController();
-  TextEditingController phoneController = TextEditingController();
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
+  TextEditingController patientNameController = TextEditingController();
+  TextEditingController patientPhoneController = TextEditingController();
+  TextEditingController patientEmailController = TextEditingController();
   TextEditingController currentPasswordController = TextEditingController();
   TextEditingController newPasswordController = TextEditingController();
   TextEditingController confirmNewPasswordController = TextEditingController();
-  TextEditingController ageController = TextEditingController();
+  TextEditingController patientAgeController = TextEditingController();
+
+  TextEditingController doctorNameController = TextEditingController();
+  TextEditingController doctorPhoneController = TextEditingController();
+  TextEditingController doctorEmailController = TextEditingController();
+  TextEditingController doctorAdressController = TextEditingController();
+  TextEditingController doctorExperienceController = TextEditingController();
+  TextEditingController doctorFocusController = TextEditingController();
 
   UserProfileCubit(this.api) : super(UserProfileInitial());
 
   String profilePhotoPath = "";
+  UserProfile? userProfile;
 
   Future<void> fetchUserProfile(int patientId) async {
     try {
@@ -40,6 +48,8 @@ class UserProfileCubit extends Cubit<UserProfileState> {
         try {
           File savedFile = await saveBase64Image(userProfile.photoData!);
           profilePhotoPath = savedFile.path;
+          await CacheHelper().saveData(key: "name", value: userProfile.name);
+
           emit(UserProfileSuccess(userProfile));
         } catch (e) {
           print("Failed to process image: $e");
@@ -83,16 +93,15 @@ class UserProfileCubit extends Cubit<UserProfileState> {
     }
   }
 
-  Future<void> updateProfile(int userId) async {
+  Future<void> updatePatientProfile(int userId) async {
     try {
       emit(UpdateProfileLoading());
 
       FormData formData = FormData.fromMap({
-        "name": nameController.text,
-        "email": emailController.text,
-        "password": passwordController.text,
-        "phone": phoneController.text,
-        "age": ageController.text,
+        "name": patientNameController.text,
+        "email": patientEmailController.text,
+        "phone": patientPhoneController.text,
+        "age": patientAgeController.text,
         if (profilePhotoPath.isNotEmpty)
           "photo": await MultipartFile.fromFile(
             profilePhotoPath,
@@ -102,6 +111,40 @@ class UserProfileCubit extends Cubit<UserProfileState> {
 
       final response = await api.put(
         '${EndPoints.updateUserProfile}?id=$userId',
+        data: formData,
+      );
+
+      emit(UpdateProfileSuccess());
+    } on DioException catch (e) {
+      print("Error in updateProfile: ${e.response?.data}");
+      emit(UpdateProfileFailure(
+          errorMessage: e.response?.data ?? "An error occurred"));
+    } catch (e) {
+      print("Unexpected error in updateProfile: $e");
+      emit(UpdateProfileFailure(errorMessage: "Unexpected error occurred: $e"));
+    }
+  }
+
+  Future<void> updateDoctorProfile(int userId) async {
+    try {
+      emit(UpdateProfileLoading());
+
+      FormData formData = FormData.fromMap({
+        "name": patientNameController.text,
+        "email": patientEmailController.text,
+        "phone": patientPhoneController.text,
+        "address": doctorAdressController.text,
+        "experience": doctorExperienceController.text,
+        "focus": doctorFocusController.text,
+        if (profilePhotoPath.isNotEmpty)
+          "photo": await MultipartFile.fromFile(
+            profilePhotoPath,
+            filename: "profile.jpg",
+          ),
+      });
+
+      final response = await api.put(
+        '${EndPoints.doctorUpdateProfile}?id=$userId',
         data: formData,
       );
 

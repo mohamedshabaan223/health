@@ -11,6 +11,7 @@ import 'package:health_app/models/booking_model.dart';
 import 'package:health_app/models/canceled_booking_model.dart';
 import 'package:health_app/models/get_all_booking_model.dart';
 import 'package:meta/meta.dart';
+import 'dart:developer';
 
 part 'booking_cubit_state.dart';
 
@@ -39,8 +40,10 @@ class BookingCubit extends Cubit<BookingCubitState> {
             .toList();
         if (slots.isEmpty) {
           emit(BookingCubitError("No available slots for this date."));
+          log("No available slots for this date.");
         } else {
           emit(BookingCubitSuccess(slots));
+          log("Available slots: $slots");
         }
       } else {
         emit(BookingCubitError("Unexpected response format"));

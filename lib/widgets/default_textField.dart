@@ -2,9 +2,13 @@ import 'package:flutter/material.dart';
 
 class DoctorDefaultTextfield extends StatelessWidget {
   DoctorDefaultTextfield(
-      {required this.controller, required this.typeKeyboard});
+      {super.key,
+      required this.controller,
+      required this.typeKeyboard,
+      required this.hintText});
   TextEditingController controller;
   TextInputType typeKeyboard;
+  String hintText;
 
   @override
   Widget build(BuildContext context) {
@@ -12,14 +16,17 @@ class DoctorDefaultTextfield extends StatelessWidget {
       controller: controller,
       keyboardType: typeKeyboard,
       decoration: InputDecoration(
-        contentPadding: EdgeInsets.symmetric(horizontal: 15),
+        hintText: hintText,
+        hintStyle: const TextStyle(
+            color: Colors.grey, fontSize: 15, fontWeight: FontWeight.w400),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 15),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(15),
-          borderSide: BorderSide(color: Colors.grey),
+          borderSide: const BorderSide(color: Colors.grey),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(15),
-          borderSide: BorderSide(color: Colors.grey),
+          borderSide: const BorderSide(color: Colors.grey),
         ),
       ),
     );

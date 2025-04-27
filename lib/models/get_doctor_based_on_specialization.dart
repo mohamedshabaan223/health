@@ -3,14 +3,16 @@ class GetDoctorBySpecialization {
   final String doctorName;
   final String? photo;
   final String address;
-  final int rating; // إضافة الحقل rating
+  final int rating;
+  String? localImagePath;
 
   GetDoctorBySpecialization({
     required this.id,
     required this.doctorName,
     this.photo,
     required this.address,
-    required this.rating, // إضافة في constructor
+    required this.rating,
+    this.localImagePath,
   });
 
   factory GetDoctorBySpecialization.fromJson(Map<String, dynamic> json) {
@@ -19,7 +21,7 @@ class GetDoctorBySpecialization {
       doctorName: json['doctorName'] as String,
       photo: json['photo'] as String?,
       address: json['address'] as String,
-      rating: json['rating'] as int, // معالجة الحقل rating
+      rating: json['rating'] as int,
     );
   }
 

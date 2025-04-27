@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:health_app/app_theme.dart';
@@ -7,6 +9,7 @@ import 'package:health_app/pages/chat_page.dart';
 import 'package:health_app/widgets/DoctorAppointmentsDropdown.dart';
 import 'package:health_app/widgets/container_schdule.dart';
 import 'package:health_app/models/get_doctor_info_by_id.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class ContainerDoctorInfo extends StatefulWidget {
   const ContainerDoctorInfo({super.key, required this.doctorId});
@@ -54,8 +57,12 @@ class _ContainerDoctorInfoState extends State<ContainerDoctorInfo> {
               children: [
                 Row(
                   children: [
-                    const CircleAvatar(
-                      backgroundImage: AssetImage('assets/images/male.png'),
+                    CircleAvatar(
+                      backgroundImage: doctor.localImagePath != null &&
+                              doctor.localImagePath!.isNotEmpty
+                          ? CachedNetworkImageProvider(doctor.localImagePath!)
+                          : const AssetImage('assets/images/doctor_image.png')
+                              as ImageProvider,
                       radius: 50,
                     ),
                     const SizedBox(width: 20),
@@ -102,13 +109,13 @@ class _ContainerDoctorInfoState extends State<ContainerDoctorInfo> {
                                     color: Colors.white,
                                     fontSize: 15,
                                   ),
-                                )
+                                ),
                               ],
                             ),
                           ),
                         ],
                       ),
-                    )
+                    ),
                   ],
                 ),
                 const SizedBox(height: 25),

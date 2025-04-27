@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:health_app/app_theme.dart';
 import 'package:health_app/models/get_all_review_model.dart';
+import 'dart:io';
 
 class ContainerReview extends StatelessWidget {
   final ReviewModel review;
@@ -46,11 +47,18 @@ class ContainerReview extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          CircleAvatar(
-            radius: 30,
-            backgroundImage: const AssetImage('assets/images/male.png'),
-            backgroundColor: AppTheme.green.withOpacity(0.2),
-          ),
+          review.localImagePath != null &&
+                  File(review.localImagePath!).existsSync()
+              ? CircleAvatar(
+                  radius: 30,
+                  backgroundImage: FileImage(File(review.localImagePath!)),
+                  backgroundColor: AppTheme.green.withOpacity(0.2),
+                )
+              : CircleAvatar(
+                  radius: 30,
+                  backgroundImage: const AssetImage('assets/images/male.png'),
+                  backgroundColor: AppTheme.green.withOpacity(0.2),
+                ),
           const SizedBox(width: 15),
           Expanded(
             child: Column(

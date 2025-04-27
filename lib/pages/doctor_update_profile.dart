@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:health_app/app_theme.dart';
-import 'package:health_app/widgets/default_textField.dart';
+import 'package:health_app/cache/cache_helper.dart';
+import 'package:health_app/cubits/profile_cubit/profile_cubit.dart';
+import 'package:health_app/cubits/profile_cubit/profile_state.dart';
+import 'package:health_app/pages/home_screen_doctor.dart';
 import 'package:health_app/widgets/image_profile.dart';
-import 'package:intl/intl.dart';
+import 'package:health_app/widgets/update_doctor_slots_day_time.dart';
+import 'package:health_app/widgets/update_text_field.dart';
 
 class DoctorUpdateProfile extends StatefulWidget {
   const DoctorUpdateProfile({super.key});
@@ -13,36 +18,17 @@ class DoctorUpdateProfile extends StatefulWidget {
 }
 
 class _DoctorUpdateProfileState extends State<DoctorUpdateProfile> {
-  TextEditingController nameController = TextEditingController();
+  TextEditingController phoneController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController adressController = TextEditingController();
-  TextEditingController aboutController = TextEditingController();
-  TextEditingController specializationController = TextEditingController();
-  TextEditingController priceController = TextEditingController();
   TextEditingController experienceController = TextEditingController();
-
-  DateTime selectedDate = DateTime.now();
-  DateFormat dateFormate = DateFormat('dd/MM/yyyy');
-
-  List<String> slotsAvailable = [
-    '10:00 AM',
-    '10:30 AM',
-    '11:00 AM',
-    '11:30 AM',
-    '12:00 PM',
-    '12:30 PM',
-    '03:00 PM',
-    '03:30 PM',
-    '04:00 PM',
-    '04:30 PM',
-    '05:00 PM',
-    '05:30 PM',
-  ];
-
-  int? selectedIndex;
+  TextEditingController aboutController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+    final profileCubit = BlocProvider.of<UserProfileCubit>(context);
+    int userId = CacheHelper().getData(key: 'id');
+
     return Scaffold(
       appBar: AppBar(
         titleSpacing: MediaQuery.of(context).size.width * 0.2,
@@ -53,7 +39,7 @@ class _DoctorUpdateProfileState extends State<DoctorUpdateProfile> {
               'My Profile',
               style: TextStyle(
                 color: Color(0xFF58CFA4),
-                fontSize: 23,
+                fontSize: 20,
                 fontWeight: FontWeight.w600,
               ),
             ),
@@ -62,143 +48,28 @@ class _DoctorUpdateProfileState extends State<DoctorUpdateProfile> {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 15),
+          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 15),
+              const SizedBox(height: 10),
               const Center(child: DoctorImageProfile()),
-              const SizedBox(height: 25),
-              _buildLabel('Years of experience'),
-              DoctorDefaultTextfield(
-                  controller: experienceController,
-                  typeKeyboard: TextInputType.number),
-              const SizedBox(height: 8),
-              _buildLabel('Email'),
-              DoctorDefaultTextfield(
-                  controller: emailController,
-                  typeKeyboard: TextInputType.emailAddress),
-              const SizedBox(height: 8),
-              _buildLabel('Adress'),
-              DoctorDefaultTextfield(
-                  controller: adressController,
-                  typeKeyboard: TextInputType.streetAddress),
-              const SizedBox(height: 8),
-              _buildLabel('About'),
-              DoctorDefaultTextfield(
-                  controller: aboutController,
-                  typeKeyboard: TextInputType.multiline),
-              const SizedBox(height: 8),
-              _buildLabel('Price'),
-              DoctorDefaultTextfield(
-                  controller: priceController,
-                  typeKeyboard: TextInputType.number),
-              const SizedBox(height: 8),
-              _buildLabel('Schedule'),
-              Container(
-                height: 45,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey),
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                child: TextButton(
-                  onPressed: () async {
-                    DateTime? dateTime = await showDatePicker(
-                      context: context,
-                      firstDate: DateTime.now(),
-                      lastDate: DateTime.now().add(const Duration(days: 365)),
-                      initialDate: selectedDate,
-                      initialEntryMode: DatePickerEntryMode.calendar,
-                    );
-                    if (dateTime != null) {
-                      setState(() {
-                        selectedDate = dateTime;
-                      });
-                    }
-                  },
-                  child: Text(dateFormate.format(selectedDate)),
-                ),
-              ),
-              const SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text(
-                    'Available Slots',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  IconButton(
-                    icon:
-                        const Icon(Icons.add_circle, color: Color(0xFF58CFA4)),
-                    onPressed: () {
-                      _showTimePicker();
-                    },
-                  ),
-                ],
-              ),
-              const SizedBox(height: 10),
-              GridView.count(
-                crossAxisCount: 3,
-                mainAxisSpacing: 5,
-                crossAxisSpacing: 5,
-                childAspectRatio: 2.5,
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                children: List.generate(slotsAvailable.length, (index) {
-                  return ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        selectedIndex = index;
-                      });
-                    },
-                    onLongPress: () {
-                      _confirmDeleteSlot(index);
-                    },
-                    style: ElevatedButton.styleFrom(
-                      side: BorderSide(
-                        color: selectedIndex == index
-                            ? const Color(0xFF58CFA4)
-                            : AppTheme.green,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                    ),
-                    child: Text(
-                      slotsAvailable[index],
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                        color: selectedIndex == index
-                            ? const Color.fromARGB(255, 2, 58, 37)
-                            : AppTheme.white,
-                      ),
-                    ),
-                  );
-                }),
-              ),
               const SizedBox(height: 15),
-              Row(
-                children: [
-                  Icon(Icons.info_outline,
-                      color: Colors.red.shade600, size: 20),
-                  const SizedBox(width: 6),
-                  Expanded(
-                    child: Text(
-                      'To delete a slot, long-press on it.',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.red.shade600,
-                        fontStyle: FontStyle.italic,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+              _buildProfileField(
+                  context, 'Email', profileCubit.doctorEmailController),
+              _buildProfileField(
+                  context, 'Phone number', profileCubit.doctorPhoneController),
+              _buildProfileField(
+                  context, 'Address', profileCubit.doctorAdressController),
+              _buildProfileField(context, 'Experience',
+                  profileCubit.doctorExperienceController),
+              _buildProfileField(
+                  context, 'Focus', profileCubit.doctorFocusController),
+              const SizedBox(height: 8),
+              UpdateDoctorSlotsDayTime(
+                  doctorName: CacheHelper().getData(key: 'name')),
+              const SizedBox(height: 15),
+              _buildUpdateButton(context, profileCubit, userId),
             ],
           ),
         ),
@@ -206,67 +77,85 @@ class _DoctorUpdateProfileState extends State<DoctorUpdateProfile> {
     );
   }
 
-  Text _buildLabel(String text) {
-    return Text(
-      text,
-      style: const TextStyle(
-        fontSize: 18,
-        fontWeight: FontWeight.w500,
-        color: Colors.black,
+  Widget _buildProfileField(
+      BuildContext context, String label, TextEditingController controller,
+      {bool isPassword = false}) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 15),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(label,
+              style:
+                  const TextStyle(fontSize: 17, fontWeight: FontWeight.w500)),
+          const SizedBox(height: 5),
+          UpdateTextField(
+            hintText:
+                controller.text.isNotEmpty ? controller.text : 'Enter $label',
+            controller: controller,
+            isPassword: isPassword,
+          ),
+        ],
       ),
     );
   }
 
-  void _showTimePicker() async {
-    TimeOfDay? pickedTime = await showTimePicker(
-      context: context,
-      initialTime: TimeOfDay.now(),
-    );
-
-    if (pickedTime != null) {
-      final now = DateTime.now();
-      final dateTime = DateTime(
-          now.year, now.month, now.day, pickedTime.hour, pickedTime.minute);
-      final formattedSlot = DateFormat('hh:mm a').format(dateTime);
-
-      if (slotsAvailable.contains(formattedSlot)) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('This slot already exists.'),
-            backgroundColor: Colors.red,
-          ),
-        );
-      } else {
-        setState(() {
-          slotsAvailable.add(formattedSlot);
-        });
-      }
-    }
-  }
-
-  void _confirmDeleteSlot(int index) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Delete Slot'),
-        content:
-            Text('Are you sure you want to delete "${slotsAvailable[index]}"?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () {
-              setState(() {
-                slotsAvailable.removeAt(index);
-                if (selectedIndex == index) selectedIndex = null;
-              });
-              Navigator.pop(context);
-            },
-            child: const Text('Delete'),
-          ),
-        ],
+  Widget _buildUpdateButton(
+      BuildContext context, UserProfileCubit profileCubit, int userId) {
+    return BlocListener<UserProfileCubit, UserProfileState>(
+      listener: (context, state) {
+        if (state is UpdateProfileSuccess) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+                content: Text("Profile updated successfully!"),
+                backgroundColor: AppTheme.green2),
+          );
+          Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(
+                builder: (context) => const HomeScreenDoctor(selectedIndex: 4)),
+            (route) => false,
+          );
+        } else if (state is UpdateProfileFailure) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+                content:
+                    Text("Failed to update profile: ${state.errorMessage}"),
+                backgroundColor: Colors.red),
+          );
+        }
+      },
+      child: Center(
+        child: BlocBuilder<UserProfileCubit, UserProfileState>(
+          builder: (context, state) {
+            return InkWell(
+              onTap: () => profileCubit.updateDoctorProfile(userId),
+              child: Container(
+                alignment: Alignment.center,
+                height: 50,
+                width: 220,
+                decoration: BoxDecoration(
+                  color: AppTheme.green,
+                  borderRadius: BorderRadius.circular(30),
+                  boxShadow: const [
+                    BoxShadow(
+                        color: Colors.black26,
+                        blurRadius: 4,
+                        offset: Offset(0, 2))
+                  ],
+                ),
+                child: state is UpdateProfileLoading
+                    ? const CircularProgressIndicator(color: Colors.white)
+                    : const Text(
+                        'Update Profile',
+                        style: TextStyle(
+                            color: AppTheme.white,
+                            fontSize: 22,
+                            fontWeight: FontWeight.w500),
+                      ),
+              ),
+            );
+          },
+        ),
       ),
     );
   }

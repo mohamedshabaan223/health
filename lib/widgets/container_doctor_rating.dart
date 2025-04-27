@@ -1,4 +1,5 @@
-import 'package:flutter/cupertino.dart';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:health_app/app_theme.dart';
@@ -29,6 +30,13 @@ class _ContainrDoctorRatingState extends State<ContainrDoctorRating> {
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
+    ImageProvider doctorImage;
+    if (widget.doctor.localImagePath != null &&
+        widget.doctor.localImagePath!.isNotEmpty) {
+      doctorImage = FileImage(File(widget.doctor.localImagePath!));
+    } else {
+      doctorImage = const AssetImage('assets/images/doctor_image.png');
+    }
 
     return BlocBuilder<FavoriteDoctorCubit, FavoriteDoctorState>(
       builder: (context, state) {
@@ -46,11 +54,11 @@ class _ContainrDoctorRatingState extends State<ContainrDoctorRating> {
           ),
           child: Row(
             children: [
-              const Padding(
-                padding: EdgeInsets.only(left: 14.0),
+              Padding(
+                padding: const EdgeInsets.only(left: 14.0),
                 child: CircleAvatar(
                   radius: 40,
-                  backgroundImage: AssetImage('assets/images/doctor_image.png'),
+                  backgroundImage: doctorImage,
                 ),
               ),
               Padding(
@@ -64,6 +72,8 @@ class _ContainrDoctorRatingState extends State<ContainrDoctorRating> {
                             fontSize: 16,
                             color: AppTheme.green,
                           ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: 3),
                     Text(
@@ -72,6 +82,8 @@ class _ContainrDoctorRatingState extends State<ContainrDoctorRating> {
                           .textTheme
                           .titleSmall
                           ?.copyWith(fontSize: 14),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: 5),
                     Row(
@@ -79,12 +91,17 @@ class _ContainrDoctorRatingState extends State<ContainrDoctorRating> {
                         const Icon(Icons.location_on,
                             color: AppTheme.green3, size: 18),
                         const SizedBox(width: 5),
-                        Text(
-                          widget.doctor.address,
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleSmall
-                              ?.copyWith(fontSize: 14, color: Colors.grey),
+                        SizedBox(
+                          width: 100,
+                          child: Text(
+                            widget.doctor.address,
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleSmall
+                                ?.copyWith(fontSize: 14, color: Colors.grey),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ),
                       ],
                     ),

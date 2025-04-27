@@ -8,6 +8,8 @@ class GetDoctorInfoById {
   final String? focus;
   final String address;
   final double rating;
+  String? localImagePath;
+
   final List<AvailableSlot> availableSlots;
 
   GetDoctorInfoById({
@@ -20,6 +22,7 @@ class GetDoctorInfoById {
     this.focus,
     required this.address,
     required this.rating,
+    String? localImagePath,
     required this.availableSlots,
   });
 

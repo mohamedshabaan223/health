@@ -4,12 +4,14 @@ class ReviewModel {
   final String? senderImage;
   final int rating;
   final int age;
+  String? localImagePath;
   ReviewModel({
     required this.comment,
     required this.senderName,
     this.senderImage,
     required this.rating,
     required this.age,
+    this.localImagePath,
   });
   factory ReviewModel.fromJson(Map<String, dynamic> json) {
     return ReviewModel(

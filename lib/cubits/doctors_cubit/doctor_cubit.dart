@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
+import 'dart:developer';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:health_app/core/api/api_consumer.dart';
@@ -16,31 +17,31 @@ part 'doctor_state.dart';
 class DoctorCubit extends Cubit<DoctorState> {
   final ApiConsumer api;
   DoctorCubit(this.api) : super(DoctorInitial());
-
-  // حفظ مسار الصورة للطبيب
   String doctorProfilePhotoPath = "";
 
-  // طريقة لحفظ الصورة بعد فك تشفير base64
   Future<File> saveDoctorProfileImage(String base64String) async {
     try {
       final String base64Data = base64String.split(',').last;
-      Uint8List bytes = base64Decode(base64Data);
-
+      String cleanedBase64 =
+          base64Data.replaceAll(RegExp(r'[^A-Za-z0-9+/=]'), '');
+      String paddedBase64 = cleanedBase64;
+      while (paddedBase64.length % 4 != 0) {
+        paddedBase64 += "=";
+      }
+      Uint8List bytes = base64Decode(paddedBase64);
       final directory = await getApplicationDocumentsDirectory();
       final String filePath = '${directory.path}/doctor_profile_image.png';
-
       final File file = File(filePath);
       await file.writeAsBytes(bytes);
 
-      print("Doctor Image saved at: $filePath");
+      log("Profile Image saved at: $filePath");
       return file;
     } catch (e) {
-      print("Failed to save doctor image: $e");
+      log("Failed to save image: $e");
       rethrow;
     }
   }
 
-  // الحصول على تفاصيل الطبيب بواسطة المعرف
   Future<void> getDoctorById({required int doctorId}) async {
     try {
       emit(GetDoctorInfoLoading());
@@ -53,17 +54,16 @@ class DoctorCubit extends Cubit<DoctorState> {
       if (doctorInfo.profileImage != null &&
           doctorInfo.profileImage!.isNotEmpty) {
         try {
-          // حفظ الصورة من Base64
           File savedFile =
               await saveDoctorProfileImage(doctorInfo.profileImage!);
           doctorProfilePhotoPath = savedFile.path;
           emit(GetDoctorInfoSuccess(doctorInfo));
         } catch (e) {
-          print("Failed to process doctor image: $e");
+          log("Failed to process doctor image: $e");
           emit(GetDoctorInfoFailure(errorMessage: "Failed to process image"));
         }
       } else {
-        emit(GetDoctorInfoSuccess(doctorInfo)); // إذا لا توجد صورة
+        emit(GetDoctorInfoSuccess(doctorInfo));
       }
     } on ServerException catch (e) {
       emit(GetDoctorInfoFailure(errorMessage: e.errorModel.errorMessage));
@@ -72,7 +72,6 @@ class DoctorCubit extends Cubit<DoctorState> {
     }
   }
 
-  // الحصول على جميع الأطباء بالترتيب
   Future<void> getAllDoctorsByOrderType({String orderType = "ASC"}) async {
     try {
       emit(DoctorLoading());
@@ -83,21 +82,19 @@ class DoctorCubit extends Cubit<DoctorState> {
       );
 
       final List<dynamic> data = response;
-      print("Response Data: $data");
+      log("Response Data: $data");
 
       final doctors = data.map((json) {
-        print("Doctor JSON: $json");
+        log("Doctor JSON: $json");
         return DoctorModel.fromJson(json);
       }).toList();
-
-      // التعامل مع صورة الطبيب هنا (إذا كانت موجودة)
       for (var doctor in doctors) {
         if (doctor.photo != null && doctor.phone!.isNotEmpty) {
           try {
             File savedFile = await saveDoctorProfileImage(doctor.photo!);
             doctorProfilePhotoPath = savedFile.path;
           } catch (e) {
-            print("Failed to process doctor image: $e");
+            log("Failed to process doctor image: $e");
           }
         }
       }
@@ -110,26 +107,20 @@ class DoctorCubit extends Cubit<DoctorState> {
     }
   }
 
-  // الحصول على الأطباء بأعلى تقييم
   Future<void> getAllDoctorsByTopRating() async {
     try {
       emit(DoctorLoading());
-
       final response = await api.get(EndPoints.getAllDoctors);
-
       final List<dynamic> data = response;
       final doctors = data.map((json) => DoctorModel.fromJson(json)).toList();
-
       final filteredDoctors = doctors.where((doc) => doc.rating >= 4).toList();
-
-      // التعامل مع الصورة
       for (var doctor in filteredDoctors) {
         if (doctor.photo != null && doctor.photo!.isNotEmpty) {
           try {
             File savedFile = await saveDoctorProfileImage(doctor.photo!);
             doctorProfilePhotoPath = savedFile.path;
           } catch (e) {
-            print("Failed to process doctor image: $e");
+            log("Failed to process doctor image: $e");
           }
         }
       }
@@ -142,7 +133,6 @@ class DoctorCubit extends Cubit<DoctorState> {
     }
   }
 
-  // البحث عن طبيب حسب الجنس
   Future<void> getDoctorsByGender({required String gender}) async {
     try {
       emit(DoctorLoading());
@@ -153,15 +143,13 @@ class DoctorCubit extends Cubit<DoctorState> {
       final List<DoctorModel> doctors = List<DoctorModel>.from(
         response.map((doctor) => DoctorModel.fromJson(doctor)),
       );
-
-      // التعامل مع الصورة
       for (var doctor in doctors) {
         if (doctor.photo != null && doctor.photo!.isNotEmpty) {
           try {
             File savedFile = await saveDoctorProfileImage(doctor.photo!);
             doctorProfilePhotoPath = savedFile.path;
           } catch (e) {
-            print("Failed to process doctor image: $e");
+            log("Failed to process doctor image: $e");
           }
         }
       }
@@ -174,7 +162,6 @@ class DoctorCubit extends Cubit<DoctorState> {
     }
   }
 
-  // الحصول على الأطباء حسب التخصص
   Future<void> getDoctorsBySpecialization(
       {required int specializationId}) async {
     try {
@@ -184,24 +171,20 @@ class DoctorCubit extends Cubit<DoctorState> {
         "http://10.0.2.2:5282/Api/V1/Specialization/GetDoctorsBySpecializationID",
         queryParameters: {"specializationId": specializationId},
       );
-
       final List<GetDoctorBySpecialization> doctors =
           List<GetDoctorBySpecialization>.from(
         response.map((doctor) => GetDoctorBySpecialization.fromJson(doctor)),
       );
-
-      // التعامل مع الصور هنا
       for (var doctor in doctors) {
         if (doctor.photo != null && doctor.photo!.isNotEmpty) {
           try {
             File savedFile = await saveDoctorProfileImage(doctor.photo!);
             doctorProfilePhotoPath = savedFile.path;
           } catch (e) {
-            print("Failed to process doctor image: $e");
+            log("Failed to process doctor image: $e");
           }
         }
       }
-
       emit(GetDoctorBySpecializationSuccess(doctors));
     } on ServerException catch (e) {
       emit(GetDoctorBySpecializationFailure(
@@ -212,7 +195,6 @@ class DoctorCubit extends Cubit<DoctorState> {
     }
   }
 
-  // إعادة تعيين الحالة
   void resetState() {
     emit(DoctorInitial());
   }

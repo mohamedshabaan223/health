@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:health_app/app_theme.dart';
 import 'package:health_app/pages/all_appoinements_for_doctor.dart';
+import 'package:health_app/pages/doctor_profile_page.dart';
 import 'package:health_app/pages/get_all_review_for_doctor.dart';
 import 'package:health_app/pages/home_page_doctor.dart';
 import 'package:health_app/tabs/chat/display_all_chat.dart';
@@ -8,21 +9,30 @@ import 'package:health_app/tabs/chat/display_all_chat.dart';
 class HomeScreenDoctor extends StatefulWidget {
   static const String id = '/home-screen-doctor';
 
-  const HomeScreenDoctor({super.key});
+  final int selectedIndex;
+
+  const HomeScreenDoctor({super.key, this.selectedIndex = 0});
 
   @override
   State<HomeScreenDoctor> createState() => _MyWidgetState();
 }
 
 class _MyWidgetState extends State<HomeScreenDoctor> {
-  int selectedIndex = 0;
+  late int selectedIndex;
 
   List<Widget> tabs = [
-    HomePageDoctor(),
+    const HomePageDoctor(),
     const DisplayAllChat(),
     const AllAppoinementForDoctor(),
     const GetAllReviewForDoctor(),
+    const ProfileDoctor(),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    selectedIndex = widget.selectedIndex;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,6 +73,10 @@ class _MyWidgetState extends State<HomeScreenDoctor> {
               BottomNavigationBarItem(
                 icon: Icon(Icons.reviews_outlined, size: 22),
                 label: 'Reviews',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.person_2_outlined, size: 22),
+                label: 'Settings',
               ),
             ],
           ),

@@ -29,11 +29,12 @@ class _UpdateTextFieldState extends State<UpdateTextField> {
       decoration: InputDecoration(
         contentPadding: const EdgeInsets.only(left: 15),
         filled: true,
-        fillColor: AppTheme.gray,
+        fillColor: AppTheme.white,
         hintText: widget.hintText,
         hintStyle: Theme.of(context).textTheme.titleSmall?.copyWith(
-              color: AppTheme.green,
-              fontSize: 17,
+              color: Colors.grey,
+              fontSize: 15,
+              fontWeight: FontWeight.w400,
             ),
         suffixIcon: widget.isPassword
             ? IconButton(
@@ -47,11 +48,11 @@ class _UpdateTextFieldState extends State<UpdateTextField> {
                     : Icons.visibility_off_outlined))
             : null,
         enabledBorder: OutlineInputBorder(
-          borderSide: const BorderSide(color: AppTheme.white),
+          borderSide: BorderSide(color: Colors.grey),
           borderRadius: BorderRadius.circular(13),
         ),
         focusedBorder: OutlineInputBorder(
-          borderSide: const BorderSide(color: AppTheme.white),
+          borderSide: const BorderSide(color: Colors.grey),
           borderRadius: BorderRadius.circular(13),
         ),
       ),

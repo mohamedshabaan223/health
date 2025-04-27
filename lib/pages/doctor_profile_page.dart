@@ -56,31 +56,14 @@ class _ProfileDoctorState extends State<ProfileDoctor> {
             } else if (state is UserProfileSuccess) {
               return Column(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.all(18.0),
-                    child: Row(
-                      children: [
-                        IconButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            icon: const Icon(
-                              Icons.arrow_back_ios,
-                              size: 25,
-                              color: AppTheme.green,
-                            )),
-                        const Spacer(flex: 2),
-                        const Text(
-                          'My Profile',
-                          style: TextStyle(
-                              color: AppTheme.green,
-                              fontSize: 23,
-                              fontWeight: FontWeight.w600),
-                        ),
-                        const Spacer(flex: 3),
-                      ],
-                    ),
-                  ),
+                  SizedBox(height: height * 0.03),
+                  const Text('My Profile',
+                      style: TextStyle(
+                        color: AppTheme.green,
+                        fontSize: 23,
+                        fontWeight: FontWeight.w600,
+                      )),
+                  SizedBox(height: height * 0.02),
                   Center(
                     child: Stack(
                       children: [

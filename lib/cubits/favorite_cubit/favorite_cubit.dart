@@ -1,16 +1,44 @@
+import 'dart:convert';
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:health_app/cache/cache_helper.dart';
 import 'package:health_app/core/api/api_consumer.dart';
 import 'package:health_app/core/api/end_points.dart';
 import 'package:health_app/cubits/favorite_cubit/favorite_state.dart';
 import 'package:health_app/models/doctor_model.dart';
+import 'package:path_provider/path_provider.dart';
 
 class FavoriteDoctorCubit extends Cubit<FavoriteDoctorState> {
   FavoriteDoctorCubit(this.api) : super(FavoriteDoctorInitial());
 
   final ApiConsumer api;
   final Map<int, bool> favoriteDoctors = {};
+  String doctorfavoriteimagepath = "";
 
+  // تعديل دالة حفظ الصورة لتقبل doctorId
+  Future<File> saveDoctorProfileImage(String base64String, int doctorId) async {
+    try {
+      final String base64Data = base64String.split(',').last;
+      Uint8List bytes = base64Decode(base64Data);
+
+      final directory = await getApplicationDocumentsDirectory();
+      final String filePath =
+          '${directory.path}/doctor_favorite_image_$doctorId.png';
+
+      final File file = File(filePath);
+      await file.writeAsBytes(bytes);
+
+      print("Doctor Image saved at: $filePath");
+      return file;
+    } catch (e) {
+      print("Failed to save doctor image: $e");
+      rethrow;
+    }
+  }
+
+  // تعديل دالة getAllDoctorsInFavorites لحفظ الصور
   Future<void> getAllDoctorsInFavorites({required int patientId}) async {
     try {
       emit(FavoriteDoctorLoading());
@@ -23,6 +51,19 @@ class FavoriteDoctorCubit extends Cubit<FavoriteDoctorState> {
       final List<dynamic> data = response;
       final List<DoctorModel> doctors =
           data.map((json) => DoctorModel.fromJson(json)).toList();
+
+      // هنا هنتأكد نحفظ الصورة لو موجودة
+      for (var doctor in doctors) {
+        if (doctor.photo != null && doctor.photo!.isNotEmpty) {
+          try {
+            File savedFile =
+                await saveDoctorProfileImage(doctor.photo!, doctor.id ?? 0);
+            doctor.localImagePath = savedFile.path;
+          } catch (e) {
+            print("Failed to process doctor image: $e");
+          }
+        }
+      }
 
       final newFavorites = {for (var doctor in doctors) doctor.id ?? 0: true};
 
@@ -94,7 +135,7 @@ class FavoriteDoctorCubit extends Cubit<FavoriteDoctorState> {
         emit(FavoriteDoctorLoaded(Map.from(favoriteDoctors)));
       } else {
         emit(FavoriteDoctorFailure(
-            errorMessage: "تعذر إزالة الطبيب من المفضلة."));
+            errorMessage: "Failed to remove favorite doctor"));
       }
     } catch (e) {
       emit(FavoriteDoctorFailure(errorMessage: "Unexpected error: $e"));

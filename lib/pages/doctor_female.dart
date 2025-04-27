@@ -7,7 +7,7 @@ import 'package:health_app/pages/doctor_male.dart';
 import 'package:health_app/pages/doctor_page.dart';
 import 'package:health_app/pages/doctor_page_information.dart';
 import 'package:health_app/pages/doctor_rating.dart';
-import 'package:health_app/widgets/container_doctor.dart';
+import 'package:health_app/widgets/container_doctor_dart';
 import 'package:health_app/widgets/default_icon.dart';
 
 class Female extends StatefulWidget {
@@ -147,7 +147,10 @@ class _FemaleState extends State<Female> {
                     ),
                     SizedBox(width: width * 0.02),
                     Defaulticon(
-                      onTap: () {},
+                      onTap: () {
+                        BlocProvider.of<DoctorCubit>(context)
+                            .getDoctorsByGender(gender: '1');
+                      },
                       icon: Icon(Icons.female,
                           size: width * 0.045, color: AppTheme.white),
                       containerClolor: AppTheme.green,
@@ -208,7 +211,7 @@ class _FemaleState extends State<Female> {
                             final doctors = state.doctorsList;
                             return ListView.builder(
                               itemCount: doctors.length,
-                              itemBuilder: (_, index) => ContainerDoctor(
+                              itemBuilder: (_, index) => ContainerDoctorMale(
                                 doctorAddress:
                                     doctors[index].address ?? 'No Address',
                                 doctorNmae:

@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:health_app/app_theme.dart';
 import 'package:health_app/cubits/doctors_cubit/doctor_cubit.dart';
+import 'package:health_app/widgets/default_icon.dart';
 import 'package:health_app/widgets/doctor_container_specialization.dart';
 
 class AllDoctorsBasedOnSpecialization extends StatefulWidget {
@@ -18,6 +21,8 @@ class _AllDoctorsBasedOnSpecializationState
     extends State<AllDoctorsBasedOnSpecialization> {
   late int specializationId;
   late String title;
+  String searchQuery = '';
+  bool isSearching = false;
 
   @override
   void didChangeDependencies() {
@@ -40,17 +45,44 @@ class _AllDoctorsBasedOnSpecializationState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Column(
-          children: [
-            const SizedBox(
-              height: 15,
+        title: isSearching
+            ? TextField(
+                autofocus: true,
+                onChanged: (value) {
+                  setState(() {
+                    searchQuery = value;
+                  });
+                },
+                decoration: const InputDecoration(
+                  hintText: 'Search Doctor...',
+                  border: InputBorder.none,
+                ),
+              )
+            : Column(
+                children: [
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  Text(
+                    title,
+                    style: const TextStyle(color: AppTheme.green),
+                  ),
+                ],
+              ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 18),
+            child: Defaulticon(
+              icon: const Icon(Icons.search),
+              containerClolor: const Color.fromARGB(255, 245, 247, 251),
+              onTap: () {
+                setState(() {
+                  isSearching = !isSearching;
+                });
+              },
             ),
-            Text(
-              title,
-              style: const TextStyle(color: AppTheme.green),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
       body: BlocBuilder<DoctorCubit, DoctorState>(
         builder: (context, state) {
@@ -64,22 +96,40 @@ class _AllDoctorsBasedOnSpecializationState
               ),
             );
           } else if (state is GetDoctorBySpecializationSuccess) {
-            if (state.doctorsList.isEmpty) {
+            final doctorsListToDisplay = isSearching
+                ? state.doctorsList
+                    .where((doctor) => doctor.doctorName
+                        .toLowerCase()
+                        .contains(searchQuery.toLowerCase()))
+                    .toList()
+                : state.doctorsList;
+
+            if (doctorsListToDisplay.isEmpty) {
               return const Center(child: Text("No doctors available."));
             }
 
-            return ListView.builder(
-              itemCount: state.doctorsList.length,
-              itemBuilder: (context, index) {
-                final doctor = state.doctorsList[index];
-                return DoctorContainerSpecialization(
-                  doctorNmae: doctor.doctorName,
-                  address: doctor.address,
-                  doctorImage: doctor.photo ?? 'assets/images/doctor_image.png',
-                  doctorid: doctor.id,
-                  rating: doctor.rating,
-                );
-              },
+            return Column(
+              children: [
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: doctorsListToDisplay.length,
+                    itemBuilder: (context, index) {
+                      final doctor = doctorsListToDisplay[index];
+                      final patientImage = doctor.localImagePath != null &&
+                              doctor.localImagePath!.isNotEmpty
+                          ? FileImage(File(doctor.localImagePath!))
+                          : const AssetImage("assets/images/doctor_image.png");
+                      return DoctorContainerSpecialization(
+                        doctorNmae: doctor.doctorName,
+                        address: doctor.address,
+                        doctorImage: patientImage,
+                        rating: doctor.rating.toDouble(),
+                        doctorid: doctor.id,
+                      );
+                    },
+                  ),
+                ),
+              ],
             );
           } else {
             return const Center(child: Text("Something went wrong."));

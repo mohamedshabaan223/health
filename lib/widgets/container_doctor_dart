@@ -1,22 +1,24 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:health_app/app_theme.dart';
 import 'package:health_app/cache/cache_helper.dart';
+import 'package:health_app/cubits/doctors_cubit/doctor_cubit.dart';
 import 'package:health_app/cubits/favorite_cubit/favorite_cubit.dart';
 import 'package:health_app/cubits/favorite_cubit/favorite_state.dart';
 import 'package:health_app/models/doctor_model.dart';
 import 'package:health_app/pages/doctor_page_information.dart';
 import 'package:health_app/widgets/default_icon.dart';
 
-class ContainerDoctor extends StatefulWidget {
-  const ContainerDoctor({
+class ContainerDoctorMale extends StatefulWidget {
+  const ContainerDoctorMale({
     required this.doctorNmae,
     required this.descrabtion,
     required this.doctorImage,
     required this.doctorid,
     required this.doctorAddress,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   final String doctorNmae;
   final String descrabtion;
@@ -25,10 +27,10 @@ class ContainerDoctor extends StatefulWidget {
   final String doctorAddress;
 
   @override
-  State<ContainerDoctor> createState() => _ContainerDoctorState();
+  State<ContainerDoctorMale> createState() => _ContainerDoctorMaleState();
 }
 
-class _ContainerDoctorState extends State<ContainerDoctor> {
+class _ContainerDoctorMaleState extends State<ContainerDoctorMale> {
   late int patientId;
   bool isFavorite = false;
 
@@ -40,6 +42,7 @@ class _ContainerDoctorState extends State<ContainerDoctor> {
 
   @override
   Widget build(BuildContext context) {
+    DoctorCubit doctorCubit = context.read<DoctorCubit>();
     double height = MediaQuery.of(context).size.height;
 
     return BlocBuilder<FavoriteDoctorCubit, FavoriteDoctorState>(
@@ -47,7 +50,7 @@ class _ContainerDoctorState extends State<ContainerDoctor> {
         return Container(
           margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
           width: double.infinity,
-          height: height * 0.16,
+          height: height * 0.18,
           decoration: BoxDecoration(
             color: AppTheme.gray,
             borderRadius: BorderRadius.circular(17),
@@ -61,64 +64,79 @@ class _ContainerDoctorState extends State<ContainerDoctor> {
                   width: 80,
                   child: CircleAvatar(
                     radius: 50,
-                    backgroundImage: AssetImage(widget.doctorImage),
+                    backgroundImage: (widget.doctorid.localImagePath != null &&
+                            widget.doctorid.localImagePath!.isNotEmpty)
+                        ? FileImage(File(widget.doctorid.localImagePath!))
+                            as ImageProvider
+                        : const AssetImage("assets/images/doctor_image.png"),
                   ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(top: 20, left: 10, bottom: 15),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      widget.doctorNmae,
-                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                            fontSize: 16,
-                            color: AppTheme.green,
+              const SizedBox(width: 10),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 20, bottom: 15),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        widget.doctorNmae,
+                        style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                              fontSize: 16,
+                              color: AppTheme.green,
+                            ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(height: 5),
+                      Text(
+                        widget.descrabtion,
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleSmall
+                            ?.copyWith(fontSize: 14),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(height: 5),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Icon(Icons.location_on,
+                              color: AppTheme.green3, size: 18),
+                          const SizedBox(width: 5),
+                          Expanded(
+                            child: Text(
+                              widget.doctorAddress,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleSmall
+                                  ?.copyWith(fontSize: 14, color: Colors.grey),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
                           ),
-                    ),
-                    const SizedBox(height: 5),
-                    Text(
-                      widget.descrabtion,
-                      style: Theme.of(context)
-                          .textTheme
-                          .titleSmall
-                          ?.copyWith(fontSize: 14),
-                    ),
-                    const SizedBox(height: 5),
-                    Row(
-                      children: [
-                        const Icon(Icons.location_on,
-                            color: AppTheme.green3, size: 18),
-                        const SizedBox(width: 5),
-                        Text(
-                          widget.doctorAddress,
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleSmall
-                              ?.copyWith(fontSize: 14, color: Colors.grey),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 5),
-                    Row(
-                      children: [
-                        const Icon(Icons.star,
-                            color: AppTheme.green3, size: 18),
-                        const SizedBox(width: 5),
-                        Text(
-                          widget.doctorid.rating.toString(),
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleSmall
-                              ?.copyWith(fontSize: 14, color: Colors.grey),
-                        ),
-                      ],
-                    ),
-                  ],
+                        ],
+                      ),
+                      const SizedBox(height: 5),
+                      Row(
+                        children: [
+                          const Icon(Icons.star,
+                              color: AppTheme.green3, size: 18),
+                          const SizedBox(width: 5),
+                          Text(
+                            widget.doctorid.rating.toString(),
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleSmall
+                                ?.copyWith(fontSize: 14, color: Colors.grey),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
-              const Spacer(),
               Column(
                 children: [
                   SizedBox(height: height * 0.05),

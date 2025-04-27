@@ -8,6 +8,7 @@ import 'package:health_app/cache/cache_helper.dart';
 import 'package:health_app/constants.dart';
 import 'package:health_app/core/api/dio_consumer.dart';
 import 'package:health_app/core/api/end_points.dart';
+import 'package:health_app/cubits/appointment_cubit/appointment_cubit.dart';
 import 'package:health_app/cubits/auth_cubit/auth_cubit.dart';
 import 'package:health_app/cubits/booking_cubit/booking_cubit_cubit.dart';
 import 'package:health_app/cubits/chat_cubit/chat_cubit.dart';
@@ -85,7 +86,6 @@ void main() async {
 class MyApp extends StatelessWidget {
   MyApp({super.key});
   final dioConsumer = DioConsumer(dio: Dio());
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
@@ -97,10 +97,6 @@ class MyApp extends StatelessWidget {
           create: (context) => DoctorCubit(dioConsumer)
             ..getAllDoctorsByOrderType(orderType: 'ASC'),
         ),
-        BlocProvider<BookingCubit>(
-            create: (context) => BookingCubit(dioConsumer)
-              ..getDoctorCompletedBookings(
-                  doctorId: CacheHelper().getData(key: "id"))),
         BlocProvider(
           create: (context) => BookingCubit(dioConsumer),
         ),
@@ -124,12 +120,14 @@ class MyApp extends StatelessWidget {
           create: (context) => ReviewCubit(dioConsumer),
         ),
         BlocProvider<LocationCubit>(
-          // ★ أضف ده
           create: (context) => LocationCubit(
             dioConsumer,
             CacheHelper(),
           ),
         ),
+        BlocProvider(
+          create: (context) => AppointmentCubit(dioConsumer),
+        )
       ],
       child: Builder(
         builder: (context) {
