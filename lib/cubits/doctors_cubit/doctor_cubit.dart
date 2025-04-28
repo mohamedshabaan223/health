@@ -17,7 +17,6 @@ part 'doctor_state.dart';
 class DoctorCubit extends Cubit<DoctorState> {
   final ApiConsumer api;
   DoctorCubit(this.api) : super(DoctorInitial());
-  String doctorProfilePhotoPath = "";
 
   Future<File> saveDoctorProfileImage(String base64String) async {
     try {
@@ -56,7 +55,7 @@ class DoctorCubit extends Cubit<DoctorState> {
         try {
           File savedFile =
               await saveDoctorProfileImage(doctorInfo.profileImage!);
-          doctorProfilePhotoPath = savedFile.path;
+          doctorInfo.localImagePath = savedFile.path;
           emit(GetDoctorInfoSuccess(doctorInfo));
         } catch (e) {
           log("Failed to process doctor image: $e");
@@ -89,10 +88,10 @@ class DoctorCubit extends Cubit<DoctorState> {
         return DoctorModel.fromJson(json);
       }).toList();
       for (var doctor in doctors) {
-        if (doctor.photo != null && doctor.phone!.isNotEmpty) {
+        if (doctor.photo != null && (doctor.phone?.isNotEmpty ?? false)) {
           try {
             File savedFile = await saveDoctorProfileImage(doctor.photo!);
-            doctorProfilePhotoPath = savedFile.path;
+            doctor.localImagePath = savedFile.path;
           } catch (e) {
             log("Failed to process doctor image: $e");
           }
@@ -118,7 +117,7 @@ class DoctorCubit extends Cubit<DoctorState> {
         if (doctor.photo != null && doctor.photo!.isNotEmpty) {
           try {
             File savedFile = await saveDoctorProfileImage(doctor.photo!);
-            doctorProfilePhotoPath = savedFile.path;
+            doctor.localImagePath = savedFile.path;
           } catch (e) {
             log("Failed to process doctor image: $e");
           }
@@ -147,7 +146,7 @@ class DoctorCubit extends Cubit<DoctorState> {
         if (doctor.photo != null && doctor.photo!.isNotEmpty) {
           try {
             File savedFile = await saveDoctorProfileImage(doctor.photo!);
-            doctorProfilePhotoPath = savedFile.path;
+            doctor.localImagePath = savedFile.path;
           } catch (e) {
             log("Failed to process doctor image: $e");
           }
@@ -179,7 +178,7 @@ class DoctorCubit extends Cubit<DoctorState> {
         if (doctor.photo != null && doctor.photo!.isNotEmpty) {
           try {
             File savedFile = await saveDoctorProfileImage(doctor.photo!);
-            doctorProfilePhotoPath = savedFile.path;
+            doctor.localImagePath = savedFile.path;
           } catch (e) {
             log("Failed to process doctor image: $e");
           }

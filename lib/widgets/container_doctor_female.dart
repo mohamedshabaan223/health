@@ -3,37 +3,33 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:health_app/app_theme.dart';
 import 'package:health_app/cache/cache_helper.dart';
-import 'package:health_app/cubits/doctors_cubit/doctor_cubit.dart';
 import 'package:health_app/cubits/favorite_cubit/favorite_cubit.dart';
 import 'package:health_app/cubits/favorite_cubit/favorite_state.dart';
 import 'package:health_app/models/doctor_model.dart';
-import 'package:health_app/pages/doctor_page_information.dart';
+import 'package:health_app/pages/doctor_page_information_for_femla.dart';
 import 'package:health_app/widgets/default_icon.dart';
 
-class ContainerDoctorMale extends StatefulWidget {
-  const ContainerDoctorMale({
-    required this.doctorNmae,
-    required this.descrabtion,
-    required this.doctorImage,
-    required this.doctorid,
-    required this.doctorAddress,
-    super.key,
-  });
-
+class ContainerDoctorFemale extends StatefulWidget {
   final String doctorNmae;
   final String descrabtion;
   final String doctorImage;
   final DoctorModel doctorid;
   final String doctorAddress;
+  const ContainerDoctorFemale(
+      {super.key,
+      required this.doctorNmae,
+      required this.descrabtion,
+      required this.doctorImage,
+      required this.doctorid,
+      required this.doctorAddress});
 
   @override
-  State<ContainerDoctorMale> createState() => _ContainerDoctorMaleState();
+  State<ContainerDoctorFemale> createState() => _ContainerDoctorFemaleState();
 }
 
-class _ContainerDoctorMaleState extends State<ContainerDoctorMale> {
+class _ContainerDoctorFemaleState extends State<ContainerDoctorFemale> {
   late int patientId;
   bool isFavorite = false;
-
   @override
   void initState() {
     super.initState();
@@ -42,7 +38,6 @@ class _ContainerDoctorMaleState extends State<ContainerDoctorMale> {
 
   @override
   Widget build(BuildContext context) {
-    DoctorCubit doctorCubit = context.read<DoctorCubit>();
     double height = MediaQuery.of(context).size.height;
 
     return BlocBuilder<FavoriteDoctorCubit, FavoriteDoctorState>(
@@ -64,10 +59,9 @@ class _ContainerDoctorMaleState extends State<ContainerDoctorMale> {
                   width: 80,
                   child: CircleAvatar(
                     radius: 50,
-                    backgroundImage: (widget.doctorid.localImagePath != null &&
-                            widget.doctorid.localImagePath!.isNotEmpty)
+                    backgroundImage: widget.doctorid.localImagePath != null &&
+                            widget.doctorid.localImagePath!.isNotEmpty
                         ? FileImage(File(widget.doctorid.localImagePath!))
-                            as ImageProvider
                         : const AssetImage("assets/images/doctor_image.png"),
                   ),
                 ),
@@ -125,7 +119,7 @@ class _ContainerDoctorMaleState extends State<ContainerDoctorMale> {
                               color: AppTheme.green3, size: 18),
                           const SizedBox(width: 5),
                           Text(
-(widget.doctorid.rating ?? 0).toString(),
+                            widget.doctorid.rating.toString(),
                             style: Theme.of(context)
                                 .textTheme
                                 .titleSmall
@@ -172,7 +166,7 @@ class _ContainerDoctorMaleState extends State<ContainerDoctorMale> {
                   InkWell(
                     onTap: () {
                       Navigator.of(context).pushNamed(
-                        DoctorInformation.routeName,
+                        DoctorPageInformationForFemla.routeName,
                         arguments: widget.doctorid.id,
                       );
                     },

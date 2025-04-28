@@ -22,7 +22,7 @@ class AvailableSlotModel {
       timeStart: json['timeStart'] as String,
       timeEnd: json['timeEnd'] as String,
       appointmentId: json['appointmentId'] as int,
-      price: json['price'] as int,
+      price: json['price'] as int?, // ✅ هنا التعديل
     );
   }
 }

@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:health_app/app_theme.dart';
@@ -7,7 +6,7 @@ import 'package:health_app/cache/cache_helper.dart';
 import 'package:health_app/cubits/favorite_cubit/favorite_cubit.dart';
 import 'package:health_app/cubits/favorite_cubit/favorite_state.dart';
 import 'package:health_app/models/doctor_model.dart';
-import 'package:health_app/pages/doctor_page_information.dart';
+import 'package:health_app/pages/doctor_page_information_for_rating.dart';
 import 'package:health_app/widgets/default_icon.dart';
 
 class ContainrDoctorRating extends StatefulWidget {
@@ -153,7 +152,7 @@ class _ContainrDoctorRatingState extends State<ContainrDoctorRating> {
                   InkWell(
                     onTap: () {
                       Navigator.of(context).pushNamed(
-                        DoctorInformation.routeName,
+                        DoctorPageInformationForRating.routeName,
                         arguments: widget.doctor.id,
                       );
                     },

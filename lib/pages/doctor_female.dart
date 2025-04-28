@@ -7,7 +7,7 @@ import 'package:health_app/pages/doctor_male.dart';
 import 'package:health_app/pages/doctor_page.dart';
 import 'package:health_app/pages/doctor_page_information.dart';
 import 'package:health_app/pages/doctor_rating.dart';
-import 'package:health_app/widgets/container_doctor_dart';
+import 'package:health_app/widgets/container_doctor_female.dart';
 import 'package:health_app/widgets/default_icon.dart';
 
 class Female extends StatefulWidget {
@@ -211,7 +211,7 @@ class _FemaleState extends State<Female> {
                             final doctors = state.doctorsList;
                             return ListView.builder(
                               itemCount: doctors.length,
-                              itemBuilder: (_, index) => ContainerDoctorMale(
+                              itemBuilder: (_, index) => ContainerDoctorFemale(
                                 doctorAddress:
                                     doctors[index].address ?? 'No Address',
                                 doctorNmae:

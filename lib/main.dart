@@ -14,7 +14,6 @@ import 'package:health_app/cubits/booking_cubit/booking_cubit_cubit.dart';
 import 'package:health_app/cubits/chat_cubit/chat_cubit.dart';
 import 'package:health_app/cubits/doctors_cubit/doctor_cubit.dart';
 import 'package:health_app/cubits/favorite_cubit/favorite_cubit.dart';
-import 'package:health_app/cubits/get_doctor_info_in_doctor_app_cubit/get_doctor_info_in_doctor_app_cubit.dart';
 import 'package:health_app/cubits/location_cubit/location_cubit.dart';
 import 'package:health_app/cubits/payment_cubit/payment_cubit.dart';
 import 'package:health_app/cubits/profile_cubit/profile_cubit.dart';
@@ -30,12 +29,15 @@ import 'package:health_app/pages/appointment_screen.dart';
 import 'package:health_app/pages/cancelled_reason_page.dart';
 import 'package:health_app/pages/change_password.dart';
 import 'package:health_app/pages/chat_page.dart';
+import 'package:health_app/pages/doctor_page_doctor_information_male.dart';
 import 'package:health_app/pages/create_new_password_page.dart';
 import 'package:health_app/pages/doctor_favorite.dart';
 import 'package:health_app/pages/doctor_female.dart';
 import 'package:health_app/pages/doctor_male.dart';
 import 'package:health_app/pages/doctor_page.dart';
 import 'package:health_app/pages/doctor_page_information.dart';
+import 'package:health_app/pages/doctor_page_information_for_femla.dart';
+import 'package:health_app/pages/doctor_page_information_for_rating.dart';
 import 'package:health_app/pages/doctor_profile_page.dart';
 import 'package:health_app/pages/doctor_rating.dart';
 import 'package:health_app/pages/doctor_update_profile.dart';
@@ -129,9 +131,6 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (context) => AppointmentCubit(dioConsumer),
         ),
-        BlocProvider(
-          create: (context) => GetDoctorInfoInDoctorAppCubit(dioConsumer),
-        )
       ],
       child: Builder(
         builder: (context) {
@@ -192,6 +191,12 @@ class MyApp extends StatelessWidget {
               AllNearbyDoctorsPage.id: (_) => const AllNearbyDoctorsPage(),
               ReviewScreenDoctorReview.id: (_) =>
                   const ReviewScreenDoctorReview(),
+              DoctorPageInformationForFemla.routeName: (_) =>
+                  const DoctorPageInformationForFemla(),
+              DoctorPageInformationForMale.routeName: (_) =>
+                  const DoctorPageInformationForMale(),
+              DoctorPageInformationForRating.routeName: (_) =>
+                  const DoctorPageInformationForRating(),
             },
             initialRoute: token == null
                 ? StartScreen.id
