@@ -125,7 +125,7 @@ class _ContainerDoctorMaleState extends State<ContainerDoctorMale> {
                               color: AppTheme.green3, size: 18),
                           const SizedBox(width: 5),
                           Text(
-                            widget.doctorid.rating.toString(),
+(widget.doctorid.rating ?? 0).toString(),
                             style: Theme.of(context)
                                 .textTheme
                                 .titleSmall

@@ -45,4 +45,28 @@ class AppointmentCubit extends Cubit<AppointmentState> {
       emit(AppointmentFailure('Unexpected error occurred: $e'));
     }
   }
+
+  Future<void> removeAppointmentSlot({required int appointmentId}) async {
+    try {
+      emit(AppointmentLoading());
+      final response = await api.delete(
+        "http://10.0.2.2:5282/Api/V1/Appointment/RemoveAppointment?appointmentId=$appointmentId",
+      );
+      if (response != null && response == true) {
+        emit(AppointmentDeleted('Appointment removed successfully.'));
+      } else {
+        emit(AppointmentDeleteFailure(
+            'Appointment not found or failed to remove.'));
+      }
+    } on ServerException catch (e) {
+      emit(AppointmentDeleteFailure(
+          'Server error: ${e.errorModel.errorMessage}'));
+    } catch (e) {
+      emit(AppointmentDeleteFailure('Unexpected error occurred: $e'));
+    }
+  }
+
+  void resetState() {
+    emit(AppointmentInitial());
+  }
 }

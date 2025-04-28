@@ -16,3 +16,13 @@ class AppointmentFailure extends AppointmentState {
   final String errorMessage;
   AppointmentFailure(this.errorMessage);
 }
+
+class AppointmentDeleted extends AppointmentState {
+  final String message;
+  AppointmentDeleted(this.message);
+}
+
+class AppointmentDeleteFailure extends AppointmentState {
+  final String errorMessage;
+  AppointmentDeleteFailure(this.errorMessage);
+}

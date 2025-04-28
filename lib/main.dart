@@ -14,6 +14,7 @@ import 'package:health_app/cubits/booking_cubit/booking_cubit_cubit.dart';
 import 'package:health_app/cubits/chat_cubit/chat_cubit.dart';
 import 'package:health_app/cubits/doctors_cubit/doctor_cubit.dart';
 import 'package:health_app/cubits/favorite_cubit/favorite_cubit.dart';
+import 'package:health_app/cubits/get_doctor_info_in_doctor_app_cubit/get_doctor_info_in_doctor_app_cubit.dart';
 import 'package:health_app/cubits/location_cubit/location_cubit.dart';
 import 'package:health_app/cubits/payment_cubit/payment_cubit.dart';
 import 'package:health_app/cubits/profile_cubit/profile_cubit.dart';
@@ -127,6 +128,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => AppointmentCubit(dioConsumer),
+        ),
+        BlocProvider(
+          create: (context) => GetDoctorInfoInDoctorAppCubit(dioConsumer),
         )
       ],
       child: Builder(

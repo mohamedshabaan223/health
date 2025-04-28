@@ -3,11 +3,94 @@ import 'package:health_app/app_theme.dart';
 import 'package:health_app/models/get_doctor_info_by_id.dart';
 import 'package:intl/intl.dart';
 
-class first_screen_in_doctor_app_doctor_info extends StatelessWidget {
+class FirstScreenInDoctorAppDoctorInfo extends StatelessWidget {
   final GetDoctorInfoById getDoctorInfoById;
-  const first_screen_in_doctor_app_doctor_info(
-      {super.key, required this.groupedByDay, required this.getDoctorInfoById});
   final Map<String, List<Map<String, dynamic>>> groupedByDay;
+  final Function(int) onRemoveAppointment;
+
+  const FirstScreenInDoctorAppDoctorInfo({
+    super.key,
+    required this.groupedByDay,
+    required this.getDoctorInfoById,
+    required this.onRemoveAppointment,
+  });
+
+  Future<void> _showDeleteDialog(
+      BuildContext context, int appointmentId) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title:
+              const Text('Are you sure you want to delete this appointment?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                onRemoveAppointment(appointmentId);
+                Navigator.of(context).pop();
+              },
+              child: const Text('Delete'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showAppointmentsBottomSheet(
+      BuildContext context, List<Map<String, dynamic>> slots) {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
+      ),
+      builder: (context) => Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: ListView.builder(
+          shrinkWrap: true,
+          itemCount: slots.length,
+          itemBuilder: (context, index) {
+            final slot = slots[index];
+            return Dismissible(
+              key: Key(slot['appointmentId'].toString()),
+              direction: DismissDirection.endToStart,
+              onDismissed: (direction) {
+                Navigator.of(context).pop(); // Close the BottomSheet
+                _showDeleteDialog(context, slot['appointmentId']);
+              },
+              background: Container(
+                color: Colors.red,
+                alignment: Alignment.centerRight,
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: const Icon(Icons.delete, color: Colors.white),
+              ),
+              child: Card(
+                margin: const EdgeInsets.symmetric(vertical: 8),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  side: const BorderSide(color: AppTheme.green, width: 1),
+                ),
+                child: ListTile(
+                  title: Text(
+                    "${slot['timeStart']} - ${slot['timeEnd']}",
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  subtitle: Text("EGP ${slot['price']}"),
+                ),
+              ),
+            );
+          },
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,14 +104,14 @@ class first_screen_in_doctor_app_doctor_info extends StatelessWidget {
           color: Colors.white,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15),
-            side: BorderSide(color: AppTheme.green, width: 1),
+            side: const BorderSide(color: AppTheme.green, width: 1),
           ),
           elevation: 5,
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: Row(
               children: [
-                CircleAvatar(
+                const CircleAvatar(
                   radius: 40,
                   backgroundImage: AssetImage('assets/images/doctor_image.png'),
                 ),
@@ -52,17 +135,21 @@ class first_screen_in_doctor_app_doctor_info extends StatelessWidget {
                     SizedBox(height: height * 0.005),
                     Row(
                       children: [
-                        Icon(Icons.location_on,
+                        const Icon(Icons.location_on,
                             size: 20, color: AppTheme.green),
-                        Text(getDoctorInfoById.address,
-                            style: TextStyle(fontSize: width * 0.04)),
+                        Text(
+                          getDoctorInfoById.address,
+                          style: TextStyle(fontSize: width * 0.04),
+                        ),
                       ],
                     ),
                     Row(
                       children: [
-                        Icon(Icons.star, size: 20, color: AppTheme.green),
-                        Text(getDoctorInfoById.rating.toString(),
-                            style: TextStyle(fontSize: width * 0.04)),
+                        const Icon(Icons.star, size: 20, color: AppTheme.green),
+                        Text(
+                          getDoctorInfoById.rating.toString(),
+                          style: TextStyle(fontSize: width * 0.04),
+                        ),
                       ],
                     ),
                     Text(
@@ -78,14 +165,51 @@ class first_screen_in_doctor_app_doctor_info extends StatelessWidget {
         ),
         SizedBox(height: height * 0.03),
         const Divider(color: AppTheme.green),
-        Text(
-          "My Schedule:",
-          style: TextStyle(
-              color: AppTheme.green,
-              fontSize: width * 0.05,
-              fontWeight: FontWeight.bold),
-        ),
         SizedBox(height: height * 0.02),
+
+        // ==== My Schedule With Nice Frame ====
+        Center(
+          child: Container(
+            padding: EdgeInsets.symmetric(vertical: 5, horizontal: 110),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(color: AppTheme.green, width: 1.5),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.3),
+                  spreadRadius: 1,
+                  blurRadius: 5,
+                ),
+              ],
+            ),
+            child: Text(
+              "My Slots",
+              style: TextStyle(
+                fontSize: width * 0.05,
+                fontWeight: FontWeight.bold,
+                foreground: Paint()
+                  ..shader = const LinearGradient(
+                    colors: [AppTheme.green, Colors.teal],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ).createShader(const Rect.fromLTWH(0.0, 0.0, 200.0, 70.0)),
+                shadows: [
+                  Shadow(
+                    offset: const Offset(1.0, 1.0),
+                    blurRadius: 5.0,
+                    color: Colors.grey.withOpacity(0.5),
+                  ),
+                ],
+                letterSpacing: 1.5,
+                fontStyle: FontStyle.italic,
+              ),
+            ),
+          ),
+        ),
+
+        SizedBox(height: height * 0.03),
+
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: groupedByDay.keys.map((day) {
@@ -104,48 +228,28 @@ class first_screen_in_doctor_app_doctor_info extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: height * 0.01),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: groupedByDay[day]!.map((slot) {
-                    return Padding(
-                      padding: const EdgeInsets.only(bottom: 12),
-                      child: Card(
-                        color: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          side:
-                              const BorderSide(color: AppTheme.green, width: 1),
-                        ),
-                        elevation: 3,
-                        child: Padding(
-                          padding: const EdgeInsets.all(12),
-                          child: Row(
-                            children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "${slot['timeStart']} - ${slot['timeEnd']}",
-                                    style: TextStyle(
-                                      fontSize: width * 0.04,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  Text(
-                                    "EGP ${slot['price']}",
-                                    style: TextStyle(
-                                      fontSize: width * 0.035,
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppTheme.white,
+                    elevation: 2,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                      side: const BorderSide(
+                        color: AppTheme.green,
+                        width: 1,
                       ),
-                    );
-                  }).toList(),
+                    ),
+                  ),
+                  onPressed: () {
+                    _showAppointmentsBottomSheet(context, groupedByDay[day]!);
+                  },
+                  child: const Text(
+                    'View Available Slots for This Day',
+                    style: TextStyle(
+                        fontSize: 15,
+                        color: AppTheme.black,
+                        fontWeight: FontWeight.w400),
+                  ),
                 ),
                 SizedBox(height: height * 0.02),
               ],
