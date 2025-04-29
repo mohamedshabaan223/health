@@ -23,7 +23,6 @@ class _AllDoctorsBasedOnSpecializationState
   late String title;
   String searchQuery = '';
   bool isSearching = false;
-
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -31,10 +30,12 @@ class _AllDoctorsBasedOnSpecializationState
     final args =
         ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
 
-    if (args != null) {
+    if (args != null && args['specializationId'] != null) {
       specializationId = args['specializationId'];
       title = args['specializationName'];
 
+      // لا حاجة لإرسال الحدث هنا، لأنه سيتم التعامل مع الحالة عبر BlocBuilder
+      // فقط تأكد من أنك ترسل الحدث عند بدء الصفحة إذا كانت الحالة جديدة
       context
           .read<DoctorCubit>()
           .getDoctorsBySpecialization(specializationId: specializationId);

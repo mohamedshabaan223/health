@@ -83,7 +83,8 @@ class _AllAppoinementForDoctorState extends State<AllAppoinementForDoctor> {
                                     );
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
-                                    content: Text('تم حذف الحجز بنجاح'),
+                                    content: Text(
+                                        'Appointment cancelled successfully'),
                                   ),
                                 );
                               }

@@ -16,26 +16,29 @@ class ChatCubit extends Cubit<ChatState> {
   final ApiConsumer api;
 
   ChatCubit(this.api) : super(ChatInitial());
-
   Future<File> saveBase64Image(String base64String) async {
     try {
-      Uint8List bytes = base64Decode(base64String);
-
+      final String base64Data = base64String.split(',').last;
+      String cleanedBase64 =
+          base64Data.replaceAll(RegExp(r'[^A-Za-z0-9+/=]'), '');
+      String paddedBase64 = cleanedBase64;
+      while (paddedBase64.length % 4 != 0) {
+        paddedBase64 += "=";
+      }
+      Uint8List bytes = base64Decode(paddedBase64);
       final directory = await getApplicationDocumentsDirectory();
       final String filePath =
-          '${directory.path}/chat_image_${DateTime.now().millisecondsSinceEpoch}.png';
-
+          '${directory.path}/booking_profile_image_${DateTime.now().millisecondsSinceEpoch}.png';
       final File file = File(filePath);
       await file.writeAsBytes(bytes);
-
-      print("Image saved at: $filePath");
       return file;
     } catch (e) {
-      print("Failed to save image: $e");
+      print("Failed to save booking image: $e");
       rethrow;
     }
   }
 
+  // دالة لجلب الرسائل بين المريض والطبيب
   Future<void> fetchMessages({
     required int senderId,
     required int receiverId,
@@ -54,6 +57,7 @@ class ChatCubit extends Cubit<ChatState> {
           String? imagePath;
           if (json["image"] != null && json["image"].isNotEmpty) {
             try {
+              // استخدام دالة saveBase64Image لحفظ الصورة
               File savedFile = await saveBase64Image(json["image"]);
               imagePath = savedFile.path;
             } catch (e) {
@@ -76,6 +80,7 @@ class ChatCubit extends Cubit<ChatState> {
     }
   }
 
+  // دالة لإرسال رسالة جديدة
   Future<void> sendMessage({
     required int senderId,
     required int receiverId,
@@ -132,38 +137,60 @@ class ChatCubit extends Cubit<ChatState> {
     }
   }
 
+  // دالة لجلب قائمة الشات بين المستخدمين
   Future<void> fetchChatList({
     required int userId,
     required String userType,
   }) async {
     try {
       emit(ChatLoading());
+
       final response = await api.get(
         EndPoints.getAllChats,
         queryParameters: {"userId": userId, "userType": userType},
       );
+
       if (response is List) {
         final List<ChatSummary> chatList = [];
+
         for (var json in response) {
           String? lastMessage;
           bool isImage = false;
+          String? otherUserLocalImagePath;
+
+          // التعامل مع الرسالة (صورة أو نص)
           if (json["image"] != null && json["image"].startsWith("/9j")) {
             try {
               File savedFile = await saveBase64Image(json["image"]);
               lastMessage = savedFile.path;
               isImage = true;
             } catch (e) {
-              print("Failed to save image: $e");
+              print("Failed to save message image: $e");
             }
           } else {
             lastMessage = json["message"];
           }
+
+          // التعامل مع صورة المرسل
+          if (json["otherUserImage"] != null &&
+              json["otherUserImage"].isNotEmpty) {
+            try {
+              File savedFile = await saveBase64Image(json["otherUserImage"]);
+              otherUserLocalImagePath = savedFile.path;
+            } catch (e) {
+              print("Failed to save sender's image: $e");
+            }
+          }
+
+          // بناء الكائن
           chatList.add(ChatSummary.fromJson({
             ...json,
             "lastMessage": lastMessage,
             "isImage": isImage,
+            "otherUserLocalImagePath": otherUserLocalImagePath,
           }));
         }
+
         emit(ChatListSuccess(chatList));
       } else {
         emit(ChatFailure("Invalid response format"));
@@ -175,6 +202,7 @@ class ChatCubit extends Cubit<ChatState> {
     }
   }
 
+  // دالة لإعادة تعيين حالة الشات
   void resetState() {
     emit(ChatInitial());
   }

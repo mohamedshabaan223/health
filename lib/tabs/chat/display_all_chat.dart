@@ -9,6 +9,7 @@ import 'package:health_app/cubits/chat_cubit/chat_state.dart';
 import 'package:health_app/models/get_all_chats.dart';
 import 'package:health_app/pages/chat_page.dart';
 import 'package:intl/intl.dart';
+import 'dart:convert';
 
 class DisplayAllChat extends StatefulWidget {
   static const routeName = '/display-all-chat';
@@ -184,9 +185,18 @@ class _DisplayAllChatState extends State<DisplayAllChat> {
             ),
             child: Row(
               children: [
-                const CircleAvatar(
+                CircleAvatar(
                   radius: 35,
-                  backgroundImage: AssetImage('assets/images/male.png'),
+                  backgroundImage: chat.otherUserImage != null &&
+                          chat.otherUserImage!.isNotEmpty
+                      ? (chat.otherUserImage!.startsWith("data:image")
+                          ? MemoryImage(
+                              base64Decode(
+                                  chat.otherUserImage!.split(',').last),
+                            )
+                          : NetworkImage(chat.otherUserImage!))
+                      : const AssetImage('assets/images/male.png')
+                          as ImageProvider,
                 ),
                 const SizedBox(width: 12),
                 Expanded(

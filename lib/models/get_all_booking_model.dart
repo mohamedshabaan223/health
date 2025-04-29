@@ -8,6 +8,7 @@ class GetAllBooking {
   final String day;
   final String time;
   final String address;
+  String? localImagePath;
 
   GetAllBooking({
     required this.id,
@@ -19,6 +20,7 @@ class GetAllBooking {
     required this.day,
     required this.time,
     required this.address,
+    this.localImagePath,
   });
 
   factory GetAllBooking.fromJson(Map<String, dynamic> json) {

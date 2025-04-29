@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:health_app/app_theme.dart';
+import 'package:health_app/pages/doctor_information_in_specialization.dart';
 import 'package:health_app/pages/doctor_page_information.dart';
 import 'package:health_app/widgets/default_icon.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -173,7 +174,7 @@ class _DoctorContainerSpecializationState
                   InkWell(
                     onTap: () {
                       Navigator.of(context).pushNamed(
-                        DoctorInformation.routeName,
+                        DoctorInformationInSpecialization.routeName,
                         arguments: widget.doctorid,
                       );
                     },

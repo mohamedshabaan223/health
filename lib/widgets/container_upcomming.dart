@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:health_app/app_theme.dart';
 import 'package:health_app/models/get_all_booking_model.dart';
@@ -16,6 +18,9 @@ class ContainerUpcoming extends StatelessWidget {
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
+    final imageProvider = booking.localImagePath != null
+        ? FileImage(File(booking.localImagePath!))
+        : const AssetImage('assets/images/doctor_image.png') as ImageProvider;
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       width: width * 0.15,
@@ -30,12 +35,11 @@ class ContainerUpcoming extends StatelessWidget {
           children: [
             Row(
               children: [
-                const Padding(
-                  padding: EdgeInsets.only(left: 5),
+                Padding(
+                  padding: const EdgeInsets.only(left: 5),
                   child: CircleAvatar(
                     radius: 40,
-                    backgroundImage:
-                        AssetImage('assets/images/doctor_image.png'),
+                    backgroundImage: imageProvider,
                   ),
                 ),
                 Padding(
@@ -186,7 +190,7 @@ class ContainerUpcoming extends StatelessWidget {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: const Text(
-                          'يمكنك تعديل الحجز مرتين فقط والا سيتم حذف الحجز تلقائي',
+                          'You can only modify the reservation twice, otherwise the reservation will be automatically deleted.',
                           style: TextStyle(color: Colors.white),
                         ),
                         backgroundColor: AppTheme.green2,

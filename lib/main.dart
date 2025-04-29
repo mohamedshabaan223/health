@@ -19,7 +19,6 @@ import 'package:health_app/cubits/payment_cubit/payment_cubit.dart';
 import 'package:health_app/cubits/profile_cubit/profile_cubit.dart';
 import 'package:health_app/cubits/review_cubit/review_cubit.dart';
 import 'package:health_app/cubits/specializations_cubit/specializations_cubit.dart';
-import 'package:health_app/navigator_observar.dart';
 import 'package:health_app/pages/AllNearbyDoctorsPage.dart';
 import 'package:health_app/pages/Specializations_page.dart';
 import 'package:health_app/pages/all_appoinements_for_doctor.dart';
@@ -29,6 +28,7 @@ import 'package:health_app/pages/appointment_screen.dart';
 import 'package:health_app/pages/cancelled_reason_page.dart';
 import 'package:health_app/pages/change_password.dart';
 import 'package:health_app/pages/chat_page.dart';
+import 'package:health_app/pages/doctor_information_in_specialization.dart';
 import 'package:health_app/pages/doctor_page_doctor_information_male.dart';
 import 'package:health_app/pages/create_new_password_page.dart';
 import 'package:health_app/pages/doctor_favorite.dart';
@@ -97,8 +97,7 @@ class MyApp extends StatelessWidget {
           create: (context) => AuthCubit(dioConsumer),
         ),
         BlocProvider<DoctorCubit>(
-          create: (context) => DoctorCubit(dioConsumer)
-            ..getAllDoctorsByOrderType(orderType: 'ASC'),
+          create: (context) => DoctorCubit(dioConsumer),
         ),
         BlocProvider(
           create: (context) => BookingCubit(dioConsumer),
@@ -134,15 +133,9 @@ class MyApp extends StatelessWidget {
       ],
       child: Builder(
         builder: (context) {
-          final doctorCubit = BlocProvider.of<DoctorCubit>(context);
           return MaterialApp(
             debugShowCheckedModeBanner: false,
             navigatorObservers: [
-              MyNavigatorObserver(
-                onPopNext: () {
-                  doctorCubit.getAllDoctorsByOrderType(orderType: 'ASC');
-                },
-              ),
               AnotherNavigatorObserver(
                 onPopNext: () {
                   final doctorId = CacheHelper().getData(key: 'id');
@@ -197,6 +190,8 @@ class MyApp extends StatelessWidget {
                   const DoctorPageInformationForMale(),
               DoctorPageInformationForRating.routeName: (_) =>
                   const DoctorPageInformationForRating(),
+              DoctorInformationInSpecialization.routeName: (_) =>
+                  const DoctorInformationInSpecialization(),
             },
             initialRoute: token == null
                 ? StartScreen.id

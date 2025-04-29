@@ -42,26 +42,31 @@ class DoctorCubit extends Cubit<DoctorState> {
   }
 
   Future<void> getDoctorById({required int doctorId}) async {
-    try {
-      emit(GetDoctorInfoLoading());
+    if (state is GetDoctorInfoLoading) return;
+    emit(GetDoctorInfoLoading());
 
+    try {
       final response =
           await api.get("http://10.0.2.2:5282/GetDoctorDetails/$doctorId");
 
       final doctorInfo = GetDoctorInfoById.fromJson(response);
 
+      // تأكد من معالجة الصورة بشكل صحيح قبل التحديث
       if (doctorInfo.profileImage != null &&
           doctorInfo.profileImage!.isNotEmpty) {
         try {
+          // فقط إذا كان هناك صورة، قم بحفظها
           File savedFile =
               await saveDoctorProfileImage(doctorInfo.profileImage!);
           doctorInfo.localImagePath = savedFile.path;
+          // الآن تصدر الحالة بنجاح فقط بعد تحديث الصورة
           emit(GetDoctorInfoSuccess(doctorInfo));
         } catch (e) {
           log("Failed to process doctor image: $e");
           emit(GetDoctorInfoFailure(errorMessage: "Failed to process image"));
         }
       } else {
+        // إذا لم تكن هناك صورة، فقط تصدر حالة النجاح
         emit(GetDoctorInfoSuccess(doctorInfo));
       }
     } on ServerException catch (e) {

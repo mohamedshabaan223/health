@@ -8,24 +8,28 @@ import 'package:health_app/pages/review_screen_doctor.dart';
 import 'package:health_app/widgets/container_doctor_info.dart';
 import 'package:health_app/widgets/container_review.dart';
 
-class DoctorInformation extends StatefulWidget {
-  static const String routeName = '/doctor-info';
+class DoctorInformationInSpecialization extends StatefulWidget {
+  static const String routeName = '/doctor-info-in-specialization';
 
-  const DoctorInformation({super.key});
+  const DoctorInformationInSpecialization({super.key});
 
   @override
-  State<DoctorInformation> createState() => _DoctorInformationState();
+  State<DoctorInformationInSpecialization> createState() =>
+      _DoctorInformationInSpecializationState();
 }
 
-class _DoctorInformationState extends State<DoctorInformation> {
+class _DoctorInformationInSpecializationState
+    extends State<DoctorInformationInSpecialization> {
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    final doctorId = ModalRoute.of(context)?.settings.arguments as int?;
-    if (doctorId != null) {
-      context.read<DoctorCubit>().getDoctorById(doctorId: doctorId);
-      context.read<ReviewCubit>().getReviewsByDoctorId(doctorId);
-    }
+  void initState() {
+    super.initState();
+    Future.microtask(() {
+      final doctorId = ModalRoute.of(context)?.settings.arguments as int?;
+      if (doctorId != null) {
+        context.read<DoctorCubit>().getDoctorById(doctorId: doctorId);
+        context.read<ReviewCubit>().getReviewsByDoctorId(doctorId);
+      }
+    });
   }
 
   @override
@@ -73,8 +77,6 @@ class _DoctorInformationState extends State<DoctorInformation> {
                         IconButton(
                           onPressed: () {
                             Navigator.of(context).pop();
-                            BlocProvider.of<DoctorCubit>(context)
-                                .getAllDoctorsByOrderType(orderType: 'ASC');
                           },
                           icon: Icon(
                             Icons.arrow_back_ios_new_outlined,

@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'dart:io';
+import 'dart:typed_data';
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:health_app/cache/cache_helper.dart';
@@ -13,6 +15,8 @@ import 'package:health_app/models/get_all_booking_model.dart';
 import 'package:meta/meta.dart';
 import 'dart:developer';
 
+import 'package:path_provider/path_provider.dart';
+
 part 'booking_cubit_state.dart';
 
 class BookingCubit extends Cubit<BookingCubitState> {
@@ -20,6 +24,28 @@ class BookingCubit extends Cubit<BookingCubitState> {
   BookingCubit(this.api) : super(BookingCubitInitial());
   List<GetAllBooking> bookings = [];
   List<CanceledBookingModel> canceledBookings = [];
+
+  Future<File> saveBookingProfileImage(String base64String) async {
+    try {
+      final String base64Data = base64String.split(',').last;
+      String cleanedBase64 =
+          base64Data.replaceAll(RegExp(r'[^A-Za-z0-9+/=]'), '');
+      String paddedBase64 = cleanedBase64;
+      while (paddedBase64.length % 4 != 0) {
+        paddedBase64 += "=";
+      }
+      Uint8List bytes = base64Decode(paddedBase64);
+      final directory = await getApplicationDocumentsDirectory();
+      final String filePath =
+          '${directory.path}/booking_profile_image_${DateTime.now().millisecondsSinceEpoch}.png';
+      final File file = File(filePath);
+      await file.writeAsBytes(bytes);
+      return file;
+    } catch (e) {
+      log("Failed to save booking image: $e");
+      rethrow;
+    }
+  }
 
   Future<void> getAvailableSlots({required int doctorId}) async {
     try {
@@ -120,9 +146,19 @@ class BookingCubit extends Cubit<BookingCubitState> {
           .toList();
 
       if (bookings.isEmpty) {
-        emit(BookingCubitGetAllError("لا توجد حجوزات متاحة."));
+        emit(BookingCubitGetAllError("No bookings found."));
       } else {
         this.bookings = bookings;
+        for (var booking in bookings) {
+          if (booking.photo != null && booking.photo!.isNotEmpty) {
+            try {
+              File savedFile = await saveBookingProfileImage(booking.photo!);
+              booking.localImagePath = savedFile.path;
+            } catch (e) {
+              log("Failed to process appointment image: $e");
+            }
+          }
+        }
         emit(BookingCubitGetAllSuccess(bookings));
       }
     } on FormatException {
@@ -143,16 +179,15 @@ class BookingCubit extends Cubit<BookingCubitState> {
       final response = await api.put(
         'http://10.0.2.2:5282/api/Booking/Api/V1/Booking/UpdateBooking?bookingId=$bookingId',
         data: jsonEncode({
-          "dto": {
-            "day": day,
-            "time": time,
-          }
+          "day": day,
+          "time": time,
         }),
       );
 
       final String responseData = response;
 
       if (responseData == 'Booking updated successfully') {
+        print('day: $day, time: $time');
         emit(BookingCubitSuccessUpdate(responseData));
         final patientId = CacheHelper().getData(key: 'id');
         if (patientId != null) {
@@ -191,6 +226,18 @@ class BookingCubit extends Cubit<BookingCubitState> {
         if (bookings.isEmpty) {
           emit(BookingDoctorCompletedError("No completed bookings found."));
         } else {
+          for (var booking in bookings) {
+            if (booking.patientPhoto != null &&
+                booking.patientPhoto!.isNotEmpty) {
+              try {
+                File savedFile =
+                    await saveBookingProfileImage(booking.patientPhoto!);
+                booking.localImagePath = savedFile.path;
+              } catch (e) {
+                log("Failed to process appointment image: $e");
+              }
+            }
+          }
           emit(BookingDoctorCompletedSuccess(bookings));
         }
       } else {
@@ -270,15 +317,26 @@ class BookingCubit extends Cubit<BookingCubitState> {
           .toList();
 
       if (bookings.isEmpty) {
-        emit(BookingCubitAllCanceledEmpty("لا توجد حجوزات ملغية."));
+        emit(BookingCubitAllCanceledEmpty("No canceled bookings found."));
       } else {
         this.canceledBookings = bookings;
+        for (var booking in bookings) {
+          if (booking.doctorImage != null && booking.doctorImage!.isNotEmpty) {
+            try {
+              File savedFile =
+                  await saveBookingProfileImage(booking.doctorImage!);
+              booking.localImagePath = savedFile.path;
+            } catch (e) {
+              log("Failed to process appointment image: $e");
+            }
+          }
+        }
         emit(BookingCubitAllCanceledSuccess(bookings));
       }
     } on FormatException {
-      emit(BookingCubitError("خطأ في تنسيق البيانات المستلمة."));
+      emit(BookingCubitError("Invalid response format."));
     } catch (e) {
-      emit(BookingCubitError("حدث خطأ غير متوقع: $e"));
+      emit(BookingCubitError("Unexpected error occurred: $e"));
     }
   }
 

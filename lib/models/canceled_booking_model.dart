@@ -1,19 +1,29 @@
 class CanceledBookingModel {
   final String doctorName;
   final String? doctorImage;
-  final DateTime bookingDate;
+  final String? specializationName;
+  final DateTime? bookingDate;
+  String? localImagePath;
 
   CanceledBookingModel({
     required this.doctorName,
     this.doctorImage,
-    required this.bookingDate,
+    this.specializationName,
+    this.bookingDate,
+    this.localImagePath,
   });
 
   factory CanceledBookingModel.fromJson(Map<String, dynamic> json) {
+    DateTime? parsedDate;
+    if (json['bookingDate'] != null && json['bookingDate'] != '0001-01-01') {
+      parsedDate = DateTime.parse(json['bookingDate']);
+    }
+
     return CanceledBookingModel(
-      doctorName: json['doctorName'],
+      doctorName: json['doctorName'] ?? '',
       doctorImage: json['doctorImage'],
-      bookingDate: DateTime.parse(json['bookingDate']),
+      specializationName: json['specializationName'],
+      bookingDate: parsedDate,
     );
   }
 
@@ -21,7 +31,8 @@ class CanceledBookingModel {
     return {
       'doctorName': doctorName,
       'doctorImage': doctorImage,
-      'bookingDate': bookingDate.toIso8601String(),
+      'specializationName': specializationName,
+      'bookingDate': bookingDate?.toIso8601String(),
     };
   }
 }

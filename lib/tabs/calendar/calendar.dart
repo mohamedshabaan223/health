@@ -121,7 +121,7 @@ class _CalendarState extends State<Calendar>
                 } else if (state is BookingCubitGetAllSuccess) {
                   final upcomingBookings = state.bookings;
                   if (upcomingBookings.isEmpty) {
-                    return const Center(child: Text('لا توجد حجوزات قادمة.'));
+                    return const Center(child: Text('No Upcoming Bookings.'));
                   }
                   return ListView.builder(
                     itemCount: upcomingBookings.length,
@@ -134,7 +134,7 @@ class _CalendarState extends State<Calendar>
                   final upcomingBookings =
                       context.read<BookingCubit>().bookings;
                   if (upcomingBookings.isEmpty) {
-                    return const Center(child: Text('لا توجد حجوزات قادمة.'));
+                    return const Center(child: Text('No Upcoming Bookings.'));
                   }
                   return ListView.builder(
                     itemCount: upcomingBookings.length,

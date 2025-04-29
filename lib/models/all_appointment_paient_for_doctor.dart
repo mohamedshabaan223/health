@@ -4,6 +4,7 @@ class AllAppointmentsPatientForDoctor {
   final String patientName;
   final String? patientPhoto;
   final int age;
+  String? localImagePath;
 
   AllAppointmentsPatientForDoctor({
     required this.bookingId,
@@ -11,6 +12,7 @@ class AllAppointmentsPatientForDoctor {
     required this.patientName,
     this.patientPhoto,
     required this.age,
+    this.localImagePath,
   });
 
   factory AllAppointmentsPatientForDoctor.fromJson(Map<String, dynamic> json) {

@@ -3,9 +3,11 @@ class ChatSummary {
   final String? message;
   final String otherUserName;
   final int otherUserId;
-  final String? otherUserImage;
+  final String? otherUserImage; // Base64 جاي من API
   final DateTime sendTime;
-  final String? image;
+  final String? image; // لو كانت الرسالة صورة
+  String? localImagePath; // مسار الصورة لو كانت الرسالة صورة
+  String? otherUserLocalImagePath; // مسار صورة المرسل
 
   ChatSummary({
     required this.id,
@@ -15,6 +17,8 @@ class ChatSummary {
     required this.sendTime,
     this.image,
     this.otherUserImage,
+    this.localImagePath,
+    this.otherUserLocalImagePath,
   });
 
   factory ChatSummary.fromJson(Map<String, dynamic> json) {
@@ -26,6 +30,7 @@ class ChatSummary {
       sendTime: DateTime.parse(json['sendTime']),
       image: json['image'],
       otherUserImage: json['otherUserImage'],
+      otherUserLocalImagePath: json['otherUserLocalImagePath'],
     );
   }
 
@@ -37,7 +42,8 @@ class ChatSummary {
       'otherUserId': otherUserId,
       'sendTime': sendTime.toIso8601String(),
       'image': image,
-      'otherUserImage': otherUserImage
+      'otherUserImage': otherUserImage,
+      'otherUserLocalImagePath': otherUserLocalImagePath,
     };
   }
 }
