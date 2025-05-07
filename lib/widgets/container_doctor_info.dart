@@ -1,15 +1,12 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:health_app/app_theme.dart';
 import 'package:health_app/cache/cache_helper.dart';
 import 'package:health_app/cubits/doctors_cubit/doctor_cubit.dart';
 import 'package:health_app/pages/chat_page.dart';
-import 'package:health_app/widgets/DoctorAppointmentsDropdown.dart';
 import 'package:health_app/widgets/container_schdule.dart';
 import 'package:health_app/models/get_doctor_info_by_id.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 
 class ContainerDoctorInfo extends StatefulWidget {
   const ContainerDoctorInfo({super.key, required this.doctorId});
@@ -27,7 +24,6 @@ class _ContainerDoctorInfoState extends State<ContainerDoctorInfo> {
 
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
 
     return BlocBuilder<DoctorCubit, DoctorState>(
@@ -46,9 +42,9 @@ class _ContainerDoctorInfoState extends State<ContainerDoctorInfo> {
         if (state is GetDoctorInfoSuccess) {
           final doctor = state.doctorInfo;
           return Container(
-            height: height * 0.35,
+            height: height * 0.28,
             padding: const EdgeInsets.all(12),
-            margin: const EdgeInsets.symmetric(horizontal: 5),
+            margin: const EdgeInsets.symmetric(horizontal: 10),
             decoration: BoxDecoration(
               color: AppTheme.gray,
               borderRadius: BorderRadius.circular(17),
@@ -61,23 +57,21 @@ class _ContainerDoctorInfoState extends State<ContainerDoctorInfo> {
                       backgroundImage: doctor.localImagePath != null &&
                               doctor.localImagePath!.isNotEmpty
                           ? FileImage(File(doctor.localImagePath!))
-                          : const AssetImage('assets/images/doctor_image.png'),
-                      radius: 50,
+                          : const AssetImage('assets/images/doctor_image.png')
+                              as ImageProvider,
+                      radius: 45,
                     ),
-                    const SizedBox(width: 20),
+                    const SizedBox(width: 16),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Padding(
-                            padding: const EdgeInsets.only(top: 7.0),
-                            child: Text(
-                              doctor.name,
-                              style: const TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                color: AppTheme.green,
-                              ),
+                          Text(
+                            doctor.name,
+                            style: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: AppTheme.green,
                             ),
                           ),
                           const SizedBox(height: 4),
@@ -88,26 +82,53 @@ class _ContainerDoctorInfoState extends State<ContainerDoctorInfo> {
                               color: AppTheme.black,
                             ),
                           ),
-                          const SizedBox(height: 20),
+                          const SizedBox(height: 10),
                           Container(
                             padding: const EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 6),
+                                horizontal: 8, vertical: 3),
                             decoration: BoxDecoration(
-                              color: AppTheme.green,
-                              borderRadius: BorderRadius.circular(20),
+                              color: AppTheme.white,
+                              borderRadius: BorderRadius.circular(12),
                             ),
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                Image.asset('assets/images/professianol1.png',
-                                    height: 20),
+                                const Icon(Icons.star,
+                                    color: AppTheme.green, size: 18),
+                                const SizedBox(width: 6),
+                                Text(
+                                  '${doctor.rating}',
+                                  style: const TextStyle(
+                                    color: AppTheme.green,
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 8, vertical: 6),
+                            decoration: BoxDecoration(
+                              color: AppTheme.white,
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Image.asset(
+                                  'assets/images/professianol1.png',
+                                  height: 20,
+                                ),
                                 const SizedBox(width: 6),
                                 Text(
                                   '${doctor.experience} experience',
                                   style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 15,
-                                  ),
+                                      color: AppTheme.green,
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold),
                                 ),
                               ],
                             ),
@@ -117,78 +138,7 @@ class _ContainerDoctorInfoState extends State<ContainerDoctorInfo> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 25),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: AppTheme.white,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Icon(Icons.price_change,
-                              color: AppTheme.green, size: 18),
-                          const SizedBox(width: 6),
-                          Text(
-                            selectedSlot != null
-                                ? '${selectedSlot!.price} EGP'
-                                : 'Select Time',
-                            style: const TextStyle(
-                              color: AppTheme.green,
-                              fontSize: 15,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(width: 15),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: AppTheme.white,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Icon(Icons.star,
-                              color: AppTheme.green, size: 18),
-                          const SizedBox(width: 6),
-                          Text(
-                            '${doctor.rating}',
-                            style: const TextStyle(
-                              color: AppTheme.green,
-                              fontSize: 15,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 15),
-                Row(
-                  children: [
-                    Expanded(
-                      child: DoctorAppointmentsDropdown(
-                        availableAppointments: doctor.availableSlots,
-                        selectedSlot: selectedSlot,
-                        onSlotSelected: (slot) {
-                          setState(() {
-                            selectedSlot = slot;
-                          });
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 15),
+                const SizedBox(height: 30),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
@@ -236,6 +186,13 @@ class _ContainerDoctorInfoState extends State<ContainerDoctorInfo> {
       decoration: BoxDecoration(
         color: AppTheme.white,
         borderRadius: BorderRadius.circular(15),
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.black12,
+            blurRadius: 4,
+            offset: Offset(0, 2),
+          ),
+        ],
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,

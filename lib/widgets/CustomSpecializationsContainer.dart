@@ -38,7 +38,7 @@ class SpecializationContainer extends StatelessWidget {
                       width: 40,
                     )
                   : Image.asset(
-                      'assets/images/heart.png',
+                      'assets/images/rheumatology_46dp_FFFFFF_FILL0_wght400_GRAD0_opsz48.png',
                       height: 40,
                       width: 40,
                     ),

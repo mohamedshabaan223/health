@@ -29,6 +29,7 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
   int? patientId = CacheHelper().getData(key: 'id');
   String? problemDescription;
   List<AppointmentDisplayDoctorData> availableSlots = [];
+  double? selectedPrice;
 
   final TextEditingController ageController = TextEditingController();
   final TextEditingController fullNameController = TextEditingController();
@@ -184,6 +185,18 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                 _buildSectionTitle("Available Time"),
                 const SizedBox(height: 10),
                 _buildTimesSection(),
+                if (selectedPrice != null)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 16.0),
+                    child: Text(
+                      'Price: \EGP${selectedPrice!.toStringAsFixed(2)}',
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: AppTheme.green2,
+                      ),
+                    ),
+                  ),
                 const SizedBox(height: 20),
                 const Divider(color: AppTheme.green2),
                 const SizedBox(height: 10),
@@ -253,24 +266,33 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
         if (state is BookingCubitSuccess) {
           final uniqueDays =
               availableSlots.map((slot) => slot.day).toSet().toList();
-
           final selectedDay = uniqueDays[selectedDayIndex];
-
           final times =
               availableSlots.where((slot) => slot.day == selectedDay).toList();
 
-          return Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: List.generate(times.length, (index) {
-              return GestureDetector(
-                onTap: () => setState(() => selectedTimeIndex = index),
-                child: _buildTimeTile(
-                  time: times[index].timeStart,
-                  isSelected: selectedTimeIndex == index,
-                ),
-              );
-            }),
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: List.generate(times.length, (index) {
+                  return GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        selectedTimeIndex = index;
+                        // تعيين السعر بناءً على الوقت المحدد
+                        selectedPrice = times[index].price.toDouble();
+                      });
+                    },
+                    child: _buildTimeTile(
+                      time: times[index].timeStart,
+                      isSelected: selectedTimeIndex == index,
+                    ),
+                  );
+                }),
+              ),
+            ],
           );
         }
         return const SizedBox();
