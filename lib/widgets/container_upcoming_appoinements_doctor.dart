@@ -60,7 +60,7 @@ class _ContainerUpComingAppoinementsDoctorState
       },
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-        padding: const EdgeInsets.all(15),
+        padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
           color: AppTheme.gray,
           borderRadius: BorderRadius.circular(17),

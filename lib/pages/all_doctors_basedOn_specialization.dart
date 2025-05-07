@@ -33,9 +33,6 @@ class _AllDoctorsBasedOnSpecializationState
     if (args != null && args['specializationId'] != null) {
       specializationId = args['specializationId'];
       title = args['specializationName'];
-
-      // لا حاجة لإرسال الحدث هنا، لأنه سيتم التعامل مع الحالة عبر BlocBuilder
-      // فقط تأكد من أنك ترسل الحدث عند بدء الصفحة إذا كانت الحالة جديدة
       context
           .read<DoctorCubit>()
           .getDoctorsBySpecialization(specializationId: specializationId);

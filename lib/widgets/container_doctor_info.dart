@@ -60,9 +60,8 @@ class _ContainerDoctorInfoState extends State<ContainerDoctorInfo> {
                     CircleAvatar(
                       backgroundImage: doctor.localImagePath != null &&
                               doctor.localImagePath!.isNotEmpty
-                          ? CachedNetworkImageProvider(doctor.localImagePath!)
-                          : const AssetImage('assets/images/doctor_image.png')
-                              as ImageProvider,
+                          ? FileImage(File(doctor.localImagePath!))
+                          : const AssetImage('assets/images/doctor_image.png'),
                       radius: 50,
                     ),
                     const SizedBox(width: 20),

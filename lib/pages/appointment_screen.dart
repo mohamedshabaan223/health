@@ -220,7 +220,7 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
               availableSlots.map((slot) => slot.day).toSet().toList();
 
           return SizedBox(
-            height: 85,
+            height: 40,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
               itemCount: uniqueDays.length,
@@ -384,7 +384,7 @@ Widget _buildDateTile({
 }) {
   return Container(
     margin: const EdgeInsets.symmetric(horizontal: 5),
-    width: 60,
+    width: 105,
     decoration: BoxDecoration(
       color: isSelected ? AppTheme.green3 : Colors.white,
       borderRadius: BorderRadius.circular(20),

@@ -62,7 +62,7 @@ class FirstScreenInDoctorAppDoctorInfo extends StatelessWidget {
               key: Key(slot['appointmentId'].toString()),
               direction: DismissDirection.endToStart,
               onDismissed: (direction) {
-                Navigator.of(context).pop(); // Close the BottomSheet
+                Navigator.of(context).pop();
                 _showDeleteDialog(context, slot['appointmentId']);
               },
               background: Container(
@@ -166,8 +166,6 @@ class FirstScreenInDoctorAppDoctorInfo extends StatelessWidget {
         SizedBox(height: height * 0.03),
         const Divider(color: AppTheme.green),
         SizedBox(height: height * 0.02),
-
-        // ==== My Schedule With Nice Frame ====
         Center(
           child: Container(
             padding: EdgeInsets.symmetric(vertical: 5, horizontal: 110),
@@ -184,7 +182,7 @@ class FirstScreenInDoctorAppDoctorInfo extends StatelessWidget {
               ],
             ),
             child: Text(
-              "My Slots",
+              "Appointments",
               style: TextStyle(
                 fontSize: width * 0.05,
                 fontWeight: FontWeight.bold,
@@ -207,9 +205,7 @@ class FirstScreenInDoctorAppDoctorInfo extends StatelessWidget {
             ),
           ),
         ),
-
         SizedBox(height: height * 0.03),
-
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: groupedByDay.keys.map((day) {
@@ -219,39 +215,28 @@ class FirstScreenInDoctorAppDoctorInfo extends StatelessWidget {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  formattedDate,
-                  style: TextStyle(
-                    fontSize: width * 0.045,
-                    fontWeight: FontWeight.bold,
-                    color: AppTheme.green,
-                  ),
-                ),
-                SizedBox(height: height * 0.01),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppTheme.white,
-                    elevation: 2,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                      side: const BorderSide(
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      formattedDate,
+                      style: TextStyle(
+                        fontSize: width * 0.045,
+                        fontWeight: FontWeight.bold,
                         color: AppTheme.green,
-                        width: 1,
                       ),
                     ),
-                  ),
-                  onPressed: () {
-                    _showAppointmentsBottomSheet(context, groupedByDay[day]!);
-                  },
-                  child: const Text(
-                    'View Available Slots for This Day',
-                    style: TextStyle(
-                        fontSize: 15,
-                        color: AppTheme.black,
-                        fontWeight: FontWeight.w400),
-                  ),
+                    IconButton(
+                      icon: const Icon(Icons.calendar_month,
+                          size: 25, color: AppTheme.green2),
+                      onPressed: () {
+                        _showAppointmentsBottomSheet(
+                            context, groupedByDay[day]!);
+                      },
+                    ),
+                  ],
                 ),
-                SizedBox(height: height * 0.02),
+                SizedBox(height: height * 0.008),
               ],
             );
           }).toList(),

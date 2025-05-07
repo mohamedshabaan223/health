@@ -62,12 +62,14 @@ class ReviewCubit extends Cubit<ReviewState> {
   }
 
   Future<void> getReviewsByDoctorId(int doctorId) async {
-    emit(ReviewLoading());
+    if (state is ReviewLoading)
+      return; // إذا كانت الحالة بالفعل في وضع تحميل، لا نعيد التبديل.
+
+    emit(ReviewLoading()); // عرض دائرة التحميل.
 
     try {
       final response = await api.get(
-        'http://10.0.2.2:5282/Api/V1/Review/GetAllReviewsByDrId?doctorId=$doctorId',
-      );
+          'http://10.0.2.2:5282/Api/V1/Review/GetAllReviewsByDrId?doctorId=$doctorId');
       List<dynamic> jsonData = response;
 
       List<ReviewModel> reviews =
@@ -89,7 +91,7 @@ class ReviewCubit extends Cubit<ReviewState> {
         }
       }
 
-      emit(ReviewListSuccess(reviews));
+      emit(ReviewListSuccess(reviews)); // الحالة بنجاح بعد تحميل المراجعات.
     } on ServerException catch (e) {
       emit(ReviewError(e.errorModel.errorMessage));
     } catch (e) {

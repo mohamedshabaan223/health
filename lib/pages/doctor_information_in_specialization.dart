@@ -23,13 +23,15 @@ class _DoctorInformationInSpecializationState
   @override
   void initState() {
     super.initState();
-    Future.microtask(() {
-      final doctorId = ModalRoute.of(context)?.settings.arguments as int?;
-      if (doctorId != null) {
-        context.read<DoctorCubit>().getDoctorById(doctorId: doctorId);
-        context.read<ReviewCubit>().getReviewsByDoctorId(doctorId);
-      }
-    });
+    Future.microtask(
+      () {
+        final doctorId = ModalRoute.of(context)?.settings.arguments as int?;
+        if (doctorId != null) {
+          context.read<DoctorCubit>().getDoctorById(doctorId: doctorId);
+          context.read<ReviewCubit>().getReviewsByDoctorId(doctorId);
+        }
+      },
+    );
   }
 
   @override

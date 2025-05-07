@@ -38,7 +38,7 @@ class _AllAppoinementForDoctorState extends State<AllAppoinementForDoctor> {
         title: Column(
           children: [
             SizedBox(height: heigth * 0.023),
-            const Text('All Appointments',
+            const Text('Appointments',
                 style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
           ],
         ),
@@ -47,7 +47,7 @@ class _AllAppoinementForDoctorState extends State<AllAppoinementForDoctor> {
         padding: const EdgeInsets.all(8.0),
         child: Column(
           children: [
-            SizedBox(height: heigth * 0.02),
+            SizedBox(height: heigth * 0.01),
             Expanded(
               child: BlocBuilder<BookingCubit, BookingCubitState>(
                 builder: (context, state) {
