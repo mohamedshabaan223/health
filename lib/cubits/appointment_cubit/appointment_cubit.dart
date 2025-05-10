@@ -29,7 +29,7 @@ class AppointmentCubit extends Cubit<AppointmentState> {
       };
 
       final response = await api.post(
-        "http://10.0.2.2:5282/Api/V1/Appointment/AddAppointment",
+        "http://medicalservicesproject.runasp.net/Api/V1/Appointment/AddAppointment",
         data: json.encode(appointmentData),
       );
 
@@ -50,7 +50,7 @@ class AppointmentCubit extends Cubit<AppointmentState> {
     try {
       emit(AppointmentLoading());
       final response = await api.delete(
-        "http://10.0.2.2:5282/Api/V1/Appointment/RemoveAppointment?appointmentId=$appointmentId",
+        "http://medicalservicesproject.runasp.net/Api/V1/Appointment/RemoveAppointment?appointmentId=$appointmentId",
       );
       if (response != null && response == true) {
         emit(AppointmentDeleted('Appointment removed successfully.'));

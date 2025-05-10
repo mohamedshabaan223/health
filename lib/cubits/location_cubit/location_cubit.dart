@@ -4,7 +4,6 @@ import 'package:location/location.dart';
 import 'package:health_app/core/api/api_consumer.dart';
 import 'package:health_app/cache/cache_helper.dart';
 import 'package:dio/dio.dart';
-
 part 'location_state.dart';
 
 class LocationCubit extends Cubit<LocationState> {
@@ -65,7 +64,7 @@ class LocationCubit extends Cubit<LocationState> {
       };
 
       await api.post(
-        'http://10.0.2.2:5282/Api/V1/Location/AddOrUpdateLocation',
+        'http://medicalservicesproject.runasp.net/Api/V1/Location/AddOrUpdateLocation',
         data: jsonEncode(body),
       );
 
@@ -80,8 +79,6 @@ class LocationCubit extends Cubit<LocationState> {
   Future<void> fetchNearbyDoctors() async {
     try {
       emit(LocationLoading());
-
-      // Get current location
       final locData = await _determineLocation();
       final double? lat = locData.latitude;
       final double? lng = locData.longitude;
@@ -90,11 +87,9 @@ class LocationCubit extends Cubit<LocationState> {
         emit(LocationError('تعذر تحديد الموقع.'));
         return;
       }
-
-      const double distanceInKm = 20; // مسافة ثابتة
-
+      const double distanceInKm = 50;
       final response = await api.get(
-        'http://10.0.2.2:5282/Api/V1/Location/NearbyDoctors',
+        'http://medicalservicesproject.runasp.net/Api/V1/Location/NearbyDoctors',
         queryParameters: {
           'lat': lat,
           'lng': lng,

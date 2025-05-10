@@ -39,52 +39,57 @@ class GetAllReviewForDoctor extends StatelessWidget {
           ],
         ),
       ),
-      body: BlocBuilder<ReviewCubit, ReviewState>(
-        builder: (context, state) {
-          if (state is ReviewLoading) {
-            return const Center(child: CircularProgressIndicator());
-          }
-
-          if (state is ReviewError) {
-            return Center(child: Text('Error: ${state.error}'));
-          }
-
-          if (state is ReviewListSuccess) {
-            List<ReviewModel> reviews = state.reviews;
-
-            if (reviews.isEmpty) {
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 10),
+        child: BlocBuilder<ReviewCubit, ReviewState>(
+          builder: (context, state) {
+            if (state is ReviewLoading) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+            if (state is ReviewError) {
               return Center(
-                child: Text(
-                  'No reviews available.',
-                  style: TextStyle(
-                    color: Colors.grey[600],
-                    fontSize: 18,
-                    fontStyle: FontStyle.italic,
+                child: Text('Error: ${state.error}'),
+              );
+            }
+            if (state is ReviewListSuccess) {
+              List<ReviewModel> reviews = state.reviews;
+
+              if (reviews.isEmpty) {
+                return Center(
+                  child: Text(
+                    'No reviews available.',
+                    style: TextStyle(
+                      color: Colors.grey[600],
+                      fontSize: 18,
+                      fontStyle: FontStyle.italic,
+                    ),
                   ),
-                ),
+                );
+              }
+
+              return Column(
+                children: [
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: reviews.length,
+                      itemBuilder: (context, index) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 10),
+                          child: ContainerReview(review: reviews[index]),
+                        );
+                      },
+                    ),
+                  ),
+                ],
               );
             }
 
-            return Column(
-              children: [
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: reviews.length,
-                    itemBuilder: (context, index) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 10),
-                        child: ContainerReview(review: reviews[index]),
-                      );
-                    },
-                  ),
-                ),
-              ],
-            );
-          }
-
-          return const Center(child: Text('No reviews available.'));
-        },
+            return const Center(child: Text('No reviews available.'));
+          },
+        ),
       ),
     );
   }

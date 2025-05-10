@@ -31,10 +31,14 @@ class ContainerCancelled extends StatelessWidget {
             Row(
               children: [
                 Padding(
-                  padding: EdgeInsets.only(left: 14.0, top: 8),
-                  child: CircleAvatar(
-                    radius: 40,
-                    backgroundImage: imageProvider,
+                  padding: const EdgeInsets.only(left: 14.0, top: 25),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(60),
+                    child: Image(
+                      image: imageProvider,
+                      height: 90,
+                      width: 90,
+                    ),
                   ),
                 ),
                 const SizedBox(width: 10),
@@ -56,32 +60,39 @@ class ContainerCancelled extends StatelessWidget {
                           .titleSmall
                           ?.copyWith(fontSize: 14),
                     ),
+                    const SizedBox(height: 20),
+                    Container(
+                      height: 30,
+                      width: 150,
+                      decoration: BoxDecoration(
+                        color: AppTheme.green,
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(
+                            Icons.calendar_month,
+                            color: AppTheme.white,
+                            size: 18,
+                          ),
+                          const SizedBox(width: 5),
+                          Text(
+                            bookings.bookingDate != null
+                                ? '${bookings.bookingDate!.year}-${bookings.bookingDate!.month.toString().padLeft(2, '0')}-${bookings.bookingDate!.day.toString().padLeft(2, '0')}'
+                                : 'No Date',
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleMedium
+                                ?.copyWith(color: AppTheme.white),
+                          ),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               ],
             ),
-            const Spacer(), // هنا عشان ينزل التاريخ للنص
-            Center(
-              child: Container(
-                alignment: Alignment.center,
-                height: 30,
-                width: 155,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(18),
-                  color: AppTheme.green,
-                ),
-                child: Text(
-                  bookings.bookingDate != null
-                      ? '${bookings.bookingDate!.year}-${bookings.bookingDate!.month.toString().padLeft(2, '0')}-${bookings.bookingDate!.day.toString().padLeft(2, '0')}'
-                      : 'No Date',
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleMedium
-                      ?.copyWith(color: AppTheme.white),
-                ),
-              ),
-            ),
-            const Spacer(), // يضيف مسافة تحت بعد التاريخ لو حبيت توازن المسافات
           ],
         ),
       ),

@@ -1,21 +1,17 @@
 class EndPoints {
-  static String baseUrl = "http://10.0.2.2:5282/Api/";
-  static String login = "V1/Account/Login";
-  static String register = "V1/Account/Register";
-  static String getAllDoctors = "V1/Doctors/GetAllDoctors";
-  static String payment = "Payment/Pay";
-  static String paymentConfirm = "Payment/payment-success";
-  static String allSpecialities = "V1/Specialization/GetAllSpecializations";
-  static String getAllMessages = "V1/Chat/GetMessage";
-  static String sendMessage = "V1/Chat/SendMessage";
-  static String getUserProfile = "V1/Profile/GetUserProfile";
-  static String updateUserProfile = "V1/Profile/UpdateUserProfile";
-  static String getAllChats = "V1/Chat/GetAllChats";
-  static String addFavoriteDoctor = "V1/Doctors/AddFavoriteDR";
-  static String removeFavoriteDoctor = "V1/Doctors/RemoveFavoriteDR";
-  static String getAllFavoriteDoctors = "V1/Doctors/GetAllDoctors";
-  static String deleteAccount = 'V1/Account/DeleteAccount';
-  static String doctorUpdateProfile = 'V1/Profile/UpdateDoctorProfile';
+  static String baseUrl = "http://medicalservicesproject.runasp.net";
+  static String getAllDoctors = "/Api/V1/Doctors/GetAllDoctors";
+  static String allSpecialities =
+      "/Api/V1/Specialization/GetAllSpecializations";
+  static String getAllMessages = "/Api/V1/Chat/GetMessage";
+  static String sendMessage = "/Api/V1/Chat/SendMessage";
+  static String getUserProfile = "/Api/V1/Profile/GetUserProfile";
+  static String updateUserProfile = "/Api/V1/Profile/UpdateUserProfile";
+  static String getAllChats = "/Api/V1/Chat/GetAllChats";
+  static String addFavoriteDoctor = "/Api/V1/Doctors/AddFavoriteDR";
+  static String removeFavoriteDoctor = "/Api/V1/Doctors/RemoveFavoriteDR";
+  static String deleteAccount = '/Api/V1/Account/DeleteAccount';
+  static String doctorUpdateProfile = '/Api/V1/Profile/UpdateDoctorProfile';
 }
 
 class ApiKey {

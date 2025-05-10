@@ -37,7 +37,7 @@ class AuthCubit extends Cubit<AuthState> {
       emit(LoginLoading());
       print("Initiating API call for login...");
       final response = await api.post(
-        EndPoints.login,
+        'http://medicalservicesproject.runasp.net/Api/V1/Account/Login',
         data: {
           ApiKey.email: logInEmail.text,
           ApiKey.password: logInPassword.text,
@@ -67,7 +67,7 @@ class AuthCubit extends Cubit<AuthState> {
     try {
       emit(RegisterLoading());
       final response = await api.post(
-        EndPoints.register,
+        'http://medicalservicesproject.runasp.net/Api/V1/Account/Register',
         data: {
           ApiKey.username: registerUserName.text,
           ApiKey.email: registerEmail.text,

@@ -44,6 +44,8 @@ dependencies:
   jwt_decoder: ^2.0.1
   location: ^5.0.0
   cached_network_image: ^3.4.1
+  flutter_image_compress: ^2.4.0
+  flutter_rating_bar: ^4.0.1
 
 dev_dependencies:
 

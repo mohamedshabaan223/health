@@ -45,7 +45,7 @@ class _ContainerDoctorFemaleState extends State<ContainerDoctorFemale> {
         return Container(
           margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
           width: double.infinity,
-          height: height * 0.18,
+          height: height * 0.2,
           decoration: BoxDecoration(
             color: AppTheme.gray,
             borderRadius: BorderRadius.circular(17),
@@ -57,12 +57,16 @@ class _ContainerDoctorFemaleState extends State<ContainerDoctorFemale> {
                 child: SizedBox(
                   height: 80,
                   width: 80,
-                  child: CircleAvatar(
-                    radius: 50,
-                    backgroundImage: widget.doctorid.localImagePath != null &&
-                            widget.doctorid.localImagePath!.isNotEmpty
-                        ? FileImage(File(widget.doctorid.localImagePath!))
-                        : const AssetImage("assets/images/doctor_image.png"),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(40),
+                    child: Image(
+                      image: widget.doctorid.localImagePath != null &&
+                              widget.doctorid.localImagePath!.isNotEmpty
+                          ? FileImage(File(widget.doctorid.localImagePath!))
+                          : const AssetImage("assets/images/habiba.png")
+                              as ImageProvider,
+                      fit: BoxFit.contain,
+                    ),
                   ),
                 ),
               ),
@@ -120,6 +124,23 @@ class _ContainerDoctorFemaleState extends State<ContainerDoctorFemale> {
                           const SizedBox(width: 5),
                           Text(
                             widget.doctorid.rating.toString(),
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleSmall
+                                ?.copyWith(fontSize: 14, color: Colors.grey),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          const Icon(Icons.money,
+                              color: AppTheme.green3, size: 18),
+                          const SizedBox(width: 5),
+                          Text(
+                            widget.doctorid.availableSlots.isNotEmpty
+                                ? widget.doctorid.availableSlots[0].price!
+                                    .toStringAsFixed(2)
+                                : 'no price',
                             style: Theme.of(context)
                                 .textTheme
                                 .titleSmall

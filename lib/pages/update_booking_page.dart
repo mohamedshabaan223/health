@@ -44,7 +44,10 @@ class _UpdateBookingPageState extends State<UpdateBookingPage> {
 
           setState(() {
             availableSlots = slotsMap;
-            allTimes = slotsMap.values.expand((e) => e).toList();
+            allTimes = slotsMap.values
+                .expand((e) => e)
+                .toSet()
+                .toList(); // تفادي التكرار هنا
           });
         } else if (state is BookingCubitError) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -120,7 +123,8 @@ class _UpdateBookingPageState extends State<UpdateBookingPage> {
                   value: _selectedTime,
                   items: (_selectedDay == null
                           ? allTimes
-                          : availableSlots[_selectedDay!] ?? [])
+                          : (availableSlots[_selectedDay!] ?? []))
+                      .toSet() // ← تفادي التكرار هنا
                       .map((String time) {
                     return DropdownMenuItem<String>(
                       value: time,

@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:health_app/app_theme.dart';
@@ -144,19 +143,24 @@ class _FavoriteState extends State<Favorite> {
                             children: [
                               Padding(
                                 padding: const EdgeInsets.only(left: 14.0),
-                                child: SizedBox(
-                                  height: 80,
-                                  width: 80,
-                                  child: CircleAvatar(
-                                    radius: 50,
-                                    backgroundImage: filteredDoctors[index]
-                                                .localImagePath !=
-                                            null
-                                        ? FileImage(File(filteredDoctors[index]
-                                            .localImagePath!))
-                                        : AssetImage(
-                                                'assets/images/doctor_image.png')
-                                            as ImageProvider,
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(50),
+                                  child: SizedBox(
+                                    height: 80,
+                                    width: 80,
+                                    child:
+                                        filteredDoctors[index].localImagePath !=
+                                                null
+                                            ? Image.file(
+                                                File(filteredDoctors[index]
+                                                    .localImagePath!),
+                                                fit: BoxFit.contain,
+                                              )
+                                            : const Image(
+                                                image: AssetImage(
+                                                    'assets/images/doctor_image.png'),
+                                                fit: BoxFit.contain,
+                                              ),
                                   ),
                                 ),
                               ),
@@ -292,7 +296,6 @@ class _FavoriteState extends State<Favorite> {
                                   ],
                                 ),
                               ),
-                              // Favorite Icon to remove doctor from favorites
                             ],
                           ),
                         ),

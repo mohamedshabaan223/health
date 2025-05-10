@@ -52,12 +52,14 @@ class ContainerReview extends StatelessWidget {
               ? CircleAvatar(
                   radius: 30,
                   backgroundImage: FileImage(File(review.localImagePath!)),
-                  backgroundColor: AppTheme.green.withOpacity(0.2),
+                  backgroundColor:
+                      AppTheme.green.withAlpha((0.2 * 255).round()),
                 )
               : CircleAvatar(
                   radius: 30,
                   backgroundImage: const AssetImage('assets/images/male.png'),
-                  backgroundColor: AppTheme.green.withOpacity(0.2),
+                  backgroundColor:
+                      AppTheme.green.withAlpha((0.2 * 255).round()),
                 ),
           const SizedBox(width: 15),
           Expanded(

@@ -26,7 +26,8 @@ class SpecializationsCubit extends Cubit<SpecialityState> {
       for (var specialization in specializations) {
         if (specialization.image != null && specialization.image!.isNotEmpty) {
           try {
-            File savedFile = await saveBase64Image(specialization.image!);
+            File savedFile =
+                await saveSpecializationImage(specialization.image!);
             specialization.imagePath = savedFile.path;
           } catch (e) {
             print("Failed to process specialization image: $e");
@@ -42,7 +43,7 @@ class SpecializationsCubit extends Cubit<SpecialityState> {
     }
   }
 
-  Future<File> saveBase64Image(String base64String) async {
+  Future<File> saveSpecializationImage(String base64String) async {
     try {
       final String base64Data = base64String.split(',').last;
       Uint8List bytes = base64Decode(base64Data);
@@ -53,10 +54,10 @@ class SpecializationsCubit extends Cubit<SpecialityState> {
       final File file = File(filePath);
       await file.writeAsBytes(bytes);
 
-      print("Image saved at: $filePath");
+      print("Specialization Image saved at: $filePath");
       return file;
     } catch (e) {
-      print("Failed to save image: $e");
+      print("Failed to save specialization image: $e");
       rethrow;
     }
   }

@@ -90,7 +90,7 @@ class _HomePagePatientState extends State<HomePagePatient> {
                 const SearchField(),
               ],
             ),
-            SizedBox(height: height * 0.07),
+            SizedBox(height: height * 0.05),
             Row(
               children: [
                 Text(
@@ -143,27 +143,14 @@ class _HomePagePatientState extends State<HomePagePatient> {
                         const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 3,
                       crossAxisSpacing: 10,
-                      mainAxisSpacing: 15,
-                      childAspectRatio: 1,
+                      childAspectRatio: 0.9,
                     ),
                     itemCount: specializations.length,
                     itemBuilder: (context, index) {
                       final specialization = specializations[index];
-
                       return GestureDetector(
-                        onTap: () {
-                          Navigator.of(context).pushNamed(
-                            AllDoctorsBasedOnSpecialization.id,
-                            arguments: {
-                              'specializationId': specialization.id,
-                              'specializationName': specialization.name
-                            },
-                          );
-                        },
                         child: SpecializationContainer(
-                          imagePath: specialization.imagePath.isNotEmpty
-                              ? specialization.imagePath
-                              : 'assets/images/icons8-kidney-failure-50.png',
+                          imagePath: specialization.imagePath ?? '',
                           title: specialization.name,
                           onTap: () {
                             Navigator.of(context).pushNamed(
@@ -183,7 +170,7 @@ class _HomePagePatientState extends State<HomePagePatient> {
                 }
               },
             ),
-            SizedBox(height: height * 0.03),
+            SizedBox(height: height * 0.02),
             Row(
               children: [
                 Text(

@@ -99,29 +99,7 @@ class _DoctorInformationState extends State<DoctorInformation> {
                     ),
                     SizedBox(height: size.height * 0.02),
                     ContainerDoctorInfo(doctorId: doctorId as int),
-                    SizedBox(height: size.height * 0.03),
-                    Text(
-                      'Profile: ',
-                      style: Theme.of(context).textTheme.labelMedium!.copyWith(
-                            fontSize: size.width * 0.05,
-                            color: AppTheme.green,
-                          ),
-                    ),
-                    SizedBox(height: size.height * 0.01),
-                    Text(
-                      doctor.focus ?? 'There is no profile.',
-                      style: TextStyle(
-                        fontSize: size.width * 0.04,
-                      ),
-                    ),
-                    SizedBox(height: size.height * 0.025),
-                    const Divider(
-                      color: AppTheme.gray,
-                      thickness: 2,
-                      indent: 40,
-                      endIndent: 40,
-                    ),
-                    SizedBox(height: size.height * 0.03),
+                    SizedBox(height: size.height * 0.06),
                     Row(
                       children: [
                         Text(

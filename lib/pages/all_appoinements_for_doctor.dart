@@ -38,8 +38,10 @@ class _AllAppoinementForDoctorState extends State<AllAppoinementForDoctor> {
         title: Column(
           children: [
             SizedBox(height: heigth * 0.023),
-            const Text('Appointments',
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+            const Text(
+              'Appointments',
+              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+            ),
           ],
         ),
       ),
@@ -68,26 +70,30 @@ class _AllAppoinementForDoctorState extends State<AllAppoinementForDoctor> {
                         final apt = appts[i];
                         return GestureDetector(
                           onTap: () {
-                            Navigator.of(context).pushNamed(
+                            Navigator.of(context).pushReplacementNamed(
                               AppointementPatientDetails.routeName,
                               arguments: {
                                 'bookingId': apt.bookingId,
                                 'patientName': apt.patientName,
                               },
                             ).then((cancelled) {
-                              if (cancelled == true && doctorId != null) {
-                                context
-                                    .read<BookingCubit>()
-                                    .getDoctorCompletedBookings(
-                                      doctorId: doctorId!,
-                                    );
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text(
-                                        'Appointment cancelled successfully'),
-                                  ),
-                                );
-                              }
+                              Future.delayed(Duration.zero, () {
+                                if (!mounted)
+                                  return; // تأكد من أن الـ widget ما زال موجودًا
+
+                                if (cancelled == true && doctorId != null) {
+                                  context
+                                      .read<BookingCubit>()
+                                      .getDoctorCompletedBookings(
+                                          doctorId: doctorId!);
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text(
+                                          'Appointment cancelled successfully'),
+                                    ),
+                                  );
+                                }
+                              });
                             });
                           },
                           child: ContainerUpComingAppoinementsDoctor(

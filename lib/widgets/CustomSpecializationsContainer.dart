@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'dart:io';
+import 'package:flutter/material.dart';
 
 class SpecializationContainer extends StatelessWidget {
   final String title;
@@ -28,30 +28,34 @@ class SpecializationContainer extends StatelessWidget {
             ),
             borderRadius: BorderRadius.circular(20),
           ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              imagePath.isNotEmpty && File(imagePath).existsSync()
-                  ? Image.file(
-                      File(imagePath),
-                      height: 40,
-                      width: 40,
-                    )
-                  : Image.asset(
-                      'assets/images/rheumatology_46dp_FFFFFF_FILL0_wght400_GRAD0_opsz48.png',
-                      height: 40,
-                      width: 40,
-                    ),
-              const SizedBox(height: 10),
-              Text(
-                title,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
+          child: Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // إذا كانت الصورة غير فارغة، نعرضها مع الشفافية إذا كانت PNG
+                imagePath.isEmpty
+                    ? Image.asset('assets/images/general.png')
+                    : Image.file(
+                        File(imagePath),
+                        fit: BoxFit.contain, // لضبط الصورة داخل الإطار
+                        alignment: Alignment.center, // لضمان أنها تكون في الوسط
+                      ),
+                const SizedBox(height: 10),
+                Text(
+                  title,
+                  textAlign: TextAlign.center,
+                  softWrap: true,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

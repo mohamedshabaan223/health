@@ -17,13 +17,22 @@ class DoctorImageProfile extends StatelessWidget {
         BlocBuilder<UserProfileCubit, UserProfileState>(
           builder: (context, state) {
             print("Building UI with Image: ${profileCubit.profilePhotoPath}");
-            return CircleAvatar(
-              radius: 60,
-              backgroundImage: profileCubit.profilePhotoPath != null &&
+            return ClipRRect(
+              borderRadius: BorderRadius.circular(60),
+              child: profileCubit.profilePhotoPath != null &&
                       profileCubit.profilePhotoPath!.isNotEmpty
-                  ? FileImage(File(profileCubit.profilePhotoPath!))
-                  : const AssetImage('assets/images/Mask group.png')
-                      as ImageProvider,
+                  ? Image.file(
+                      File(profileCubit.profilePhotoPath!),
+                      width: 120,
+                      height: 130,
+                      fit: BoxFit.contain,
+                    )
+                  : Image.asset(
+                      'assets/images/Mask group.png',
+                      width: 120,
+                      height: 120,
+                      fit: BoxFit.contain,
+                    ),
             );
           },
         ),

@@ -42,7 +42,7 @@ class _ContainerDoctorInfoState extends State<ContainerDoctorInfo> {
         if (state is GetDoctorInfoSuccess) {
           final doctor = state.doctorInfo;
           return Container(
-            height: height * 0.28,
+            height: height * 0.5,
             padding: const EdgeInsets.all(12),
             margin: const EdgeInsets.symmetric(horizontal: 10),
             decoration: BoxDecoration(
@@ -53,84 +53,198 @@ class _ContainerDoctorInfoState extends State<ContainerDoctorInfo> {
               children: [
                 Row(
                   children: [
-                    CircleAvatar(
-                      backgroundImage: doctor.localImagePath != null &&
-                              doctor.localImagePath!.isNotEmpty
-                          ? FileImage(File(doctor.localImagePath!))
-                          : const AssetImage('assets/images/doctor_image.png')
-                              as ImageProvider,
-                      radius: 45,
+                    const SizedBox(width: 8),
+                    Column(
+                      children: [
+                        ClipOval(
+                          child: Image(
+                            image: doctor.localImagePath != null &&
+                                    doctor.localImagePath!.isNotEmpty
+                                ? FileImage(File(doctor.localImagePath!))
+                                : const AssetImage(
+                                        'assets/images/doctor_image.png')
+                                    as ImageProvider,
+                            width: 120,
+                            height: 120,
+                            fit: BoxFit.contain,
+                            alignment: Alignment.center,
+                          ),
+                        ),
+                      ],
                     ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            doctor.name,
-                            style: const TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: AppTheme.green,
-                            ),
+                    SizedBox(width: height * 0.03),
+                    Column(
+                      children: [
+                        Container(
+                          height: height * 0.06,
+                          width: height * 0.2,
+                          decoration: BoxDecoration(
+                            color: AppTheme.green,
+                            borderRadius: BorderRadius.circular(20),
                           ),
-                          const SizedBox(height: 4),
-                          Text(
-                            doctor.specialization,
-                            style: const TextStyle(
-                              fontSize: 15,
-                              color: AppTheme.black,
-                            ),
+                          child: Column(
+                            children: [
+                              SizedBox(height: height * 0.003),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    height: 25,
+                                    width: 25,
+                                    decoration: BoxDecoration(
+                                      color: AppTheme.white,
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    child: Image.asset(
+                                      'assets/images/professianol1.png',
+                                      height: 20,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 5),
+                                  Text(
+                                    doctor.experience,
+                                    style: const TextStyle(
+                                      color: AppTheme.white,
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const Text(
+                                ' experience',
+                                style: TextStyle(
+                                  color: AppTheme.white,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
                           ),
-                          const SizedBox(height: 10),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 8, vertical: 3),
-                            decoration: BoxDecoration(
-                              color: AppTheme.white,
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
+                        ),
+                        SizedBox(height: height * 0.01),
+                        Container(
+                          height: height * 0.22,
+                          width: height * 0.2,
+                          decoration: BoxDecoration(
+                            color: AppTheme.green,
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Icon(Icons.star,
-                                    color: AppTheme.green, size: 18),
-                                const SizedBox(width: 6),
-                                Text(
-                                  '${doctor.rating}',
-                                  style: const TextStyle(
-                                    color: AppTheme.green,
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.bold,
+                                RichText(
+                                  text: TextSpan(
+                                    children: [
+                                      const TextSpan(
+                                        text: 'Focus : ',
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                          color: AppTheme.white,
+                                        ),
+                                      ),
+                                      TextSpan(
+                                        text: doctor.focus,
+                                        style: const TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w500,
+                                          color: AppTheme.white,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ],
                             ),
                           ),
-                          const SizedBox(height: 10),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 8, vertical: 6),
-                            decoration: BoxDecoration(
-                              color: AppTheme.white,
-                              borderRadius: BorderRadius.circular(12),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 15),
+                Container(
+                  height: height * 0.064,
+                  width: height * 0.35,
+                  decoration: BoxDecoration(
+                    color: AppTheme.white,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Column(
+                    children: [
+                      Text(
+                        doctor.name,
+                        style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: AppTheme.green,
+                        ),
+                      ),
+                      Text(
+                        doctor.specialization,
+                        style: const TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                          color: AppTheme.black,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 15),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 3),
+                      decoration: BoxDecoration(
+                        color: AppTheme.white,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(Icons.star,
+                              color: AppTheme.green, size: 18),
+                          const SizedBox(width: 6),
+                          Text(
+                            '${doctor.rating}',
+                            style: const TextStyle(
+                              color: AppTheme.green,
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
                             ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Image.asset(
-                                  'assets/images/professianol1.png',
-                                  height: 20,
-                                ),
-                                const SizedBox(width: 6),
-                                Text(
-                                  '${doctor.experience} experience',
-                                  style: const TextStyle(
-                                      color: AppTheme.green,
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(width: height * 0.04),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 3),
+                      decoration: BoxDecoration(
+                        color: AppTheme.white,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(Icons.money,
+                              color: AppTheme.green, size: 18),
+                          const SizedBox(width: 6),
+                          Text(
+                            doctor.availableSlots.isNotEmpty
+                                ? doctor.availableSlots[0].price
+                                    .toStringAsFixed(2)
+                                : "no price",
+                            style: const TextStyle(
+                              color: AppTheme.green,
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
                         ],
@@ -138,7 +252,7 @@ class _ContainerDoctorInfoState extends State<ContainerDoctorInfo> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 30),
+                const SizedBox(height: 10),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
@@ -165,7 +279,7 @@ class _ContainerDoctorInfoState extends State<ContainerDoctorInfo> {
                       ),
                     ),
                   ],
-                )
+                ),
               ],
             ),
           );

@@ -189,11 +189,11 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                   Padding(
                     padding: const EdgeInsets.only(top: 16.0),
                     child: Text(
-                      'Price: \EGP${selectedPrice!.toStringAsFixed(2)}',
+                      'Price: ${selectedPrice!.toStringAsFixed(2)} EGP',
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
-                        color: AppTheme.green2,
+                        color: AppTheme.black,
                       ),
                     ),
                   ),

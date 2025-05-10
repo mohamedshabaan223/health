@@ -36,12 +36,16 @@ class ContainerUpcoming extends StatelessWidget {
             Row(
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(left: 5),
-                  child: CircleAvatar(
-                    radius: 40,
-                    backgroundImage: imageProvider,
-                  ),
-                ),
+                    padding: const EdgeInsets.only(left: 5),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(60),
+                      child: Image(
+                        image: imageProvider,
+                        height: 90,
+                        width: 80,
+                        fit: BoxFit.contain,
+                      ),
+                    )),
                 Padding(
                   padding: const EdgeInsets.only(top: 25, left: 10, bottom: 10),
                   child: Column(
@@ -163,7 +167,7 @@ class ContainerUpcoming extends StatelessWidget {
                 InkWell(
                   onTap: () {
                     Navigator.pushNamed(context, ReviewPage.id, arguments: {
-                      'photo': booking.photo,
+                      'photo': booking.localImagePath,
                       'doctorName': booking.doctorName,
                       'doctorId': booking.doctorId,
                       'specializationName': booking.specializationName,

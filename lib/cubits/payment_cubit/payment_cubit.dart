@@ -17,7 +17,7 @@ class PaymentCubit extends Cubit<PaymentState> {
           'Request Data: {"doctorId": $doctorId, "bookingId": $bookingId}');
 
       final response = await api.post(
-        'http://10.0.2.2:5282/api/Payment/Pay',
+        'http://medicalservicesproject.runasp.net/api/Payment/Pay',
         data: {"doctorId": doctorId, "bookingId": bookingId},
         isFormData: true,
       );
@@ -43,7 +43,7 @@ class PaymentCubit extends Cubit<PaymentState> {
       emit(PaymentConfirmLoading());
 
       final response = await api.post(
-        "http://10.0.2.2:5282/api/Payment/confirmPay?bookingId=$bookingId",
+        "http://medicalservicesproject.runasp.net/api/Payment/confirmPay?bookingId=$bookingId",
       );
 
       if (response is Map<String, dynamic>) {

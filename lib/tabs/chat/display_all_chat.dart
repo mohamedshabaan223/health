@@ -28,7 +28,7 @@ class _DisplayAllChatState extends State<DisplayAllChat> {
 
   @override
   Widget build(BuildContext context) {
-    double heigth = MediaQuery.of(context).size.height;
+    double height = MediaQuery.of(context).size.height;
     final int userId = CacheHelper().getData(key: "id");
     final String role = CacheHelper().getData(key: "role");
     String userType = role == 'Patient' ? 'Patient' : 'Doctor';
@@ -59,7 +59,7 @@ class _DisplayAllChatState extends State<DisplayAllChat> {
                 )
               : Column(
                   children: [
-                    SizedBox(height: heigth * 0.03),
+                    SizedBox(height: height * 0.03),
                     const Text(
                       'All Chats',
                       style:
@@ -185,18 +185,23 @@ class _DisplayAllChatState extends State<DisplayAllChat> {
             ),
             child: Row(
               children: [
-                CircleAvatar(
-                  radius: 35,
-                  backgroundImage: chat.otherUserImage != null &&
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(50),
+                  child: chat.otherUserImage != null &&
                           chat.otherUserImage!.isNotEmpty
                       ? (chat.otherUserImage!.startsWith("data:image")
-                          ? MemoryImage(
+                          ? Image.memory(
                               base64Decode(
                                   chat.otherUserImage!.split(',').last),
+                              height: 70,
+                              width: 70,
                             )
-                          : NetworkImage(chat.otherUserImage!))
-                      : const AssetImage('assets/images/male.png')
-                          as ImageProvider,
+                          : Image.network(chat.otherUserImage!))
+                      : Image.asset(
+                          'assets/images/male.png',
+                          height: 70,
+                          width: 70,
+                        ),
                 ),
                 const SizedBox(width: 12),
                 Expanded(

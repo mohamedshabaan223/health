@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:health_app/app_theme.dart';
 import 'package:health_app/models/get_doctor_info_by_id.dart';
@@ -111,9 +113,22 @@ class FirstScreenInDoctorAppDoctorInfo extends StatelessWidget {
             padding: const EdgeInsets.all(16),
             child: Row(
               children: [
-                const CircleAvatar(
-                  radius: 40,
-                  backgroundImage: AssetImage('assets/images/doctor_image.png'),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(50),
+                  child: getDoctorInfoById.localImagePath != null &&
+                          File(getDoctorInfoById.localImagePath!).existsSync()
+                      ? Image.file(
+                          File(getDoctorInfoById.localImagePath!),
+                          width: 80,
+                          height: 120,
+                          fit: BoxFit.contain,
+                        )
+                      : Image.asset(
+                          'assets/images/doctor_image.png',
+                          width: 80,
+                          height: 80,
+                          fit: BoxFit.contain,
+                        ),
                 ),
                 SizedBox(width: width * 0.03),
                 Column(

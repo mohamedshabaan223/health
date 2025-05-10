@@ -18,8 +18,19 @@ class DoctorCubit extends Cubit<DoctorState> {
   final ApiConsumer api;
   DoctorCubit(this.api) : super(DoctorInitial());
 
-  Future<File> saveDoctorProfileImage(String base64String) async {
+  // تحميل الصورة بشكل غير متزامن فقط عند الطلب
+  Future<File> saveDoctorProfileImage(
+      String base64String, String fileName) async {
     try {
+      final directory = await getApplicationDocumentsDirectory();
+      final String filePath = '${directory.path}/$fileName.png';
+      final File file = File(filePath);
+
+      // تحقق إذا كان الملف موجود بالفعل
+      if (await file.exists()) {
+        return file;
+      }
+
       final String base64Data = base64String.split(',').last;
       String cleanedBase64 =
           base64Data.replaceAll(RegExp(r'[^A-Za-z0-9+/=]'), '');
@@ -27,48 +38,44 @@ class DoctorCubit extends Cubit<DoctorState> {
       while (paddedBase64.length % 4 != 0) {
         paddedBase64 += "=";
       }
+
       Uint8List bytes = base64Decode(paddedBase64);
-      final directory = await getApplicationDocumentsDirectory();
-      final String filePath = '${directory.path}/doctor_profile_image.png';
-      final File file = File(filePath);
       await file.writeAsBytes(bytes);
 
-      log("Profile Image saved at: $filePath");
+      log("✅ Image saved at: $filePath");
       return file;
     } catch (e) {
-      log("Failed to save image: $e");
+      log("❌ Failed to save image: $e");
       rethrow;
     }
   }
 
   Future<void> getDoctorById({required int doctorId}) async {
-    if (state is GetDoctorInfoLoading)
-      return; // إذا كانت الحالة بالفعل في حالة تحميل، لا نقوم بإعادة التحميل.
+    if (state is GetDoctorInfoLoading) return;
 
-    emit(GetDoctorInfoLoading()); // عرض دائرة التحميل.
+    emit(GetDoctorInfoLoading());
 
     try {
-      final response =
-          await api.get("http://10.0.2.2:5282/GetDoctorDetails/$doctorId");
+      final response = await api.get(
+          "http://medicalservicesproject.runasp.net/GetDoctorDetails/$doctorId");
       final doctorInfo = GetDoctorInfoById.fromJson(response);
 
-      // معالجة الصورة إذا كانت موجودة
+      // تحميل الصورة فقط عند الحاجة
       if (doctorInfo.profileImage != null &&
           doctorInfo.profileImage!.isNotEmpty) {
         try {
-          File savedFile =
-              await saveDoctorProfileImage(doctorInfo.profileImage!);
+          // تحميل الصورة عند الحاجة فقط
+          File savedFile = await saveDoctorProfileImage(
+              doctorInfo.profileImage!, 'doctor_$doctorId');
           doctorInfo.localImagePath = savedFile.path;
-          emit(GetDoctorInfoSuccess(
-              doctorInfo)); // الحالة بنجاح بعد تحديث الصورة.
         } catch (e) {
           log("Failed to process doctor image: $e");
           emit(GetDoctorInfoFailure(errorMessage: "Failed to process image"));
+          return;
         }
-      } else {
-        emit(GetDoctorInfoSuccess(
-            doctorInfo)); // إذا لم تكن هناك صورة، تصدر حالة النجاح.
       }
+
+      emit(GetDoctorInfoSuccess(doctorInfo));
     } on ServerException catch (e) {
       emit(GetDoctorInfoFailure(errorMessage: e.errorModel.errorMessage));
     } catch (e) {
@@ -92,10 +99,13 @@ class DoctorCubit extends Cubit<DoctorState> {
         log("Doctor JSON: $json");
         return DoctorModel.fromJson(json);
       }).toList();
+
+      // تحميل الصورة فقط إذا كانت غير موجودة محليًا
       for (var doctor in doctors) {
         if (doctor.photo != null && (doctor.phone?.isNotEmpty ?? false)) {
           try {
-            File savedFile = await saveDoctorProfileImage(doctor.photo!);
+            File savedFile = await saveDoctorProfileImage(
+                doctor.photo!, 'doctor_${doctor.id}');
             doctor.localImagePath = savedFile.path;
           } catch (e) {
             log("Failed to process doctor image: $e");
@@ -114,14 +124,19 @@ class DoctorCubit extends Cubit<DoctorState> {
   Future<void> getAllDoctorsByTopRating() async {
     try {
       emit(DoctorLoading());
+
       final response = await api.get(EndPoints.getAllDoctors);
       final List<dynamic> data = response;
       final doctors = data.map((json) => DoctorModel.fromJson(json)).toList();
-      final filteredDoctors = doctors.where((doc) => doc.rating >= 4).toList();
+      final filteredDoctors =
+          doctors.where((doc) => doc.rating >= 3 && doc.rating <= 5).toList();
+
+      // تحميل الصورة فقط إذا كانت غير موجودة محليًا
       for (var doctor in filteredDoctors) {
         if (doctor.photo != null && doctor.photo!.isNotEmpty) {
           try {
-            File savedFile = await saveDoctorProfileImage(doctor.photo!);
+            File savedFile = await saveDoctorProfileImage(
+                doctor.photo!, 'doctor_${doctor.id}');
             doctor.localImagePath = savedFile.path;
           } catch (e) {
             log("Failed to process doctor image: $e");
@@ -150,7 +165,8 @@ class DoctorCubit extends Cubit<DoctorState> {
       for (var doctor in doctors) {
         if (doctor.photo != null && doctor.photo!.isNotEmpty) {
           try {
-            File savedFile = await saveDoctorProfileImage(doctor.photo!);
+            File savedFile = await saveDoctorProfileImage(
+                doctor.photo!, 'doctor_${doctor.id}');
             doctor.localImagePath = savedFile.path;
           } catch (e) {
             log("Failed to process doctor image: $e");
@@ -172,7 +188,7 @@ class DoctorCubit extends Cubit<DoctorState> {
       emit(GetDoctorBySpecializationLoading());
 
       final response = await api.get(
-        "http://10.0.2.2:5282/Api/V1/Specialization/GetDoctorsBySpecializationID",
+        "http://medicalservicesproject.runasp.net/Api/V1/Specialization/GetDoctorsBySpecializationID",
         queryParameters: {"specializationId": specializationId},
       );
       final List<GetDoctorBySpecialization> doctors =
@@ -182,7 +198,8 @@ class DoctorCubit extends Cubit<DoctorState> {
       for (var doctor in doctors) {
         if (doctor.photo != null && doctor.photo!.isNotEmpty) {
           try {
-            File savedFile = await saveDoctorProfileImage(doctor.photo!);
+            File savedFile = await saveDoctorProfileImage(
+                doctor.photo!, 'doctor_${doctor.id}');
             doctor.localImagePath = savedFile.path;
           } catch (e) {
             log("Failed to process doctor image: $e");

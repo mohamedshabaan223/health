@@ -17,12 +17,18 @@ class SpecializationsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: const Column(
-        children: [
-          SizedBox(height: 15),
-          Text('All Specializations'),
-        ],
-      )),
+        title: const Column(
+          children: [
+            SizedBox(height: 15),
+            Text(
+              'All Specializations',
+              style: TextStyle(
+                fontSize: 22,
+              ),
+            ),
+          ],
+        ),
+      ),
       body: BlocProvider(
         create: (context) => SpecializationsCubit(DioConsumer(dio: Dio()))
           ..getAllSpecializations(),
@@ -37,14 +43,14 @@ class SpecializationsPage extends StatelessWidget {
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 3,
                     crossAxisSpacing: 10,
-                    childAspectRatio: 1,
+                    childAspectRatio: 0.9,
                   ),
                   itemCount: state.specializations.length,
                   itemBuilder: (context, index) {
                     final SpecializationModel specialization =
                         state.specializations[index];
                     return SpecializationContainer(
-                      imagePath: 'assets/images/heart.png',
+                      imagePath: specialization.imagePath ?? '',
                       onTap: () {
                         Navigator.pushNamed(
                           context,

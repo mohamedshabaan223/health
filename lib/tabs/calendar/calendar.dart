@@ -118,30 +118,31 @@ class _CalendarState extends State<Calendar>
                   return const Center(child: CircularProgressIndicator());
                 } else if (state is BookingCubitError) {
                   return Center(child: Text(state.errormessage));
-                } else if (state is BookingCubitGetAllSuccess) {
-                  final upcomingBookings = state.bookings;
-                  if (upcomingBookings.isEmpty) {
-                    return const Center(child: Text('No Upcoming Bookings.'));
-                  }
-                  return ListView.builder(
-                    itemCount: upcomingBookings.length,
-                    itemBuilder: (_, index) {
-                      final booking = upcomingBookings[index];
-                      return ContainerUpcoming(booking: booking);
-                    },
-                  );
                 } else {
-                  final upcomingBookings =
-                      context.read<BookingCubit>().bookings;
+                  final upcomingBookings = (state is BookingCubitGetAllSuccess)
+                      ? state.bookings
+                      : context.read<BookingCubit>().bookings;
+
                   if (upcomingBookings.isEmpty) {
                     return const Center(child: Text('No Upcoming Bookings.'));
                   }
-                  return ListView.builder(
-                    itemCount: upcomingBookings.length,
-                    itemBuilder: (_, index) {
-                      final booking = upcomingBookings[index];
-                      return ContainerUpcoming(booking: booking);
+
+                  return RefreshIndicator(
+                    onRefresh: () async {
+                      final patientId = CacheHelper().getData(key: 'id');
+                      if (patientId != null) {
+                        await context
+                            .read<BookingCubit>()
+                            .getAllBookings(patientId: patientId);
+                      }
                     },
+                    child: ListView.builder(
+                      itemCount: upcomingBookings.length,
+                      itemBuilder: (_, index) {
+                        final booking = upcomingBookings[index];
+                        return ContainerUpcoming(booking: booking);
+                      },
+                    ),
                   );
                 }
               },
@@ -155,31 +156,34 @@ class _CalendarState extends State<Calendar>
               builder: (context, state) {
                 if (state is BookingCubitLoading) {
                   return const Center(child: CircularProgressIndicator());
-                } else if (state is BookingCubitAllCanceledSuccess) {
-                  final canceledBookings = state.canceledBookings;
-                  return ListView.builder(
-                    itemCount: canceledBookings.length,
-                    itemBuilder: (_, index) {
-                      final booking = canceledBookings[index];
-                      return ContainerCancelled(bookings: booking);
-                    },
-                  );
-                } else if (state is BookingCubitAllCanceledEmpty) {
-                  return const Center(child: Text('لا توجد حجوزات ملغية.'));
                 } else if (state is BookingCubitError) {
                   return Center(child: Text(state.errormessage));
                 } else {
                   final canceledBookings =
-                      context.read<BookingCubit>().canceledBookings;
+                      (state is BookingCubitAllCanceledSuccess)
+                          ? state.canceledBookings
+                          : context.read<BookingCubit>().canceledBookings;
+
                   if (canceledBookings.isEmpty) {
                     return const Center(child: Text('لا توجد حجوزات ملغية.'));
                   }
-                  return ListView.builder(
-                    itemCount: canceledBookings.length,
-                    itemBuilder: (_, index) {
-                      final booking = canceledBookings[index];
-                      return ContainerCancelled(bookings: booking);
+
+                  return RefreshIndicator(
+                    onRefresh: () async {
+                      final patientId = CacheHelper().getData(key: 'id');
+                      if (patientId != null) {
+                        await context
+                            .read<BookingCubit>()
+                            .getAllCanceledBookings(patientId: patientId);
+                      }
                     },
+                    child: ListView.builder(
+                      itemCount: canceledBookings.length,
+                      itemBuilder: (_, index) {
+                        final booking = canceledBookings[index];
+                        return ContainerCancelled(bookings: booking);
+                      },
+                    ),
                   );
                 }
               },

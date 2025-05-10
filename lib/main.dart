@@ -103,6 +103,11 @@ class MyApp extends StatelessWidget {
           create: (context) => BookingCubit(dioConsumer),
         ),
         BlocProvider(
+          create: (context) => BookingCubit(dioConsumer)
+            ..getDoctorCompletedBookings(
+                doctorId: CacheHelper().getData(key: 'id')),
+        ),
+        BlocProvider(
           create: (context) => PaymentCubit(dioConsumer),
         ),
         BlocProvider(

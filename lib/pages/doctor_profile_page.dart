@@ -69,16 +69,22 @@ class _ProfileDoctorState extends State<ProfileDoctor> {
                       children: [
                         BlocBuilder<UserProfileCubit, UserProfileState>(
                           builder: (context, state) {
-                            return CircleAvatar(
-                              radius: 52,
-                              backgroundImage: profileCubit.profilePhotoPath !=
-                                          null &&
+                            return ClipRRect(
+                              borderRadius: BorderRadius.circular(100),
+                              child: profileCubit.profilePhotoPath != null &&
                                       profileCubit.profilePhotoPath!.isNotEmpty
-                                  ? FileImage(
-                                      File(profileCubit.profilePhotoPath!))
-                                  : const AssetImage(
-                                          'assets/images/Mask group.png')
-                                      as ImageProvider,
+                                  ? Image.file(
+                                      File(profileCubit.profilePhotoPath!),
+                                      width: 104,
+                                      height: 140,
+                                      fit: BoxFit.contain,
+                                    )
+                                  : Image.asset(
+                                      'assets/images/Mask group.png',
+                                      width: 104,
+                                      height: 104,
+                                      fit: BoxFit.contain,
+                                    ),
                             );
                           },
                         ),

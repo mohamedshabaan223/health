@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:health_app/cache/cache_helper.dart';
 import 'package:health_app/core/api/api_consumer.dart';
@@ -16,8 +15,6 @@ class FavoriteDoctorCubit extends Cubit<FavoriteDoctorState> {
   final ApiConsumer api;
   final Map<int, bool> favoriteDoctors = {};
   String doctorfavoriteimagepath = "";
-
-  // تعديل دالة حفظ الصورة لتقبل doctorId
   Future<File> saveDoctorProfileImage(String base64String, int doctorId) async {
     try {
       final String base64Data = base64String.split(',').last;
@@ -38,21 +35,18 @@ class FavoriteDoctorCubit extends Cubit<FavoriteDoctorState> {
     }
   }
 
-  // تعديل دالة getAllDoctorsInFavorites لحفظ الصور
   Future<void> getAllDoctorsInFavorites({required int patientId}) async {
     try {
       emit(FavoriteDoctorLoading());
 
       final response = await api.get(
-        "http://10.0.2.2:5282/Api/V1/Doctors/GetAllDoctors",
+        "http://medicalservicesproject.runasp.net/Api/V1/Doctors/GetAllDoctors",
         queryParameters: {"PatientId": patientId},
       );
 
       final List<dynamic> data = response;
       final List<DoctorModel> doctors =
           data.map((json) => DoctorModel.fromJson(json)).toList();
-
-      // هنا هنتأكد نحفظ الصورة لو موجودة
       for (var doctor in doctors) {
         if (doctor.photo != null && doctor.photo!.isNotEmpty) {
           try {

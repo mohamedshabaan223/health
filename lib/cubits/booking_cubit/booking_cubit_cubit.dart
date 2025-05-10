@@ -14,9 +14,8 @@ import 'package:health_app/models/canceled_booking_model.dart';
 import 'package:health_app/models/get_all_booking_model.dart';
 import 'package:meta/meta.dart';
 import 'dart:developer';
-
 import 'package:path_provider/path_provider.dart';
-
+import 'package:crypto/crypto.dart';
 part 'booking_cubit_state.dart';
 
 class BookingCubit extends Cubit<BookingCubitState> {
@@ -34,11 +33,14 @@ class BookingCubit extends Cubit<BookingCubitState> {
       while (paddedBase64.length % 4 != 0) {
         paddedBase64 += "=";
       }
-      Uint8List bytes = base64Decode(paddedBase64);
+      final hash = md5.convert(utf8.encode(paddedBase64)).toString();
       final directory = await getApplicationDocumentsDirectory();
       final String filePath =
-          '${directory.path}/booking_profile_image_${DateTime.now().millisecondsSinceEpoch}.png';
+          '${directory.path}/booking_profile_image_$hash.png';
       final File file = File(filePath);
+      if (await file.exists()) return file;
+
+      Uint8List bytes = base64Decode(paddedBase64);
       await file.writeAsBytes(bytes);
       return file;
     } catch (e) {
@@ -51,7 +53,7 @@ class BookingCubit extends Cubit<BookingCubitState> {
     try {
       emit(BookingCubitLoading());
       final response = await api.get(
-        'http://10.0.2.2:5282/api/Booking/Api/V1/Booking/GetAvailableSlots?doctorId=$doctorId',
+        'http://medicalservicesproject.runasp.net/api/Booking/Api/V1/Booking/GetAvailableSlots?doctorId=$doctorId',
       );
       final dynamic decodedResponse;
       if (response is String) {
@@ -108,7 +110,7 @@ class BookingCubit extends Cubit<BookingCubitState> {
       );
 
       final response = await api.post(
-        'http://10.0.2.2:5282/api/Booking/Api/V1/Booking/BookAppointment',
+        'http://medicalservicesproject.runasp.net/api/Booking/Api/V1/Booking/BookAppointment',
         data: jsonEncode(finalBookingRequest.toJson()),
       );
       final dynamic decodedResponse =
@@ -135,7 +137,7 @@ class BookingCubit extends Cubit<BookingCubitState> {
       emit(BookingCubitLoading());
 
       final response = await api.get(
-        'http://10.0.2.2:5282/api/Booking/Api/V1/Booking/AllBookingByPatientId?patientId=$patientId',
+        'http://medicalservicesproject.runasp.net/api/Booking/Api/V1/Booking/AllBookingByPatientId?patientId=$patientId',
       );
 
       final List<dynamic> decodedResponse =
@@ -177,7 +179,7 @@ class BookingCubit extends Cubit<BookingCubitState> {
       emit(BookingCubitLoading());
 
       final response = await api.put(
-        'http://10.0.2.2:5282/api/Booking/Api/V1/Booking/UpdateBooking?bookingId=$bookingId',
+        'http://medicalservicesproject.runasp.net/api/Booking/Api/V1/Booking/UpdateBooking?bookingId=$bookingId',
         data: jsonEncode({
           "day": day,
           "time": time,
@@ -211,7 +213,7 @@ class BookingCubit extends Cubit<BookingCubitState> {
       emit(BookingDoctorCompletedLoading());
 
       final response = await api.get(
-        'http://10.0.2.2:5282/api/Booking/doctor/$doctorId/completed-bookings',
+        'http://medicalservicesproject.runasp.net/api/Booking/doctor/$doctorId/completed-bookings',
       );
 
       final dynamic decodedResponse =
@@ -257,7 +259,7 @@ class BookingCubit extends Cubit<BookingCubitState> {
       emit(BookingCubitLoading());
 
       final response = await api.get(
-        'http://10.0.2.2:5282/api/Booking/Api/V1/Booking/GetBookingDetails?bookingId=$bookingId',
+        'http://medicalservicesproject.runasp.net/api/Booking/Api/V1/Booking/GetBookingDetails?bookingId=$bookingId',
       );
 
       final dynamic decodedResponse =
@@ -283,7 +285,7 @@ class BookingCubit extends Cubit<BookingCubitState> {
     try {
       emit(BookingCubitLoading());
       final response = await api.delete(
-        'http://10.0.2.2:5282/api/Booking/Api/V1/Booking/CancelAppointment?id=$id',
+        'http://medicalservicesproject.runasp.net/api/Booking/Api/V1/Booking/CancelAppointment?id=$id',
       );
       final dynamic decoded =
           response is String ? jsonDecode(response) : response;
@@ -305,7 +307,7 @@ class BookingCubit extends Cubit<BookingCubitState> {
       emit(BookingCubitLoading());
 
       final response = await api.get(
-        'http://10.0.2.2:5282/api/Booking/Api/V1/Booking/GetCanceledBookings?patientId=$patientId',
+        'http://medicalservicesproject.runasp.net/api/Booking/Api/V1/Booking/GetCanceledBookings?patientId=$patientId',
       );
 
       final List<dynamic> decodedResponse =

@@ -218,7 +218,7 @@ class _DoctorPageState extends State<DoctorPage> {
                                 descrabtion:
                                     doctors[index].specializationName ??
                                         'No Specialty',
-                                doctorImage: 'assets/images/doctor_image.png',
+                                doctorImage: 'assets/images/habiba.png',
                                 doctorid: doctors[index],
                               ));
                     }

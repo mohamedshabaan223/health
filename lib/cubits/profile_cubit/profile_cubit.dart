@@ -182,7 +182,7 @@ class UserProfileCubit extends Cubit<UserProfileState> {
       });
 
       await api.put(
-        'http://10.0.2.2:5282/change?id=$userId',
+        'http://medicalservicesproject.runasp.net/change?id=$userId',
         data: formData,
       );
 

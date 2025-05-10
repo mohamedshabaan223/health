@@ -2,7 +2,7 @@ class SpecializationModel {
   final int id;
   final String name;
   final String? image;
-  String imagePath = ''; // حقل لتخزين مسار الصورة المحفوظة
+  String imagePath = '';
 
   SpecializationModel({
     required this.id,

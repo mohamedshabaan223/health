@@ -38,7 +38,6 @@ class ChatCubit extends Cubit<ChatState> {
     }
   }
 
-  // دالة لجلب الرسائل بين المريض والطبيب
   Future<void> fetchMessages({
     required int senderId,
     required int receiverId,
@@ -57,7 +56,6 @@ class ChatCubit extends Cubit<ChatState> {
           String? imagePath;
           if (json["image"] != null && json["image"].isNotEmpty) {
             try {
-              // استخدام دالة saveBase64Image لحفظ الصورة
               File savedFile = await saveBase64Image(json["image"]);
               imagePath = savedFile.path;
             } catch (e) {
@@ -80,7 +78,6 @@ class ChatCubit extends Cubit<ChatState> {
     }
   }
 
-  // دالة لإرسال رسالة جديدة
   Future<void> sendMessage({
     required int senderId,
     required int receiverId,
@@ -137,7 +134,6 @@ class ChatCubit extends Cubit<ChatState> {
     }
   }
 
-  // دالة لجلب قائمة الشات بين المستخدمين
   Future<void> fetchChatList({
     required int userId,
     required String userType,
@@ -157,8 +153,6 @@ class ChatCubit extends Cubit<ChatState> {
           String? lastMessage;
           bool isImage = false;
           String? otherUserLocalImagePath;
-
-          // التعامل مع الرسالة (صورة أو نص)
           if (json["image"] != null && json["image"].startsWith("/9j")) {
             try {
               File savedFile = await saveBase64Image(json["image"]);
@@ -170,8 +164,6 @@ class ChatCubit extends Cubit<ChatState> {
           } else {
             lastMessage = json["message"];
           }
-
-          // التعامل مع صورة المرسل
           if (json["otherUserImage"] != null &&
               json["otherUserImage"].isNotEmpty) {
             try {
@@ -181,8 +173,6 @@ class ChatCubit extends Cubit<ChatState> {
               print("Failed to save sender's image: $e");
             }
           }
-
-          // بناء الكائن
           chatList.add(ChatSummary.fromJson({
             ...json,
             "lastMessage": lastMessage,
@@ -202,7 +192,6 @@ class ChatCubit extends Cubit<ChatState> {
     }
   }
 
-  // دالة لإعادة تعيين حالة الشات
   void resetState() {
     emit(ChatInitial());
   }

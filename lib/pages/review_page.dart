@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:health_app/app_theme.dart';
 import 'package:health_app/cache/cache_helper.dart';
 import 'package:health_app/cubits/review_cubit/review_cubit.dart';
@@ -16,28 +19,27 @@ class ReviewPage extends StatefulWidget {
 
 class _ReviewPageState extends State<ReviewPage> {
   final TextEditingController _commentController = TextEditingController();
-  final TextEditingController _ratingController = TextEditingController();
+  double _rating = 0;
 
   late int doctorId;
   late String doctorName;
   late String specialization;
-
+  late String patientPhoto;
   @override
   void dispose() {
     _commentController.dispose();
-    _ratingController.dispose();
     super.dispose();
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-
     final args = ModalRoute.of(context)?.settings.arguments as Map?;
     if (args != null) {
       doctorName = args['doctorName'];
       doctorId = args['doctorId'];
       specialization = args['specializationName'];
+      patientPhoto = args['photo'];
     }
   }
 
@@ -67,17 +69,18 @@ class _ReviewPageState extends State<ReviewPage> {
                     Row(
                       children: [
                         IconButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            icon: const Icon(
-                              Icons.arrow_back,
-                              size: 30,
-                              color: AppTheme.green,
-                            )),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          icon: const Icon(
+                            Icons.arrow_back,
+                            size: 30,
+                            color: AppTheme.green,
+                          ),
+                        ),
                         const Spacer(),
                         const Text(
-                          'Review',
+                          'Add Review',
                           style: TextStyle(
                               color: AppTheme.green,
                               fontSize: 24,
@@ -87,10 +90,19 @@ class _ReviewPageState extends State<ReviewPage> {
                       ],
                     ),
                     const SizedBox(height: 20),
-                    const CircleAvatar(
-                      radius: 80,
-                      backgroundImage:
-                          AssetImage('assets/images/doctor_image.png'),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(50),
+                      child: patientPhoto.isNotEmpty
+                          ? Image.file(
+                              File(patientPhoto),
+                              width: 160,
+                              height: 150,
+                              fit: BoxFit.contain,
+                            )
+                          : Image.asset(
+                              'assets/images/male.png',
+                              fit: BoxFit.contain,
+                            ),
                     ),
                     const SizedBox(height: 15),
                     Text('Dr. $doctorName',
@@ -111,8 +123,9 @@ class _ReviewPageState extends State<ReviewPage> {
                       height: 152,
                       width: 300,
                       decoration: BoxDecoration(
-                          color: AppTheme.gray,
-                          borderRadius: BorderRadius.circular(18)),
+                        color: AppTheme.gray,
+                        borderRadius: BorderRadius.circular(18),
+                      ),
                       child: Padding(
                         padding: const EdgeInsets.only(left: 10),
                         child: TextFormField(
@@ -124,52 +137,40 @@ class _ReviewPageState extends State<ReviewPage> {
                             hintStyle: TextStyle(
                                 fontSize: 15, color: Color(0xff58CFA4)),
                             enabledBorder: UnderlineInputBorder(
-                                borderSide:
-                                    BorderSide(color: Color(0xffECF1FF))),
+                              borderSide: BorderSide(color: Color(0xffECF1FF)),
+                            ),
                             focusedBorder: UnderlineInputBorder(
-                                borderSide:
-                                    BorderSide(color: Color(0xffECF1FF))),
+                              borderSide: BorderSide(color: Color(0xffECF1FF)),
+                            ),
                           ),
                         ),
                       ),
                     ),
                     const SizedBox(height: 40),
-                    Container(
-                      height: 50,
-                      width: 300,
-                      decoration: BoxDecoration(
-                          color: AppTheme.gray,
-                          borderRadius: BorderRadius.circular(18)),
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 10),
-                        child: TextFormField(
-                          controller: _ratingController,
-                          keyboardType: TextInputType.number,
-                          inputFormatters: [
-                            FilteringTextInputFormatter.digitsOnly,
-                            LengthLimitingTextInputFormatter(1),
-                          ],
-                          decoration: const InputDecoration(
-                            hintText: 'Enter your rating (1-5)',
-                            hintStyle: TextStyle(
-                                fontSize: 15, color: Color(0xff58CFA4)),
-                            enabledBorder: UnderlineInputBorder(
-                                borderSide:
-                                    BorderSide(color: Color(0xffECF1FF))),
-                            focusedBorder: UnderlineInputBorder(
-                                borderSide:
-                                    BorderSide(color: Color(0xffECF1FF))),
-                          ),
-                          onChanged: (value) {
-                            if (value.isNotEmpty) {
-                              int rating = int.tryParse(value) ?? 0;
-                              if (rating < 1 || rating > 5) {
-                                _ratingController.text = '';
-                              }
-                            }
-                          },
-                        ),
+                    Text(
+                      'Rate the doctor:',
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                    ),
+                    const SizedBox(height: 10),
+                    RatingBar.builder(
+                      initialRating: _rating,
+                      minRating: 1,
+                      direction: Axis.horizontal,
+                      allowHalfRating: false,
+                      itemCount: 5,
+                      itemSize: 40,
+                      unratedColor: Colors.grey.shade300,
+                      itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
+                      itemBuilder: (context, _) => const Icon(
+                        Icons.star,
+                        color: AppTheme.green,
                       ),
+                      onRatingUpdate: (rating) {
+                        setState(() {
+                          _rating = rating;
+                        });
+                      },
                     ),
                     const SizedBox(height: 40),
                     InkWell(
@@ -177,13 +178,9 @@ class _ReviewPageState extends State<ReviewPage> {
                           ? null
                           : () {
                               final comment = _commentController.text.trim();
-                              final ratingText = _ratingController.text;
-                              final rating = int.tryParse(ratingText);
-
                               if (comment.isEmpty ||
-                                  rating == null ||
-                                  rating < 1 ||
-                                  rating > 5) {
+                                  _rating < 1 ||
+                                  _rating > 5) {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
                                       content: Text(
@@ -195,7 +192,7 @@ class _ReviewPageState extends State<ReviewPage> {
                                   CacheHelper().getData(key: "id");
                               context.read<ReviewCubit>().addReview(
                                     comment: comment,
-                                    rating: rating,
+                                    rating: _rating.toInt(),
                                     patientId: patientId,
                                     doctorId: doctorId,
                                   );
@@ -210,7 +207,8 @@ class _ReviewPageState extends State<ReviewPage> {
                         ),
                         child: state is ReviewLoading
                             ? const CircularProgressIndicator(
-                                color: Colors.white)
+                                color: Colors.white,
+                              )
                             : const Text(
                                 'Add Review',
                                 style: TextStyle(

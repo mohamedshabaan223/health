@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:health_app/app_theme.dart';
 import 'package:health_app/cache/cache_helper.dart';
 import 'package:health_app/cubits/booking_cubit/booking_cubit_cubit.dart';
+import 'package:health_app/pages/home_page_doctor.dart';
 import 'package:health_app/widgets/row_details.dart';
 
 class AppointementPatientDetails extends StatefulWidget {
@@ -16,6 +17,8 @@ class AppointementPatientDetails extends StatefulWidget {
 
 class _AppointementPatientDetailsState
     extends State<AppointementPatientDetails> {
+  final GlobalKey<ScaffoldMessengerState> _scaffoldMessengerKey =
+      GlobalKey<ScaffoldMessengerState>();
   int? bookingId;
   String? patientName;
 
@@ -28,7 +31,7 @@ class _AppointementPatientDetailsState
       bookingId = args['bookingId'] as int?;
       patientName = args['patientName'] as String?;
 
-      if (bookingId != null) {
+      if (bookingId != null && mounted) {
         context.read<BookingCubit>().getBookingDetails(bookingId: bookingId!);
       }
     }
@@ -37,6 +40,7 @@ class _AppointementPatientDetailsState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldMessengerKey, // تعيين الـ GlobalKey هنا
       appBar: AppBar(
         foregroundColor: Colors.white,
         backgroundColor: const Color(0xFF58CFA4),
@@ -45,6 +49,7 @@ class _AppointementPatientDetailsState
           children: [
             IconButton(
               onPressed: () {
+                if (!mounted) return;
                 context.read<BookingCubit>().getDoctorCompletedBookings(
                       doctorId: CacheHelper().getData(key: 'id'),
                     );
@@ -228,16 +233,33 @@ class _AppointementPatientDetailsState
             ),
             TextButton(
               child: const Text('Yes'),
-              onPressed: () {
+              onPressed: () async {
+                // إغلاق الـ Dialog أولًا
                 Navigator.of(context).pop(true);
+
+                // تأجيل العملية للتأكد من أن الـ widget ما زال مركبًا
+                await Future.delayed(const Duration(milliseconds: 300));
+
+                if (!mounted) return; // تحقق من أن الـ widget ما زال موجودًا
+
                 if (bookingId != null) {
-                  context
+                  // إلغاء الحجز
+                  await context
                       .read<BookingCubit>()
-                      .cancelAppointment(id: bookingId!)
-                      .then((_) {
-                    context.read<BookingCubit>().getDoctorCompletedBookings(
-                          doctorId: CacheHelper().getData(key: 'id'),
-                        );
+                      .cancelAppointment(id: bookingId!);
+
+                  if (!mounted) return;
+
+                  // تحديث الحجزات بعد الإلغاء
+                  await context.read<BookingCubit>().getDoctorCompletedBookings(
+                        doctorId: CacheHelper().getData(key: 'id'),
+                      );
+
+                  if (!mounted) return;
+
+                  // هنا نتأكد من أننا لا نستخدم الـ context بشكل غير آمن
+                  if (mounted) {
+                    // عرض الـ SnackBar بشكل آمن
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: const Text(
@@ -255,8 +277,14 @@ class _AppointementPatientDetailsState
                       ),
                     );
 
-                    Navigator.pop(context);
-                  });
+                    // تأجيل العودة إلى الصفحة الرئيسية بعد عرض الـ SnackBar
+                    // استخدام `Future.delayed` للتأكد من أن الـ widget موجود
+                    Future.delayed(const Duration(milliseconds: 500), () {
+                      if (!mounted)
+                        return; // تحقق من أن الـ widget ما زال موجودًا
+                      Navigator.popAndPushNamed(context, HomePageDoctor.id);
+                    });
+                  }
                 }
               },
             ),

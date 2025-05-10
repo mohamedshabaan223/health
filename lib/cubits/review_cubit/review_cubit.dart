@@ -7,7 +7,6 @@ import 'package:health_app/core/errors/exceptions.dart';
 import 'package:health_app/models/get_all_review_model.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:meta/meta.dart';
-
 part 'review_state.dart';
 
 class ReviewCubit extends Cubit<ReviewState> {
@@ -44,7 +43,7 @@ class ReviewCubit extends Cubit<ReviewState> {
 
     try {
       final response = await api.post(
-        'http://10.0.2.2:5282/Api/V1/Review/AddReview',
+        'http://medicalservicesproject.runasp.net/Api/V1/Review/AddReview',
         data: jsonEncode({
           "comment": comment,
           "rating": rating,
@@ -62,14 +61,13 @@ class ReviewCubit extends Cubit<ReviewState> {
   }
 
   Future<void> getReviewsByDoctorId(int doctorId) async {
-    if (state is ReviewLoading)
-      return; // إذا كانت الحالة بالفعل في وضع تحميل، لا نعيد التبديل.
+    if (state is ReviewLoading) return;
 
-    emit(ReviewLoading()); // عرض دائرة التحميل.
+    emit(ReviewLoading());
 
     try {
       final response = await api.get(
-          'http://10.0.2.2:5282/Api/V1/Review/GetAllReviewsByDrId?doctorId=$doctorId');
+          'http://medicalservicesproject.runasp.net/Api/V1/Review/GetAllReviewsByDrId?doctorId=$doctorId');
       List<dynamic> jsonData = response;
 
       List<ReviewModel> reviews =
@@ -91,7 +89,7 @@ class ReviewCubit extends Cubit<ReviewState> {
         }
       }
 
-      emit(ReviewListSuccess(reviews)); // الحالة بنجاح بعد تحميل المراجعات.
+      emit(ReviewListSuccess(reviews));
     } on ServerException catch (e) {
       emit(ReviewError(e.errorModel.errorMessage));
     } catch (e) {
