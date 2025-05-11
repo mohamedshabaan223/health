@@ -20,31 +20,36 @@ class DoctorInformationInSpecialization extends StatefulWidget {
 
 class _DoctorInformationInSpecializationState
     extends State<DoctorInformationInSpecialization> {
+  bool _isInitialized = false;
+
+  late int doctorId;
+  late int specializationId;
+
   @override
-  void initState() {
-    super.initState();
-    Future.microtask(
-      () {
-        final doctorId = ModalRoute.of(context)?.settings.arguments as int?;
-        if (doctorId != null) {
-          context.read<DoctorCubit>().getDoctorById(doctorId: doctorId);
-          context.read<ReviewCubit>().getReviewsByDoctorId(doctorId);
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_isInitialized) {
+      final args =
+          ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+      doctorId = args?['doctorId'] as int;
+      specializationId = args?['specializationId'] as int;
+
+      if (doctorId != null) {
+        final doctorCubit = context.read<DoctorCubit>();
+        if (doctorCubit.state is! GetDoctorInfoLoading &&
+            doctorCubit.state is! GetDoctorInfoSuccess) {
+          doctorCubit.resetState();
+          doctorCubit.getDoctorById(doctorId: doctorId);
         }
-      },
-    );
+        context.read<ReviewCubit>().getReviewsByDoctorId(doctorId);
+      }
+      _isInitialized = true;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    final doctorId = ModalRoute.of(context)?.settings.arguments;
-
-    if (doctorId == null) {
-      return Scaffold(
-        appBar: AppBar(title: const Text('Error')),
-        body: const Center(child: Text('No doctor ID provided.')),
-      );
-    }
 
     return Scaffold(
       body: SafeArea(
@@ -79,6 +84,9 @@ class _DoctorInformationInSpecializationState
                         IconButton(
                           onPressed: () {
                             Navigator.of(context).pop();
+                            BlocProvider.of<DoctorCubit>(context)
+                                .getDoctorsBySpecialization(
+                                    specializationId: specializationId);
                           },
                           icon: Icon(
                             Icons.arrow_back_ios_new_outlined,
@@ -102,23 +110,8 @@ class _DoctorInformationInSpecializationState
                       ],
                     ),
                     SizedBox(height: size.height * 0.02),
-                    ContainerDoctorInfo(doctorId: doctorId as int),
+                    ContainerDoctorInfo(doctorId: doctorId),
                     SizedBox(height: size.height * 0.04),
-                    Text(
-                      'Profile: ',
-                      style: Theme.of(context).textTheme.labelMedium!.copyWith(
-                            fontSize: size.width * 0.05,
-                            color: AppTheme.green,
-                          ),
-                    ),
-                    SizedBox(height: size.height * 0.01),
-                    Text(
-                      doctor.focus ?? 'There is no profile.',
-                      style: TextStyle(
-                        fontSize: size.width * 0.04,
-                      ),
-                    ),
-                    SizedBox(height: size.height * 0.05),
                     Row(
                       children: [
                         Text(

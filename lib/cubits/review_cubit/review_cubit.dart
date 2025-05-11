@@ -7,20 +7,23 @@ import 'package:health_app/core/errors/exceptions.dart';
 import 'package:health_app/models/get_all_review_model.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:meta/meta.dart';
+
 part 'review_state.dart';
 
 class ReviewCubit extends Cubit<ReviewState> {
   final ApiConsumer api;
   ReviewCubit(this.api) : super(ReviewInitial());
 
-  String patientProfilePhotoPath = "";
-  Future<File> savePatientProfileImage(String base64String) async {
+  // حفظ صورة المريض بصورة فريدة لكل مراجعة
+  Future<File> savePatientReviewImage(
+      String base64String, String uniqueId) async {
     try {
       final String base64Data = base64String.split(',').last;
       Uint8List bytes = base64Decode(base64Data);
 
       final directory = await getApplicationDocumentsDirectory();
-      final String filePath = '${directory.path}/patient_profile_image.png';
+      final String filePath =
+          '${directory.path}/patient_review_image_$uniqueId.png';
 
       final File file = File(filePath);
       await file.writeAsBytes(bytes);
@@ -67,9 +70,10 @@ class ReviewCubit extends Cubit<ReviewState> {
 
     try {
       final response = await api.get(
-          'http://medicalservicesproject.runasp.net/Api/V1/Review/GetAllReviewsByDrId?doctorId=$doctorId');
-      List<dynamic> jsonData = response;
+        'http://medicalservicesproject.runasp.net/Api/V1/Review/GetAllReviewsByDrId?doctorId=$doctorId',
+      );
 
+      List<dynamic> jsonData = response;
       List<ReviewModel> reviews =
           jsonData.map((data) => ReviewModel.fromJson(data)).toList();
 
@@ -77,7 +81,10 @@ class ReviewCubit extends Cubit<ReviewState> {
         if (review.senderImage != null && review.senderImage!.isNotEmpty) {
           try {
             if (review.senderImage!.contains('data:image')) {
-              await savePatientProfileImage(review.senderImage!).then((file) {
+              // استخدم الوقت الحالي لتوليد اسم فريد للصورة
+              final uniqueId = DateTime.now().millisecondsSinceEpoch.toString();
+              await savePatientReviewImage(review.senderImage!, uniqueId)
+                  .then((file) {
                 review.localImagePath = file.path;
               });
             } else {

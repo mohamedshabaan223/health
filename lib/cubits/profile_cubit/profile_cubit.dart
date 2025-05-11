@@ -37,26 +37,34 @@ class UserProfileCubit extends Cubit<UserProfileState> {
   Future<void> fetchUserProfile(int patientId) async {
     try {
       emit(UserProfileLoading());
+
       final response = await api.get(
         EndPoints.getUserProfile,
         queryParameters: {"id": patientId},
       );
+      final userProfile = UserProfile.fromJson(response);
 
-      final UserProfile userProfile = UserProfile.fromJson(response);
+      final String? cachedBase64 = CacheHelper().getData(key: "profileBase64");
 
-      if (userProfile.photoData != null && userProfile.photoData!.isNotEmpty) {
+      if (userProfile.photoData != null &&
+          userProfile.photoData!.isNotEmpty &&
+          userProfile.photoData != cachedBase64) {
         try {
           File savedFile = await saveBase64Image(userProfile.photoData!);
           profilePhotoPath = savedFile.path;
-          await CacheHelper().saveData(key: "name", value: userProfile.name);
-
-          emit(UserProfileSuccess(userProfile));
+          await CacheHelper()
+              .saveData(key: "profileBase64", value: userProfile.photoData!);
+          await CacheHelper()
+              .saveData(key: "profilePhotoPath", value: profilePhotoPath);
         } catch (e) {
           print("Failed to process image: $e");
         }
       } else {
-        emit(UserProfileSuccess(userProfile));
+        profilePhotoPath = CacheHelper().getData(key: "profilePhotoPath") ?? "";
       }
+
+      await CacheHelper().saveData(key: "name", value: userProfile.name);
+      emit(UserProfileSuccess(userProfile));
     } catch (e) {
       print("Unexpected error in getUserProfile: $e");
       emit(UserProfileFailure("Unexpected error occurred: $e"));
@@ -88,7 +96,8 @@ class UserProfileCubit extends Cubit<UserProfileState> {
 
     if (pickedFile != null) {
       profilePhotoPath = pickedFile.path;
-      print("New Image Path: $profilePhotoPath");
+      await CacheHelper()
+          .saveData(key: "profilePhotoPath", value: profilePhotoPath);
       emit(ProfilePhotoUpdated(profilePhotoPath: profilePhotoPath));
     }
   }

@@ -168,7 +168,7 @@ class FirstScreenInDoctorAppDoctorInfo extends StatelessWidget {
                       ],
                     ),
                     Text(
-                      "Experience: ${getDoctorInfoById.experience} years",
+                      "Experience: ${getDoctorInfoById.experience}",
                       style: TextStyle(
                           color: Colors.black, fontSize: width * 0.04),
                     ),

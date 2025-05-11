@@ -30,17 +30,35 @@ class CustomUserInformation extends StatelessWidget {
 
         return Row(
           children: [
-            CircleAvatar(
-              radius: 25,
-              backgroundImage: photoPath != null
+            ClipRRect(
+              borderRadius: BorderRadius.circular(50),
+              child: photoPath != null
                   ? (photoPath.startsWith('http')
-                      ? NetworkImage(photoPath) as ImageProvider
+                      ? Image.network(
+                          photoPath,
+                          fit: BoxFit.contain,
+                          height: 60,
+                          width: 60,
+                        )
                       : (photoPath.startsWith('data:image')
-                          ? MemoryImage(
+                          ? Image.memory(
                               base64Decode(photoPath.split(',').last),
-                            ) as ImageProvider
-                          : FileImage(File(photoPath))))
-                  : const AssetImage('assets/images/Mask group.png'),
+                              fit: BoxFit.contain,
+                              height: 60,
+                              width: 60,
+                            )
+                          : Image.file(
+                              File(photoPath),
+                              fit: BoxFit.contain,
+                              height: 60,
+                              width: 60,
+                            )))
+                  : Image.asset(
+                      'assets/images/Mask group.png',
+                      fit: BoxFit.cover,
+                      height: 50,
+                      width: 50,
+                    ),
             ),
             SizedBox(width: width * 0.03),
             Column(

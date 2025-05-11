@@ -104,16 +104,20 @@ class _ProfilePatientState extends State<ProfilePatient> {
                     Center(
                       child: Stack(
                         children: [
-                          CircleAvatar(
-                            radius: 52,
-                            backgroundImage: profileCubit.profilePhotoPath !=
-                                        null &&
-                                    profileCubit.profilePhotoPath!.isNotEmpty
-                                ? FileImage(
-                                    File(profileCubit.profilePhotoPath!))
-                                : const AssetImage(
-                                        'assets/images/Mask group.png')
-                                    as ImageProvider,
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(60),
+                            child: Image(
+                              image: profileCubit.profilePhotoPath != null &&
+                                      profileCubit.profilePhotoPath!.isNotEmpty
+                                  ? FileImage(
+                                      File(profileCubit.profilePhotoPath!))
+                                  : const AssetImage(
+                                          'assets/images/Mask group.png')
+                                      as ImageProvider,
+                              width: 104,
+                              height: 104,
+                              fit: BoxFit.contain,
+                            ),
                           ),
                           Positioned(
                             bottom: 0,

@@ -14,6 +14,6 @@ class LocationError extends LocationState {
 }
 
 class NearbyDoctorsLoaded extends LocationState {
-  final List<dynamic> doctors;
+  final List<DoctorModelForNearByDoctor> doctors;
   NearbyDoctorsLoaded(this.doctors);
 }

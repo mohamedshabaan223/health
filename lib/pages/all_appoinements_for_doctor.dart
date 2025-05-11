@@ -78,8 +78,7 @@ class _AllAppoinementForDoctorState extends State<AllAppoinementForDoctor> {
                               },
                             ).then((cancelled) {
                               Future.delayed(Duration.zero, () {
-                                if (!mounted)
-                                  return; // تأكد من أن الـ widget ما زال موجودًا
+                                if (!mounted) return;
 
                                 if (cancelled == true && doctorId != null) {
                                   context

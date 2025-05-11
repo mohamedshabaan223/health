@@ -23,19 +23,26 @@ class _AllDoctorsBasedOnSpecializationState
   late String title;
   String searchQuery = '';
   bool isSearching = false;
+  bool _isLoaded = false;
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    final args =
-        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+    if (!_isLoaded) {
+      final args =
+          ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
 
-    if (args != null && args['specializationId'] != null) {
-      specializationId = args['specializationId'];
-      title = args['specializationName'];
-      context
-          .read<DoctorCubit>()
-          .getDoctorsBySpecialization(specializationId: specializationId);
+      if (args != null && args['specializationId'] != null) {
+        specializationId = args['specializationId'];
+        title = args['specializationName'];
+
+        context
+            .read<DoctorCubit>()
+            .getDoctorsBySpecialization(specializationId: specializationId);
+
+        _isLoaded = true;
+      }
     }
   }
 
@@ -58,9 +65,7 @@ class _AllDoctorsBasedOnSpecializationState
               )
             : Column(
                 children: [
-                  const SizedBox(
-                    height: 15,
-                  ),
+                  const SizedBox(height: 15),
                   Text(
                     title,
                     style: const TextStyle(color: AppTheme.green),
@@ -106,28 +111,23 @@ class _AllDoctorsBasedOnSpecializationState
               return const Center(child: Text("No doctors available."));
             }
 
-            return Column(
-              children: [
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: doctorsListToDisplay.length,
-                    itemBuilder: (context, index) {
-                      final doctor = doctorsListToDisplay[index];
-                      final patientImage = doctor.localImagePath != null &&
-                              doctor.localImagePath!.isNotEmpty
-                          ? FileImage(File(doctor.localImagePath!))
-                          : const AssetImage("assets/images/doctor_image.png");
-                      return DoctorContainerSpecialization(
-                        doctorNmae: doctor.doctorName,
-                        address: doctor.address,
-                        doctorImage: patientImage,
-                        rating: doctor.rating.toDouble(),
-                        doctorid: doctor.id,
-                      );
-                    },
-                  ),
-                ),
-              ],
+            return ListView.builder(
+              itemCount: doctorsListToDisplay.length,
+              itemBuilder: (context, index) {
+                final doctor = doctorsListToDisplay[index];
+                final patientImage = doctor.localImagePath != null &&
+                        doctor.localImagePath!.isNotEmpty
+                    ? FileImage(File(doctor.localImagePath!))
+                    : const AssetImage("assets/images/doctor_image.png");
+                return DoctorContainerSpecialization(
+                  doctorNmae: doctor.doctorName,
+                  address: doctor.address,
+                  doctorImage: patientImage,
+                  rating: doctor.rating.toDouble(),
+                  doctorid: doctor.id,
+                  specializationId: specializationId,
+                );
+              },
             );
           } else {
             return const Center(child: Text("Something went wrong."));

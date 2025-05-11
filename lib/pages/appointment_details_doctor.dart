@@ -40,7 +40,7 @@ class _AppointementPatientDetailsState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: _scaffoldMessengerKey, // تعيين الـ GlobalKey هنا
+      key: _scaffoldMessengerKey,
       appBar: AppBar(
         foregroundColor: Colors.white,
         backgroundColor: const Color(0xFF58CFA4),
@@ -234,32 +234,22 @@ class _AppointementPatientDetailsState
             TextButton(
               child: const Text('Yes'),
               onPressed: () async {
-                // إغلاق الـ Dialog أولًا
                 Navigator.of(context).pop(true);
-
-                // تأجيل العملية للتأكد من أن الـ widget ما زال مركبًا
                 await Future.delayed(const Duration(milliseconds: 300));
 
-                if (!mounted) return; // تحقق من أن الـ widget ما زال موجودًا
+                if (!mounted) return;
 
                 if (bookingId != null) {
-                  // إلغاء الحجز
                   await context
                       .read<BookingCubit>()
                       .cancelAppointment(id: bookingId!);
 
                   if (!mounted) return;
-
-                  // تحديث الحجزات بعد الإلغاء
                   await context.read<BookingCubit>().getDoctorCompletedBookings(
                         doctorId: CacheHelper().getData(key: 'id'),
                       );
-
                   if (!mounted) return;
-
-                  // هنا نتأكد من أننا لا نستخدم الـ context بشكل غير آمن
                   if (mounted) {
-                    // عرض الـ SnackBar بشكل آمن
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: const Text(
@@ -276,12 +266,8 @@ class _AppointementPatientDetailsState
                         duration: const Duration(seconds: 2),
                       ),
                     );
-
-                    // تأجيل العودة إلى الصفحة الرئيسية بعد عرض الـ SnackBar
-                    // استخدام `Future.delayed` للتأكد من أن الـ widget موجود
                     Future.delayed(const Duration(milliseconds: 500), () {
-                      if (!mounted)
-                        return; // تحقق من أن الـ widget ما زال موجودًا
+                      if (!mounted) return;
                       Navigator.popAndPushNamed(context, HomePageDoctor.id);
                     });
                   }

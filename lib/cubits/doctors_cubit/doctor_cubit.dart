@@ -11,25 +11,21 @@ import 'package:health_app/models/doctor_model.dart';
 import 'package:health_app/models/get_doctor_based_on_specialization.dart';
 import 'package:health_app/models/get_doctor_info_by_id.dart';
 import 'package:path_provider/path_provider.dart';
-
 part 'doctor_state.dart';
 
 class DoctorCubit extends Cubit<DoctorState> {
   final ApiConsumer api;
+  bool _isRequestInProgress = false;
+
   DoctorCubit(this.api) : super(DoctorInitial());
 
-  // تحميل الصورة بشكل غير متزامن فقط عند الطلب
   Future<File> saveDoctorProfileImage(
       String base64String, String fileName) async {
     try {
       final directory = await getApplicationDocumentsDirectory();
       final String filePath = '${directory.path}/$fileName.png';
       final File file = File(filePath);
-
-      // تحقق إذا كان الملف موجود بالفعل
-      if (await file.exists()) {
-        return file;
-      }
+      final String metaPath = '${directory.path}/$fileName.txt';
 
       final String base64Data = base64String.split(',').last;
       String cleanedBase64 =
@@ -38,48 +34,65 @@ class DoctorCubit extends Cubit<DoctorState> {
       while (paddedBase64.length % 4 != 0) {
         paddedBase64 += "=";
       }
+      if (await file.exists() && await File(metaPath).exists()) {
+        final oldBase64 = await File(metaPath).readAsString();
+        if (oldBase64 == paddedBase64) {
+          log("Image already exists and is the same. Skipping save.");
+          return file;
+        }
+      }
 
       Uint8List bytes = base64Decode(paddedBase64);
       await file.writeAsBytes(bytes);
-
-      log("✅ Image saved at: $filePath");
+      await File(metaPath).writeAsString(paddedBase64);
+      log("Image saved at: $filePath");
       return file;
     } catch (e) {
-      log("❌ Failed to save image: $e");
+      log("Failed to save image: $e");
       rethrow;
     }
   }
 
   Future<void> getDoctorById({required int doctorId}) async {
-    if (state is GetDoctorInfoLoading) return;
+    if (_isRequestInProgress) return;
+
+    _isRequestInProgress = true;
+
+    if (state is GetDoctorInfoLoading) {
+      return;
+    }
 
     emit(GetDoctorInfoLoading());
+    log('State changed: $state');
 
     try {
       final response = await api.get(
           "http://medicalservicesproject.runasp.net/GetDoctorDetails/$doctorId");
       final doctorInfo = GetDoctorInfoById.fromJson(response);
-
-      // تحميل الصورة فقط عند الحاجة
       if (doctorInfo.profileImage != null &&
           doctorInfo.profileImage!.isNotEmpty) {
         try {
-          // تحميل الصورة عند الحاجة فقط
           File savedFile = await saveDoctorProfileImage(
               doctorInfo.profileImage!, 'doctor_$doctorId');
           doctorInfo.localImagePath = savedFile.path;
         } catch (e) {
           log("Failed to process doctor image: $e");
           emit(GetDoctorInfoFailure(errorMessage: "Failed to process image"));
+          log('State changed: $state');
+
           return;
         }
       }
-
       emit(GetDoctorInfoSuccess(doctorInfo));
+      log('State changed: $state');
     } on ServerException catch (e) {
       emit(GetDoctorInfoFailure(errorMessage: e.errorModel.errorMessage));
+      log('State changed: $state');
     } catch (e) {
       emit(GetDoctorInfoFailure(errorMessage: "Unexpected error occurred: $e"));
+      log('State changed: $state');
+    } finally {
+      _isRequestInProgress = false;
     }
   }
 
@@ -99,8 +112,6 @@ class DoctorCubit extends Cubit<DoctorState> {
         log("Doctor JSON: $json");
         return DoctorModel.fromJson(json);
       }).toList();
-
-      // تحميل الصورة فقط إذا كانت غير موجودة محليًا
       for (var doctor in doctors) {
         if (doctor.photo != null && (doctor.phone?.isNotEmpty ?? false)) {
           try {
@@ -131,7 +142,6 @@ class DoctorCubit extends Cubit<DoctorState> {
       final filteredDoctors =
           doctors.where((doc) => doc.rating >= 3 && doc.rating <= 5).toList();
 
-      // تحميل الصورة فقط إذا كانت غير موجودة محليًا
       for (var doctor in filteredDoctors) {
         if (doctor.photo != null && doctor.photo!.isNotEmpty) {
           try {
@@ -186,6 +196,7 @@ class DoctorCubit extends Cubit<DoctorState> {
       {required int specializationId}) async {
     try {
       emit(GetDoctorBySpecializationLoading());
+      log('State changed: $state');
 
       final response = await api.get(
         "http://medicalservicesproject.runasp.net/Api/V1/Specialization/GetDoctorsBySpecializationID",
@@ -206,13 +217,16 @@ class DoctorCubit extends Cubit<DoctorState> {
           }
         }
       }
-      emit(GetDoctorBySpecializationSuccess(doctors));
+      emit(GetDoctorBySpecializationSuccess(doctors, specializationId));
+      log('State changed: $state');
     } on ServerException catch (e) {
       emit(GetDoctorBySpecializationFailure(
           errorMessage: e.errorModel.errorMessage));
+      log('State changed: $state');
     } catch (e) {
       emit(GetDoctorBySpecializationFailure(
           errorMessage: "Unexpected error occurred: $e"));
+      log('State changed: $state');
     }
   }
 

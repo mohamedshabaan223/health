@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 import 'dart:typed_data';
 import 'package:bloc/bloc.dart';
+import 'package:crypto/crypto.dart';
 import 'package:health_app/core/api/api_consumer.dart';
 import 'package:health_app/core/api/end_points.dart';
 import 'package:health_app/core/errors/exceptions.dart';
@@ -46,18 +48,24 @@ class SpecializationsCubit extends Cubit<SpecialityState> {
   Future<File> saveSpecializationImage(String base64String) async {
     try {
       final String base64Data = base64String.split(',').last;
-      Uint8List bytes = base64Decode(base64Data);
-
+      String cleanedBase64 =
+          base64Data.replaceAll(RegExp(r'[^A-Za-z0-9+/=]'), '');
+      String paddedBase64 = cleanedBase64;
+      while (paddedBase64.length % 4 != 0) {
+        paddedBase64 += "=";
+      }
+      final hash = md5.convert(utf8.encode(paddedBase64)).toString();
       final directory = await getApplicationDocumentsDirectory();
-      final String filePath = '${directory.path}/specialization_image.png';
-
+      final String filePath =
+          '${directory.path}/booking_profile_image_$hash.png';
       final File file = File(filePath);
-      await file.writeAsBytes(bytes);
+      if (await file.exists()) return file;
 
-      print("Specialization Image saved at: $filePath");
+      Uint8List bytes = base64Decode(paddedBase64);
+      await file.writeAsBytes(bytes);
       return file;
     } catch (e) {
-      print("Failed to save specialization image: $e");
+      print("Failed to save booking image: $e");
       rethrow;
     }
   }

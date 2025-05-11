@@ -19,7 +19,6 @@ import 'package:health_app/cubits/payment_cubit/payment_cubit.dart';
 import 'package:health_app/cubits/profile_cubit/profile_cubit.dart';
 import 'package:health_app/cubits/review_cubit/review_cubit.dart';
 import 'package:health_app/cubits/specializations_cubit/specializations_cubit.dart';
-import 'package:health_app/pages/AllNearbyDoctorsPage.dart';
 import 'package:health_app/pages/Specializations_page.dart';
 import 'package:health_app/pages/all_appoinements_for_doctor.dart';
 import 'package:health_app/pages/all_doctors_basedOn_specialization.dart';
@@ -45,6 +44,7 @@ import 'package:health_app/pages/home_page_patient.dart';
 import 'package:health_app/pages/home_screen_doctor.dart';
 import 'package:health_app/pages/home_screen_patient.dart';
 import 'package:health_app/pages/login_page.dart';
+import 'package:health_app/pages/nearby_doctor.dart';
 import 'package:health_app/pages/patient_profile_page.dart';
 import 'package:health_app/pages/register_page.dart';
 import 'package:health_app/pages/review_page.dart';
@@ -101,11 +101,6 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => BookingCubit(dioConsumer),
-        ),
-        BlocProvider(
-          create: (context) => BookingCubit(dioConsumer)
-            ..getDoctorCompletedBookings(
-                doctorId: CacheHelper().getData(key: 'id')),
         ),
         BlocProvider(
           create: (context) => PaymentCubit(dioConsumer),
@@ -186,7 +181,6 @@ class MyApp extends StatelessWidget {
                   const AppointementPatientDetails(),
               AllAppoinementForDoctor.id: (_) =>
                   const AllAppoinementForDoctor(),
-              AllNearbyDoctorsPage.id: (_) => const AllNearbyDoctorsPage(),
               ReviewScreenDoctorReview.id: (_) =>
                   const ReviewScreenDoctorReview(),
               DoctorPageInformationForFemla.routeName: (_) =>
@@ -197,6 +191,7 @@ class MyApp extends StatelessWidget {
                   const DoctorPageInformationForRating(),
               DoctorInformationInSpecialization.routeName: (_) =>
                   const DoctorInformationInSpecialization(),
+              NearbyDoctor.id: (_) => const NearbyDoctor(),
             },
             initialRoute: token == null
                 ? StartScreen.id

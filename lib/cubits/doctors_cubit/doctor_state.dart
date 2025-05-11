@@ -37,8 +37,9 @@ final class GetDoctorBySpecializationLoading extends DoctorState {}
 
 final class GetDoctorBySpecializationSuccess extends DoctorState {
   final List<GetDoctorBySpecialization> doctorsList;
+  final int specializationId;
 
-  GetDoctorBySpecializationSuccess(this.doctorsList);
+  GetDoctorBySpecializationSuccess(this.doctorsList, this.specializationId);
 }
 
 final class GetDoctorBySpecializationFailure extends DoctorState {

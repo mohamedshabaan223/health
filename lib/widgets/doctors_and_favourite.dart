@@ -17,16 +17,28 @@ class DoctorsAndFavourite extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: Colors.transparent, // يمكنك تخصيص اللون هنا
+      color: Colors.transparent,
       child: InkWell(
         onTap: onTap,
+        borderRadius: BorderRadius.circular(12),
         child: Column(
           children: [
-            FaIcon(
-              icon,
-              size: 22,
-              color: AppTheme.green,
+            Container(
+              width: 160,
+              height: 40,
+              decoration: BoxDecoration(
+                color: AppTheme.green.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Center(
+                child: FaIcon(
+                  icon,
+                  size: 22,
+                  color: AppTheme.green,
+                ),
+              ),
             ),
+            const SizedBox(height: 6),
             Text(
               label,
               style: const TextStyle(

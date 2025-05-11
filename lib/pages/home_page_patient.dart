@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:health_app/app_theme.dart';
 import 'package:health_app/cache/cache_helper.dart';
+import 'package:health_app/cubits/location_cubit/location_cubit.dart';
 import 'package:health_app/cubits/profile_cubit/profile_cubit.dart';
 import 'package:health_app/cubits/specializations_cubit/specializations_cubit.dart';
 import 'package:health_app/cubits/specializations_cubit/specializations_state.dart';
@@ -11,12 +12,12 @@ import 'package:health_app/pages/all_doctors_basedOn_specialization.dart';
 import 'package:health_app/pages/doctor_favorite.dart';
 import 'package:health_app/pages/doctor_page.dart';
 import 'package:health_app/pages/doctor_page_information.dart';
+import 'package:health_app/pages/nearby_doctor.dart';
 import 'package:health_app/pages/patient_profile_page.dart';
 import 'package:health_app/widgets/CustomSpecializationsContainer.dart';
 import 'package:health_app/widgets/card_of_doctor.dart';
 import 'package:health_app/widgets/custom_user_information.dart';
 import 'package:health_app/widgets/doctors_and_favourite.dart';
-import 'package:health_app/widgets/search_field.dart';
 import 'package:health_app/widgets/top_icon_in_home_page.dart';
 
 class HomePagePatient extends StatefulWidget {
@@ -32,12 +33,10 @@ class _HomePagePatientState extends State<HomePagePatient> {
   void initState() {
     super.initState();
     int? userId = CacheHelper().getData(key: 'id');
-    print("User ID from cache: $userId");
     if (userId != null) {
       context.read<UserProfileCubit>().fetchUserProfile(userId);
-    } else {
-      print("User ID is null!");
     }
+    context.read<LocationCubit>().fetchNearbyDoctors(distanceInKm: 5);
   }
 
   @override
@@ -72,6 +71,7 @@ class _HomePagePatientState extends State<HomePagePatient> {
             SizedBox(height: height * 0.03),
             Row(
               children: [
+                SizedBox(width: width * 0.05),
                 DoctorsAndFavourite(
                   icon: FontAwesomeIcons.stethoscope,
                   label: 'Doctors',
@@ -87,10 +87,9 @@ class _HomePagePatientState extends State<HomePagePatient> {
                     Navigator.of(context).pushNamed(Favorite.routeName);
                   },
                 ),
-                const SearchField(),
               ],
             ),
-            SizedBox(height: height * 0.05),
+            SizedBox(height: height * 0.04),
             Row(
               children: [
                 Text(
@@ -129,7 +128,6 @@ class _HomePagePatientState extends State<HomePagePatient> {
                 } else if (state is SpecialitySuccess) {
                   final specializations =
                       state.specializations.take(6).toList();
-                  print("Specializations: $specializations");
 
                   if (specializations.isEmpty) {
                     return const Center(
@@ -181,7 +179,9 @@ class _HomePagePatientState extends State<HomePagePatient> {
                 ),
                 const Spacer(),
                 TextButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.of(context).pushNamed(NearbyDoctor.id);
+                  },
                   child: Text(
                     'See all',
                     style: Theme.of(context).textTheme.titleMedium!.copyWith(
@@ -193,23 +193,45 @@ class _HomePagePatientState extends State<HomePagePatient> {
               ],
             ),
             const Divider(color: AppTheme.gray, thickness: 2),
-            SizedBox(
-              height: height * (width > 600 ? 0.5 : 0.4),
-              child: ListView.builder(
-                itemCount: 5,
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding: const EdgeInsets.only(bottom: 3.0),
-                    child: CardOfDoctor(
-                      onTap: () {
-                        Navigator.of(context)
-                            .pushNamed(DoctorInformation.routeName);
-                      },
-                    ),
+            BlocBuilder<LocationCubit, LocationState>(
+              builder: (context, state) {
+                if (state is LocationLoading) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (state is NearbyDoctorsLoaded) {
+                  final doctors = state.doctors.take(3).toList();
+                  if (doctors.isEmpty) {
+                    return const Center(
+                        child: Text("No doctors Nearby available."));
+                  }
+
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: doctors.length,
+                    itemBuilder: (context, index) {
+                      final doctor = doctors[index];
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 5.0),
+                        child: CardOfDoctor(
+                          doctor: doctor,
+                          onTap: () {
+                            Navigator.pushNamed(
+                              context,
+                              DoctorInformation.routeName,
+                              arguments: doctor.id,
+                            );
+                          },
+                        ),
+                      );
+                    },
                   );
-                },
-              ),
-            ),
+                } else if (state is LocationError) {
+                  return Center(child: Text(state.message));
+                } else {
+                  return const SizedBox.shrink();
+                }
+              },
+            )
           ],
         ),
       ),

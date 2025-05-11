@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:health_app/app_theme.dart';
+import 'package:health_app/cubits/doctors_cubit/doctor_cubit.dart';
 import 'package:health_app/pages/doctor_information_in_specialization.dart';
 import 'package:health_app/widgets/default_icon.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -15,6 +16,7 @@ class DoctorContainerSpecialization extends StatefulWidget {
     required this.doctorImage,
     required this.doctorid,
     required this.rating,
+    required this.specializationId,
   });
 
   final String doctorNmae;
@@ -22,7 +24,7 @@ class DoctorContainerSpecialization extends StatefulWidget {
   final Object doctorImage;
   final int doctorid;
   final double rating;
-
+  final int specializationId;
   @override
   State<DoctorContainerSpecialization> createState() =>
       _DoctorContainerSpecializationState();
@@ -41,8 +43,6 @@ class _DoctorContainerSpecializationState
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
-    double width = MediaQuery.of(context).size.width;
-
     return BlocBuilder<FavoriteDoctorCubit, FavoriteDoctorState>(
       builder: (context, state) {
         return Container(
@@ -59,11 +59,14 @@ class _DoctorContainerSpecializationState
                 child: SizedBox(
                   height: 80,
                   width: 80,
-                  child: CircleAvatar(
-                    radius: 50,
-                    backgroundImage: widget.doctorImage is FileImage
-                        ? widget.doctorImage as ImageProvider
-                        : const AssetImage("assets/images/doctor_image.png"),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(50),
+                    child: Image(
+                      image: widget.doctorImage is ImageProvider
+                          ? widget.doctorImage as ImageProvider
+                          : const AssetImage("assets/images/doctor_image.png"),
+                      fit: BoxFit.contain,
+                    ),
                   ),
                 ),
               ),
@@ -172,9 +175,17 @@ class _DoctorContainerSpecializationState
                   const SizedBox(height: 15),
                   InkWell(
                     onTap: () {
-                      Navigator.of(context).pushNamed(
-                        DoctorInformationInSpecialization.routeName,
-                        arguments: widget.doctorid,
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => BlocProvider.value(
+                            value: context.read<DoctorCubit>(),
+                            child: const DoctorInformationInSpecialization(),
+                          ),
+                          settings: RouteSettings(arguments: {
+                            'doctorId': widget.doctorid,
+                            'specializationId': widget.specializationId,
+                          }),
+                        ),
                       );
                     },
                     child: Container(

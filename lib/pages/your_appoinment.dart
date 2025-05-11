@@ -95,7 +95,7 @@ class YourAppoinment extends StatelessWidget {
                               ),
                               Text(doctorName,
                                   style: const TextStyle(
-                                    fontSize: 22,
+                                    fontSize: 20,
                                     color: AppTheme.green2,
                                     fontWeight: FontWeight.bold,
                                   )),

@@ -33,13 +33,14 @@ class SpecializationContainer extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // إذا كانت الصورة غير فارغة، نعرضها مع الشفافية إذا كانت PNG
                 imagePath.isEmpty
                     ? Image.asset('assets/images/general.png')
                     : Image.file(
                         File(imagePath),
-                        fit: BoxFit.contain, // لضبط الصورة داخل الإطار
-                        alignment: Alignment.center, // لضمان أنها تكون في الوسط
+                        fit: BoxFit.contain,
+                        alignment: Alignment.center,
+                        width: 40,
+                        height: 40,
                       ),
                 const SizedBox(height: 10),
                 Text(
