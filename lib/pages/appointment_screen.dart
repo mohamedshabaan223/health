@@ -71,6 +71,13 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
   }
 
   void _onBookingPressed() {
+    final uniqueDays = availableSlots.map((s) => s.day).toSet().toList();
+    if (selectedDayIndex < 0 || selectedDayIndex >= uniqueDays.length) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please select a day first!')),
+      );
+      return;
+    }
     if (selectedTimeIndex == -1) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Please select an available time!')),
@@ -90,7 +97,6 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
       return;
     }
 
-    final uniqueDays = availableSlots.map((slot) => slot.day).toSet().toList();
     final selectedDay = uniqueDays[selectedDayIndex];
     final selectedTime = availableSlots
         .where((slot) => slot.day == selectedDay)
@@ -266,6 +272,9 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
         if (state is BookingCubitSuccess) {
           final uniqueDays =
               availableSlots.map((slot) => slot.day).toSet().toList();
+          if (selectedDayIndex < 0 || selectedDayIndex >= uniqueDays.length) {
+            return const Text('Please select a day to view available times.');
+          }
           final selectedDay = uniqueDays[selectedDayIndex];
           final times =
               availableSlots.where((slot) => slot.day == selectedDay).toList();

@@ -91,7 +91,7 @@ class YourAppoinment extends StatelessWidget {
                                 ),
                               ),
                               SizedBox(
-                                width: width * 0.15,
+                                width: width * 0.07,
                               ),
                               Text(doctorName,
                                   style: const TextStyle(

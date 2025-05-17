@@ -71,7 +71,7 @@ class _HomePagePatientState extends State<HomePagePatient> {
             SizedBox(height: height * 0.03),
             Row(
               children: [
-                SizedBox(width: width * 0.05),
+                SizedBox(width: width * 0.02),
                 DoctorsAndFavourite(
                   icon: FontAwesomeIcons.stethoscope,
                   label: 'Doctors',
@@ -79,7 +79,7 @@ class _HomePagePatientState extends State<HomePagePatient> {
                     Navigator.of(context).pushNamed(DoctorPage.routeName);
                   },
                 ),
-                SizedBox(width: width * 0.05),
+                SizedBox(width: width * 0.04),
                 DoctorsAndFavourite(
                   icon: FontAwesomeIcons.heart,
                   label: 'Favourite',

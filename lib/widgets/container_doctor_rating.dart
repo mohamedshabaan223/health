@@ -72,7 +72,7 @@ class _ContainrDoctorRatingState extends State<ContainrDoctorRating> {
                       Text(
                         widget.doctor.doctorName,
                         style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                              fontSize: 16,
+                              fontSize: 15,
                               color: AppTheme.green,
                             ),
                         maxLines: 1,

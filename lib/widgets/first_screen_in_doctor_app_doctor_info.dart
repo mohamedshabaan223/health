@@ -119,13 +119,13 @@ class FirstScreenInDoctorAppDoctorInfo extends StatelessWidget {
                           File(getDoctorInfoById.localImagePath!).existsSync()
                       ? Image.file(
                           File(getDoctorInfoById.localImagePath!),
-                          width: 80,
+                          width: 70,
                           height: 120,
                           fit: BoxFit.contain,
                         )
                       : Image.asset(
                           'assets/images/doctor_image.png',
-                          width: 80,
+                          width: 70,
                           height: 80,
                           fit: BoxFit.contain,
                         ),
@@ -140,6 +140,7 @@ class FirstScreenInDoctorAppDoctorInfo extends StatelessWidget {
                           Theme.of(context).textTheme.headlineSmall!.copyWith(
                                 color: AppTheme.green,
                                 fontWeight: FontWeight.bold,
+                                fontSize: width * 0.05,
                               ),
                     ),
                     Text(
