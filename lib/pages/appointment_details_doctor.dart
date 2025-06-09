@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:health_app/app_theme.dart';
 import 'package:health_app/cache/cache_helper.dart';
 import 'package:health_app/cubits/booking_cubit/booking_cubit_cubit.dart';
-import 'package:health_app/pages/home_page_doctor.dart';
 import 'package:health_app/widgets/row_details.dart';
 
 class AppointementPatientDetails extends StatefulWidget {
@@ -172,7 +171,49 @@ class _AppointementPatientDetailsState
                   const SizedBox(height: 30),
                   Center(
                     child: GestureDetector(
-                      onTap: () => _cancelAppointment(context),
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: const Text('Cancel Appointment'),
+                              content: const Text(
+                                  'Are you sure you want to cancel this appointment?'),
+                              actions: <Widget>[
+                                TextButton(
+                                  child: const Text('No'),
+                                  onPressed: () => Navigator.of(context).pop(),
+                                ),
+                                TextButton(
+                                  child: const Text('Yes'),
+                                  onPressed: () async {
+                                    Navigator.of(context).pop();
+
+                                    if (bookingId != null) {
+                                      await context
+                                          .read<BookingCubit>()
+                                          .cancelAppointment(id: bookingId!);
+
+                                      context
+                                          .read<BookingCubit>()
+                                          .getDoctorCompletedBookings(
+                                            doctorId: CacheHelper()
+                                                .getData(key: 'id'),
+                                          );
+                                      if (!mounted) return;
+                                      Navigator.pop(context);
+                                      BlocProvider.of<BookingCubit>(context)
+                                          .getDoctorCompletedBookings(
+                                              doctorId: CacheHelper()
+                                                  .getData(key: 'id'));
+                                    }
+                                  },
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      },
                       child: Container(
                         decoration: BoxDecoration(
                           color: AppTheme.gray,
@@ -215,68 +256,6 @@ class _AppointementPatientDetailsState
           },
         ),
       ),
-    );
-  }
-
-  void _cancelAppointment(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Cancel Appointment'),
-          content:
-              const Text('Are you sure you want to cancel this appointment?'),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('No'),
-              onPressed: () => Navigator.of(context).pop(),
-            ),
-            TextButton(
-              child: const Text('Yes'),
-              onPressed: () async {
-                Navigator.of(context).pop(true);
-                await Future.delayed(const Duration(milliseconds: 300));
-
-                if (!mounted) return;
-
-                if (bookingId != null) {
-                  await context
-                      .read<BookingCubit>()
-                      .cancelAppointment(id: bookingId!);
-
-                  if (!mounted) return;
-                  await context.read<BookingCubit>().getDoctorCompletedBookings(
-                        doctorId: CacheHelper().getData(key: 'id'),
-                      );
-                  if (!mounted) return;
-                  if (mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: const Text(
-                          'تم حذف الحجز بنجاح',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                        backgroundColor: AppTheme.green2,
-                        behavior: SnackBarBehavior.floating,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        margin: const EdgeInsets.symmetric(
-                            horizontal: 20, vertical: 10),
-                        duration: const Duration(seconds: 2),
-                      ),
-                    );
-                    Future.delayed(const Duration(milliseconds: 500), () {
-                      if (!mounted) return;
-                      Navigator.popAndPushNamed(context, HomePageDoctor.id);
-                    });
-                  }
-                }
-              },
-            ),
-          ],
-        );
-      },
     );
   }
 }
